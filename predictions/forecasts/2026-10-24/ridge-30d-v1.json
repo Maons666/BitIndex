@@ -1,0 +1,118 @@
+{
+  "schema": 1,
+  "kind": "forward",
+  "id": "2026-10-24__ridge-30d-v1",
+  "issuedAt": "2026-10-24T02:02:06.572Z",
+  "issuedLocalDate": "2026-10-23",
+  "modelVersion": "ridge-30d-v1",
+  "source": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics",
+  "sourceFetchedAt": "2026-10-24T02:02:06.223Z",
+  "dataFingerprint": "d834b342f08ee398e44329551c2ddb787b52e019948df4c5947c04c667ed189e",
+  "inputPath": "inputs/d834b342f08ee398e44329551c2ddb787b52e019948df4c5947c04c667ed189e.json.gz",
+  "external": null,
+  "externalInputPath": null,
+  "prediction": {
+    "date": "2026-10-23",
+    "featureDate": "2026-10-22",
+    "targetDate": "2026-11-22",
+    "price": 80924.1837657744,
+    "predictedLogReturn": 0.01011751185775392,
+    "predictedReturn": 1.0168866929909874,
+    "predictedPrice": 81747.09102190014,
+    "index": 51.02596391676597,
+    "lower": 58445.388486451775,
+    "upper": 105346.78258649932,
+    "calibrationN": 148,
+    "trainingN": 5181,
+    "trainStart": "2012-07-17",
+    "trainEnd": "2026-09-22",
+    "trainLabelEnd": "2026-10-22"
+  },
+  "model": {
+    "spec": {
+      "version": "ridge-30d-v1",
+      "horizon": 30,
+      "lag": 1,
+      "alpha": 100,
+      "minTrain": 730,
+      "step": 30,
+      "intervalMin": 20
+    },
+    "features": [
+      {
+        "id": "mvrv",
+        "name": "MVRV",
+        "transform": "log",
+        "weight": 0.019714709953074887,
+        "mean": 0.5125615702946485,
+        "scale": 0.3778847506002873
+      },
+      {
+        "id": "puell",
+        "name": "Puell Multiple",
+        "transform": "log",
+        "weight": -0.04010262003581051,
+        "mean": 0.13202113203716337,
+        "scale": 0.5448613985796156
+      },
+      {
+        "id": "mayer",
+        "name": "Mayer Multiple",
+        "transform": "log",
+        "weight": -0.040896338670287066,
+        "mean": 0.13338696530966845,
+        "scale": 0.37648783696802535
+      },
+      {
+        "id": "pi",
+        "name": "Pi Cycle Top",
+        "transform": "log",
+        "weight": 0.07841207762084379,
+        "mean": -0.5439386034902167,
+        "scale": 0.3288579560953296
+      },
+      {
+        "id": "rsi",
+        "name": "RSI 14",
+        "transform": "divide100",
+        "weight": 0.06537069020422691,
+        "mean": 0.536409288793164,
+        "scale": 0.14534262334992684
+      },
+      {
+        "id": "volatility",
+        "name": "30 日年化波动率",
+        "transform": "log1pPercent",
+        "weight": 0.011868339796190508,
+        "mean": 0.480138680421645,
+        "scale": 0.19790338329689416
+      },
+      {
+        "id": "momentum",
+        "name": "60 日累计涨幅",
+        "transform": "logReturnPercent",
+        "weight": 0.04885286862173297,
+        "mean": 0.10871559722228832,
+        "scale": 0.37967066898394936
+      },
+      {
+        "id": "hashRibbon",
+        "name": "Hash Ribbon 比率",
+        "transform": "log",
+        "weight": 0.03248228858013153,
+        "mean": 0.04781586770318312,
+        "scale": 0.07163130036640504
+      },
+      {
+        "id": "ma2y",
+        "name": "两年均线倍数",
+        "transform": "log",
+        "weight": -0.06815420342958543,
+        "mean": 0.4366256477221236,
+        "scale": 0.6573920526032642
+      }
+    ],
+    "intercept": 0.0523119857055017,
+    "targetScale": 0.2465021325620909
+  }
+}

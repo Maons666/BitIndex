@@ -1,0 +1,174 @@
+{
+  "schema": 1,
+  "kind": "forward",
+  "id": "2026-10-23__ridge-30d-macro-v1",
+  "issuedAt": "2026-10-23T01:00:05.062Z",
+  "issuedLocalDate": "2026-10-22",
+  "modelVersion": "ridge-30d-macro-v1",
+  "source": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics",
+  "sourceFetchedAt": "2026-10-23T01:00:03.613Z",
+  "dataFingerprint": "f6f6d697c3f3196d779d16dee5c5a4be58d689bc5fc2abecd41f7adb65856d0e",
+  "inputPath": "inputs/f6f6d697c3f3196d779d16dee5c5a4be58d689bc5fc2abecd41f7adb65856d0e.json.gz",
+  "external": {
+    "fingerprint": "b93a240b4d4fab0606b16be71ba8c8af31ee3f6657d43f8389c0238bca193382",
+    "fetchedAt": "2026-10-23T01:00:04.709Z",
+    "state": "fresh",
+    "sources": {
+      "vix": "https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX_History.csv",
+      "effr": "https://markets.newyorkfed.org/api/rates/unsecured/effr/search.json"
+    },
+    "vixThrough": "2026-10-21",
+    "effrThrough": "2026-10-21",
+    "availabilityLagDays": {
+      "vix": 1,
+      "effr": 4
+    },
+    "maxObservationAgeDays": 14,
+    "currentInputs": {
+      "vix": 17.31,
+      "vixChange30": 0.15598174090841027,
+      "effr": 3.88,
+      "effrChange90": 0.25,
+      "vixObservedDate": "2026-10-20",
+      "effrObservedDate": "2026-10-16"
+    },
+    "error": null
+  },
+  "externalInputPath": "inputs/macro-b93a240b4d4fab0606b16be71ba8c8af31ee3f6657d43f8389c0238bca193382.json.gz",
+  "prediction": {
+    "date": "2026-10-22",
+    "featureDate": "2026-10-21",
+    "targetDate": "2026-11-21",
+    "price": 81257.0175825248,
+    "predictedLogReturn": 0.04439380738870001,
+    "predictedReturn": 4.539395770165509,
+    "predictedPrice": 84945.59520162857,
+    "index": 54.48990273241462,
+    "lower": 60971.637254838635,
+    "upper": 107797.11545350369,
+    "calibrationN": 148,
+    "trainingN": 5180,
+    "trainStart": "2012-07-17",
+    "trainEnd": "2026-09-21",
+    "trainLabelEnd": "2026-10-21"
+  },
+  "model": {
+    "spec": {
+      "version": "ridge-30d-macro-v1",
+      "horizon": 30,
+      "lag": 1,
+      "alpha": 100,
+      "minTrain": 730,
+      "step": 30,
+      "intervalMin": 20
+    },
+    "features": [
+      {
+        "id": "mvrv",
+        "name": "MVRV",
+        "transform": "log",
+        "weight": 0.033730754212567916,
+        "mean": 0.5125672734820208,
+        "scale": 0.3779210012468303
+      },
+      {
+        "id": "puell",
+        "name": "Puell Multiple",
+        "transform": "log",
+        "weight": -0.03870554861849844,
+        "mean": 0.1320250289463715,
+        "scale": 0.5449139166474972
+      },
+      {
+        "id": "mayer",
+        "name": "Mayer Multiple",
+        "transform": "log",
+        "weight": -0.04177588954499117,
+        "mean": 0.1333734425952713,
+        "scale": 0.3765229176273947
+      },
+      {
+        "id": "pi",
+        "name": "Pi Cycle Top",
+        "transform": "log",
+        "weight": 0.07714145954013552,
+        "mean": -0.5438806833430208,
+        "scale": 0.3288632729080624
+      },
+      {
+        "id": "rsi",
+        "name": "RSI 14",
+        "transform": "divide100",
+        "weight": 0.06476494048305866,
+        "mean": 0.5363706984884736,
+        "scale": 0.1453301092046757
+      },
+      {
+        "id": "volatility",
+        "name": "30 日年化波动率",
+        "transform": "log1pPercent",
+        "weight": 0.011559974477120002,
+        "mean": 0.4801626656086687,
+        "scale": 0.19791495522688202
+      },
+      {
+        "id": "momentum",
+        "name": "60 日累计涨幅",
+        "transform": "logReturnPercent",
+        "weight": 0.048791923699264654,
+        "mean": 0.10868168769007873,
+        "scale": 0.37969947014819533
+      },
+      {
+        "id": "hashRibbon",
+        "name": "Hash Ribbon 比率",
+        "transform": "log",
+        "weight": 0.032590205687940084,
+        "mean": 0.04782279097320556,
+        "scale": 0.07163648097924702
+      },
+      {
+        "id": "ma2y",
+        "name": "两年均线倍数",
+        "transform": "log",
+        "weight": -0.08831148685937443,
+        "mean": 0.4367141730672034,
+        "scale": 0.6574246254108627
+      },
+      {
+        "id": "vix",
+        "name": "VIX 风险水平",
+        "transform": "log",
+        "weight": -0.007953533106802413,
+        "mean": 2.817505735420128,
+        "scale": 0.3041104523075831
+      },
+      {
+        "id": "vixChange30",
+        "name": "VIX 30 日变化",
+        "transform": "identity",
+        "weight": 0.008607811176783983,
+        "mean": -0.0009535203719986343,
+        "scale": 0.2522273396263193
+      },
+      {
+        "id": "effr",
+        "name": "有效联邦基金利率",
+        "transform": "identity",
+        "weight": -0.013989112467270071,
+        "mean": 1.7550598455598205,
+        "scale": 1.881562219640869
+      },
+      {
+        "id": "effrChange90",
+        "name": "利率 90 日变化",
+        "transform": "identity",
+        "weight": -0.00752620383794196,
+        "mean": 0.060357142857143026,
+        "scale": 0.40978420709833235
+      }
+    ],
+    "intercept": 0.05233349654170532,
+    "targetScale": 0.24652106277706995
+  }
+}

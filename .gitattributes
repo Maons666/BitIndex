@@ -1,0 +1,3 @@
+# Preserve byte identity of the original forecasts and their input snapshots.
+predictions/** -text
+cache/** -text

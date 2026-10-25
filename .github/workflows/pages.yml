@@ -1,0 +1,84 @@
+name: Update real data and deploy Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '23 * * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bitindex-pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      BITINDEX_TRACKING_DIR: ${{ github.workspace }}/.cloud-state/predictions
+      BITINDEX_CACHE_DIR: ${{ github.workspace }}/.cloud-state/cache
+    steps:
+      - uses: actions/checkout@v6
+      - name: Restore durable daily records
+        uses: actions/checkout@v6
+        with:
+          ref: tracking-data
+          path: .cloud-state
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Test calculations and immutable tracking
+        run: npm test
+      - name: Verify original forecast archive
+        run: node dashboard/check-forecast-lock.mjs
+      - name: Fetch real prices and compare existing forecasts
+        id: refresh
+        continue-on-error: true
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" = "schedule" ]; then
+            node dashboard/daily.mjs --scheduled
+          else
+            node dashboard/daily.mjs
+          fi
+      - name: Verify forecasts were neither added nor changed
+        run: node dashboard/check-forecast-lock.mjs
+      - name: Save durable daily records
+        working-directory: .cloud-state
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add predictions cache
+          if ! git diff --cached --quiet; then
+            git commit -m 'Record real BTC data and historical forecast comparisons'
+            git push origin HEAD:tracking-data
+          fi
+      - name: Build static dashboard
+        run: npm run build:pages
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+          retention-days: 1
+      - name: Publish GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Report refresh failure after publishing honest cached status
+        if: steps.refresh.outcome == 'failure'
+        run: |
+          echo 'Real data refresh was incomplete; published available records with their original timestamps. The next scheduled run will retry.'
+          exit 1

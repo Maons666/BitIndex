@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Bitcoin 真实数据看板：12 项指数选择叠图、历史数据与已留档预测的实际价格对照。">
+  <title>BitIndex · Bitcoin 指数看板</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="BitIndex 首页"><span class="brand-icon">₿</span><span>BitIndex<span class="brand-dot">.</span></span></a>
+    <nav aria-label="主导航"><a class="nav-active" href="#main">市场概览</a><a href="#data-section">指标数据</a></nav>
+    <div class="top-actions"><span class="source-pill"><span class="dot"></span>Coin Metrics</span><button class="icon-button" id="theme" aria-label="切换深色主题" title="切换主题">◐</button><button class="button subtle" id="open-info">指标说明 <span aria-hidden="true">↗</span></button></div>
+  </header>
+
+  <main id="main">
+    <section class="page-heading">
+      <div><p class="eyebrow">BITCOIN / CYCLE MONITOR</p><h1>Bitcoin 指数看板</h1><div class="subtitle"><span class="dot" id="status-dot"></span><span id="status-text" role="status">正在连接数据源…</span></div></div>
+      <div class="heading-actions"><div class="check-time"><span>最近核对</span><strong id="checked-time">—</strong></div><button class="button primary" id="refresh"><span class="refresh-icon" aria-hidden="true">↻</span><span id="refresh-label">刷新数据</span></button></div>
+    </section>
+
+    <div class="notice" id="notice" hidden role="status"></div>
+    <section class="market-strip" aria-label="比特币价格概览">
+      <div class="market-label"><span class="coin-small">₿</span><span>Bitcoin <small>BTC / USD</small></span></div>
+      <strong class="market-price" id="btc-price">—</strong><span class="price-change" id="btc-change">—</span>
+      <div class="market-meta"><span>UTC 日收盘</span><strong id="price-date">—</strong></div><div class="market-meta coverage"><span>历史覆盖</span><strong id="coverage">—</strong></div>
+    </section>
+
+    <div class="comparison-grid">
+    <aside class="selector-panel" aria-label="指数选择器">
+      <div class="selector-heading"><h2>指数选择器</h2><span id="selection-count">已选 5 / 12</span></div>
+      <input type="search" id="metric-search" placeholder="搜索指数" aria-label="搜索指数">
+      <div class="selector-groups" id="metric-groups"><button class="active" data-group="全部" aria-pressed="true">全部</button><button data-group="估值" aria-pressed="false">估值</button><button data-group="动量" aria-pressed="false">动量</button><button data-group="矿工" aria-pressed="false">矿工</button></div>
+      <div id="metric-cards" class="selector-list"></div>
+      <div class="selector-footer"><button class="text-button" id="select-all">全选</button><button class="text-button" id="select-default">常用组合</button><button class="text-button" id="select-none">清空</button></div>
+    </aside>
+    <section class="chart-panel" aria-labelledby="chart-title">
+      <div class="chart-header"><div><div class="chart-kicker"><span class="dot selected-dot"></span><span id="chart-category">价格与估值</span></div><h2 id="chart-title">AHR999</h2></div>
+        <div class="chart-actions"><div class="segmented" id="ranges" aria-label="时间范围"><button data-range="90">90 天</button><button data-range="365" class="active" aria-pressed="true">1 年</button><button data-range="1095">3 年</button><button data-range="all">全部</button></div><button id="export" class="button subtle" disabled><span aria-hidden="true">↓</span> CSV</button></div>
+      </div>
+      <div class="chart-subbar"><div class="chart-options"><label>刻度 <select id="compare-mode" aria-label="对比刻度"><option value="percentile">历史分位 0–100</option><option value="raw">原始数值</option></select></label><label id="price-option"><input type="checkbox" id="show-price" checked> BTC 价格</label><label><input type="checkbox" id="log-scale"> <span id="log-label">价格对数</span></label><button class="text-button" id="view-toggle" aria-pressed="false">表格视图</button></div><div id="chart-legend" class="legend"></div></div>
+      <p class="comparison-note" id="comparison-note"></p>
+      <div class="chart-body" id="chart-body"><canvas id="chart" tabindex="0" role="img" aria-label="指数历史图，使用左右方向键查看日期，也可切换表格视图"></canvas><div class="chart-empty" id="chart-empty">正在获取真实历史数据…</div><div id="chart-tooltip" class="chart-tooltip" hidden></div></div>
+      <div class="history-wrap" id="history-wrap" hidden><table><thead id="history-head"></thead><tbody id="history-body"></tbody></table><div class="pagination"><button class="button subtle" id="prev-page">上一页</button><span id="page-text"></span><button class="button subtle" id="next-page">下一页</button></div></div>
+      <div class="chart-footer"><span id="range-label">—</span><span id="chart-caption">日线 · USD</span><button class="text-button" id="model-settings" hidden>调整成本参数 ↗</button></div>
+      <div class="detail-strip" id="detail-strip"></div>
+    </section>
+    </div>
+
+    <section class="forecast-panel" id="forecast-section" aria-labelledby="forecast-title">
+      <div class="section-heading"><div><p class="eyebrow">BITINDEX / FORECAST TRACKING</p><h2 id="forecast-title">历史预测对照 <span class="experiment-badge">已停止新增预测</span></h2></div><button class="button subtle" id="forecast-refresh">更新实际数据 ↻</button></div>
+      <p id="forecast-status" class="forecast-status" role="status">等待真实数据与历史留档</p>
+      <div class="tracking-heading"><p id="tracking-status" role="status"></p><a class="text-button" id="tracking-export" href="/api/tracking.csv" download="BitIndex_daily_comparison.csv">导出每日对照 CSV ↓</a></div>
+      <div id="tracking-scores" class="tracking-scores"></div>
+      <div class="table-scroll"><table class="forecast-table"><thead><tr><th>留档时间（纽约）</th><th>模型</th><th>目标日（UTC）</th><th>原预测价格</th><th>实际日期（UTC）</th><th>实际价格</th><th>目标价差</th><th>状态 / 到期误差</th></tr></thead><tbody id="tracking-body"></tbody></table></div>
+      <p class="forecast-footnote">显示最近 60 份留档。目标价差为预测价相对实际价的差距；到目标日才计算最终误差。完整逐日记录可导出。</p>
+    </section>
+    <section class="data-panel" id="data-section" aria-labelledby="data-title"><div class="section-heading"><h2 id="data-title">指标数据</h2><span id="data-count">12 个指标 · 日频</span></div><div class="table-scroll"><table class="summary-table"><thead><tr><th>指标</th><th>最新数值</th><th>较前一日</th><th>所在区间</th><th>数据截至（UTC）</th><th>数据来源</th></tr></thead><tbody id="summary-body"></tbody></table></div></section>
+    <footer><span><strong>BitIndex</strong> <span class="footer-divider">/</span> Bitcoin analytics</span><button class="text-button" id="open-info-footer">数据来源、计算口径与 API 选项 ↗</button></footer>
+  </main>
+
+  <dialog id="info-dialog" aria-labelledby="info-title"><div class="dialog-heading"><div><p class="eyebrow">METHODOLOGY & DATA</p><h2 id="info-title">统一指标说明</h2></div><button class="icon-button" data-close aria-label="关闭说明">×</button></div><div class="dialog-content">
+    <p class="info-intro">价格、算力、发行量及 MVRV 来自 <a href="https://docs.coinmetrics.io/api/v4/" target="_blank" rel="noreferrer">Coin Metrics Community API</a>，无需 API Key。只使用已结束的 UTC 日线；刷新会重新请求真实历史数据，数据源未发布新日线时数值保持不变。</p>
+    <div class="method-list">
+      <article><span class="method-number">01</span><div><h3>AHR999 <span>本地复算</span></h3><p>（币价 ÷ 200 日成本）×（币价 ÷ 拟合价格）。拟合价格 = 10^(5.84 × log₁₀(币龄天数) − 17.01)，币龄从 2009-01-03 起算。默认 200 日成本为等额每日定投的调和均值，可改为几何均值。不同平台的均值、拟合版本和价格源会产生差异。</p><p>参考线 0.45 / 1.20。<a href="https://github.com/fmzquant/strategies/blob/master/ahr999%E5%AE%9A%E6%8A%95%E7%AD%96%E7%95%A5.md" target="_blank" rel="noreferrer">公开公式实现</a> · <a href="https://docs.coinglass.com/reference/ahr999" target="_blank" rel="noreferrer">CoinGlass 官方数据选项</a></p></div></article>
+      <article><span class="method-number">02</span><div><h3>挖矿成本比率 <span>电费模型</span></h3><p>币价 ÷ 每枚 BTC 电费成本。每枚成本 = 全网算力（TH/s）× 能效（J/TH）× 24 ÷ 1000 × PUE × 电价（USD/kWh）÷ 当日 BTC 发行量。</p><p>默认参数是可调整的情景假设：25 J/TH、$0.05/kWh、PUE 1.10。整段曲线使用同一组参数，不代表各时期实际矿机成本；不含设备折旧、人工、融资，也不扣除手续费收入。尚未核实“江卓尔”原始公式，本页不将此模型标为其官方指数。<a href="https://docs.coinmetrics.io/asset-metrics/mining/hashrate" target="_blank" rel="noreferrer">算力定义及单位</a></p></div></article>
+      <article><span class="method-number">03</span><div><h3>Pi Cycle Top <span>本地复算</span></h3><p>111 日简单均线 ÷（350 日简单均线 × 2），达到 1 为两线相交。图中展示两条均线；上穿日由前一日比率 &lt; 1、当日 ≥ 1 判定。“位于线上方”不等于当日刚发生交叉。<a href="https://docs.glassnode.com/basic-api/endpoints/indicators#pi-cycle-top-indicator" target="_blank" rel="noreferrer">Glassnode 定义</a></p></div></article>
+      <article><span class="method-number">04</span><div><h3>MVRV <span>Glassnode 收录指标</span></h3><p>流通市值 ÷ 已实现市值。本页使用 Coin Metrics 的 CapMVRVCur 序列，沿用公开定义，不是 Glassnode 官方数据。参考线 1 / 3.5。<a href="https://research.glassnode.com/mastering-the-mvrv-ratio/" target="_blank" rel="noreferrer">Glassnode 方法说明</a></p></div></article>
+      <article><span class="method-number">05</span><div><h3>Puell Multiple <span>Glassnode 收录指标</span></h3><p>当日新增发行的美元价值 ÷ 其 365 日简单均值。本页用 Coin Metrics 的 IssTotUSD 复算，不包含交易手续费。参考线 0.5 / 4。<a href="https://docs.glassnode.com/basic-api/endpoints/indicators#puell-multiple" target="_blank" rel="noreferrer">Glassnode 定义</a></p></div></article>
+      <article><span class="method-number">06</span><div><h3>Mayer Multiple</h3><p>币价 ÷ 200 日简单均线。<a href="https://research.glassnode.com/the-week-onchain-week-06-2022/" target="_blank" rel="noreferrer">Glassnode 定义</a></p></div></article>
+      <article><span class="method-number">07</span><div><h3>NUPL</h3><p>（市值 − 已实现市值）÷ 市值 = 1 − 1/MVRV。本页由 Coin Metrics MVRV 推导，未做实体调整，与 MVRV 不构成独立信息源。<a href="https://docs.glassnode.com/basic-api/endpoints/indicators#net-unrealized-profitloss-nupl" target="_blank" rel="noreferrer">Glassnode 定义</a></p></div></article>
+      <article><span class="method-number">08</span><div><h3>RSI · 14 日</h3><p>Wilder RSI：先以 14 个日涨跌的算术均值初始化，再按 α=1/14 平滑。全涨为 100，全跌为 0，横盘为 50；缺失数据后重新积累窗口。<a href="https://www.tradingview.com/support/solutions/43000502338-relative-strength-index-rsi/" target="_blank" rel="noreferrer">计算定义</a></p></div></article>
+      <article><span class="method-number">09</span><div><h3>30 日年化波动率</h3><p>连续 30 个日对数收益的样本标准差 × √365 × 100%，需要 31 个日收盘价。这里是日频估计，不等同于服务商的分钟级波动率。</p></div></article>
+      <article><span class="method-number">10</span><div><h3>60 日累计涨幅</h3><p>（当日价格 ÷ 60 天前价格 − 1）× 100%。窗口缺日时留空；此价格动量指标与挖矿成本模型分开。</p></div></article>
+      <article><span class="method-number">11</span><div><h3>Hash Ribbon 比率</h3><p>算力 30 日简单均线 ÷ 算力 60 日简单均线。只展示均线比值，未加入完整交易信号的价格动量条件。<a href="https://docs.glassnode.com/basic-api/endpoints/indicators#hash-ribbon" target="_blank" rel="noreferrer">Glassnode 定义</a></p></div></article>
+      <article><span class="method-number">12</span><div><h3>两年均线倍数</h3><p>币价 ÷ 730 日简单均线；1 与 5 为参考线。</p></div></article>
+    </div>
+    <div class="info-block"><h3>叠图刻度</h3><p>默认历史分位为截至当日所有有效历史值中的中位秩 × 100，至少积累 365 个有效观测。它不反转方向，不是风险评分或上涨概率。切换图表时间范围不改变分位。原值模式保留各指标单位，零和负数使用线性刻度。单独勾选 Pi 并切到原值时显示两条均线；提示框和表格保留原值。</p></div>
+    <div class="info-block"><h3>数据与刷新</h3><p>完整历史按日重算，只用当日及之前的数据。缺失值留空；刷新失败保留原数据和时间。当前未收盘日不进入计算。CSV 包含所选指标的原值、历史分位与成本参数。</p><p>电费参数是估算；参考线仅用于观察历史，不保证收益或预测顶部。数据按 <a href="https://coinmetrics.io/community-network-data/" target="_blank" rel="noreferrer">Coin Metrics Community</a> 使用条款提供。</p></div>
+    <div class="info-block"><h3>原 30 日实验预测模型（已停止新增）</h3><p>基于 2010 年起的历史日线计算特征；两年均线预热后才有完整样本。9 个输入为 MVRV、Puell、Mayer、Pi、RSI、波动率、60 日涨幅、Hash Ribbon 与两年均线倍数。NUPL 与 MVRV 信息重复；AHR999 的拟合常数与固定电费模型不作为训练输入。看板勾选与电费参数不改变预测模型。</p><p>以昨日指标预测从当日日收盘起的未来 30 日对数收益。岭回归固定 α=100，仅用训练集均值与标准差标准化；至少 730 个已到期训练样本，逐期扩大训练集，训练标签严格早于预测日。每 30 日发出一期回测预测；相邻测试收益期不重叠。参数在本版回测前固定，没有根据结果调参。</p><p>预测价格 = 当日价格 × exp(预测对数收益)。指数 = 100 / [1 + exp(−预测对数收益 / max(训练收益标准差, 0.01))]，50 表示预测收益为零，数值不是上涨概率。点预测是对数收益预测的反变换，不是保证可达的价格。</p><p>经验区间使用预测时已到期的样本外残差 10% / 90% 分位，并扩展至包含点预测；至少积累 20 期残差，目标覆盖 80%，实际覆盖率另列。表中误差为平均绝对百分比误差（MAPE）；是否优于基准按全历史及最近两年的对数收益 RMSE 判断。基准假设未来价格等于当前价格；方向准确率另与“始终看涨”比较。</p><p>这是对当前下载历史数据的回放，不能还原服务商当时尚未修订的版本与实际发布时间；一天滞后不能完全消除这类偏差。历史结果不代表未来，尚需持续的实时样本外验证。现已停止新增预测及重算模型；刷新只更新真实指标与历史预测对照。算法参考：<a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html" target="_blank" rel="noreferrer">岭回归定义</a> · <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html" target="_blank" rel="noreferrer">时间序列验证</a>。</p></div>
+    <div class="info-block"><h3>外部因素与每日留档</h3><p>候选模型在原 9 个指标上增加 VIX 水平与 30 日变化、有效联邦基金利率与 90 日变化。数据直接来自 <a href="https://www.cboe.com/tradable-products/vix/vix-historical-data/" target="_blank" rel="noreferrer">Cboe</a> 与 <a href="https://www.newyorkfed.org/markets/reference-rates/effr" target="_blank" rel="noreferrer">纽约联储</a>，无需 Key。VIX 用自然对数及对数变化，利率使用百分点及百分点变化。候选模型沿用原模型的预测期与固定正则参数，独立留档、比较相同预测日期，不自动替换原模型。</p><p>按保守假设，VIX 在观测日后 1 个日历日可用，利率在观测日后 4 个日历日可用；沿用已知最近值至多 14 天。随后仍执行模型 1 日特征滞后。该假设不等于已取得完整历史发布时间或修订版本，因此回测仍属于当前数据回放。监管、战争、交易所事故等未发生事件没有被模型提前观测；未接入的外部因素不计入预测。</p><p>已有两版预测、模型参数和输入快照保存在独立 predictions 目录，保持原样，不再新增。每次刷新把真实获取时间与当时价格另存 observations。实际收盘价也固定首次获取值，服务商后续修订不回写。每日对照保留实际收益及距 30 日目标价格的差距，只有精确目标日数据到齐才计算误差、方向命中和区间覆盖；缺失目标日保持待验证。每日预测的 30 日收益期重叠，不能视为独立样本。</p><p>自动任务只更新实际价格和历史预测对照，以纽约时间 09:00 为日界执行门槛，失败按小时重试，需要电脑开机、联网且当前用户已登录。补跑可补齐已发出预测的实际价格，不生成过去未实际发出的预测。目录按 UTC 日期归档，记录同时保存真实留档时间和纽约日期。</p></div>
+    <div class="info-block"><h3>API Key 选项 <span class="muted">待决定</span></h3><div class="api-option"><strong>Glassnode</strong><span>官方链上原始序列；需要相应指标与历史权限。</span><a href="https://studio.glassnode.com/settings/api" target="_blank" rel="noreferrer">申请入口 ↗</a></div><div class="api-option"><strong>CoinGlass</strong><span>官方 AHR999、ETF 资金流及衍生品历史数据，依套餐权限。</span><a href="https://www.coinglass.com/pricing" target="_blank" rel="noreferrer">API 方案 ↗</a></div><div class="api-option"><strong>FRED / ALFRED</strong><span>美元、实际利率与宏观历史版本；需申请免费 API Key。</span><a href="https://fred.stlouisfed.org/docs/api/api_key.html" target="_blank" rel="noreferrer">API Key 说明 ↗</a></div><p>当前使用的指数及两个模型无需 Key；详细比较见项目的《API Key 选项清单》。</p></div>
+  </div><div class="dialog-footer"><button class="button" id="settings-from-info">计算参数</button><button class="button primary" data-close>知道了</button></div></dialog>
+
+  <dialog id="settings-dialog" aria-labelledby="settings-title"><form id="settings-form"><div class="dialog-heading"><div><p class="eyebrow">MODEL SETTINGS</p><h2 id="settings-title">计算参数</h2></div><button type="button" class="icon-button" data-close aria-label="关闭参数">×</button></div><div class="dialog-content settings-fields"><label>电价 <span>USD / kWh</span><input name="electricity" type="number" step="0.001" min="0.001" max="1" required></label><label>矿机能效 <span>J / TH</span><input name="efficiency" type="number" step="0.1" min="1" max="500" required></label><label>设施耗电系数 <span>PUE</span><input name="pue" type="number" step="0.01" min="1" max="3" required></label><label>AHR999 · 200 日成本<select name="costMean"><option value="harmonic">调和均值（等额定投）</option><option value="geometric">几何均值</option></select></label><p class="field-note">成本参数应用于整段历史；这是固定参数情景，不是历史实际生产成本。</p><p id="settings-error" class="error-text" role="alert"></p></div><div class="dialog-footer"><button type="button" class="button" id="reset-settings">恢复默认</button><button class="button primary" type="submit">保存并重算</button></div></form></dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+</body>
+</html>

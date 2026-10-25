@@ -1,0 +1,21 @@
+{
+  "name": "bitindex-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bitcoin 指数看板，使用真实公开日线数据",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node dashboard/server.mjs",
+    "build:pages": "node dashboard/build-pages.mjs",
+    "preview:pages": "node dashboard/preview-pages.mjs",
+    "test:pages": "node dashboard/tests/pages-browser.mjs",
+    "test": "node --test dashboard/tests/*.test.mjs",
+    "test:browser": "node dashboard/tests/browser.mjs",
+    "tracking:daily": "node dashboard/daily.mjs",
+    "tracking:report": "node dashboard/report.mjs",
+    "tracking:schedule": "powershell -NoProfile -ExecutionPolicy Bypass -File dashboard/install-daily-task.ps1",
+    "model:report": "node dashboard/report.mjs",
+    "forecast:daily": "node dashboard/daily.mjs",
+    "forecast:schedule": "powershell -NoProfile -ExecutionPolicy Bypass -File dashboard/install-daily-task.ps1"
+  }
+}

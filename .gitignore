@@ -1,0 +1,16 @@
+node_modules/
+.cache/
+dist/
+.cloud-state/
+.env
+.env.*
+!.env.example
+predictions/forecasts/
+predictions/actuals/
+predictions/comparisons/
+predictions/inputs/
+predictions/runs/
+predictions/observations/
+predictions/latest-comparison.md
+predictions/*.csv
+predictions/schedule.json

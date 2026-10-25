@@ -1,0 +1,41 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtemp, mkdir, writeFile, readFile, readdir } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { createHash } from 'node:crypto';
+import { buildPages } from '../build-pages.mjs';
+import { checkForecastLock } from '../check-forecast-lock.mjs';
+import { writeOnce, updateComparisons } from '../tracking.mjs';
+
+test('Pages 发布仅含静态资源与真实来源快照，项目子路径可用且版本一致', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'bitindex-pages-')), trackingRoot = join(root, 'predictions'), cacheRoot = join(root, 'cache'), output = join(root, 'dist');
+  const date = '2026-10-17', source = 'https://community-api.coinmetrics.io/v4/timeseries/asset-metrics';
+  const forecast = { id: '2026-10-18__test-v1', modelVersion: 'test-v1', issuedAt: '2026-10-18T13:00:00Z', inputPath: 'private-input', model: { secretSentinel: 'must-not-publish' }, prediction: { date, targetDate: '2026-11-16', price: 100, predictedPrice: 120 } };
+  await writeOnce(join(trackingRoot, 'forecasts/2026-10-18/test-v1.json'), JSON.stringify(forecast));
+  const snapshot = { version: 1, source, fetchedAt: '2026-10-18T13:00:00Z', rows: Array.from({ length: 400 }, (_, i) => ({ date: new Date(Date.parse(date) - (399 - i) * 86400000).toISOString().slice(0, 10), price: 100 })) };
+  await mkdir(cacheRoot); await writeFile(join(cacheRoot, 'coinmetrics-btc.json'), JSON.stringify(snapshot));
+  await updateComparisons(trackingRoot, { ...snapshot, state: 'fresh' }, { now: new Date('2026-10-18T13:00:00Z') });
+  const result = await buildPages({ trackingRoot, cacheRoot, output, repository: 'test/BitIndex' });
+  const manifest = JSON.parse(await readFile(join(output, 'data/manifest.json'), 'utf8'));
+  const market = JSON.parse(await readFile(join(output, manifest.market), 'utf8'));
+  const trackingText = await readFile(join(output, manifest.tracking), 'utf8'), tracking = JSON.parse(trackingText);
+  assert.equal(result.version, manifest.version); assert.equal(market.publicationVersion, manifest.version); assert.equal(tracking.publicationVersion, manifest.version);
+  assert.equal(market.fetchedAt, snapshot.fetchedAt); assert.equal(tracking.total, 1); assert.equal(tracking.newForecastsEnabled, false);
+  assert.ok(!trackingText.includes('must-not-publish')); assert.ok(!trackingText.includes('private-input')); assert.ok(!trackingText.includes('observationPath'));
+  const html = await readFile(join(output, 'index.html'), 'utf8');
+  assert.ok(!/(?:src|href)="\/(?!\/)/.test(html)); assert.ok(html.includes('页面刷新读取最新已发布版本'));
+  assert.ok((await readFile(join(output, manifest.csv), 'utf8')).includes('test-v1'));
+  assert.ok(!await readdir(output).then(files => files.includes('predictions')));
+  assert.equal((await buildPages({ trackingRoot, cacheRoot, output })).version, result.version);
+});
+test('预测锁阻止修改、删除及新增留档', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'bitindex-lock-')), path = join(root, 'forecasts/2026-10-18/test.json');
+  await writeOnce(path, '{"original":true}');
+  const hash = createHash('sha256').update(await readFile(path)).digest('hex');
+  await writeFile(join(root, 'forecast-lock.json'), JSON.stringify({ '2026-10-18/test.json': hash }));
+  assert.equal(await checkForecastLock(root), 1);
+  await writeFile(path, '{"original":false}'); await assert.rejects(checkForecastLock(root), /原预测被改动/);
+  await writeFile(path, '{"original":true}'); await writeOnce(join(root, 'forecasts/2026-10-19/new.json'), '{}');
+  await assert.rejects(checkForecastLock(root), /数量变化/);
+});

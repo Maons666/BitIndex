@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "scope": "daily",
+  "mode": "comparison-only",
+  "archived": false,
+  "trigger": "scheduled",
+  "sourceFetchedAt": "2026-10-30T16:02:42.295Z",
+  "status": "success",
+  "dataThrough": "2026-10-29",
+  "observedPrice": 78193.4264043074,
+  "observationPath": "observations/2026-10-30/2026-10-30T16-02-42-314Z_d8fa780b-b583-4303-ba5b-55f5b6188991.json",
+  "newActuals": 0,
+  "newComparisons": 0,
+  "total": 14,
+  "settled": 0,
+  "error": null,
+  "finishedAt": "2026-10-30T16:02:42.314Z",
+  "localDate": "2026-10-30"
+}

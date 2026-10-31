@@ -14,3 +14,5 @@ predictions/observations/
 predictions/latest-comparison.md
 predictions/*.csv
 predictions/schedule.json
+demos/
+调研报告/

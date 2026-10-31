@@ -65,7 +65,7 @@ try {
   const tracking = await (await fetch(base + '/api/tracking')).json();
   check('仅对照模式保留两版历史预测且没有提前结算', tracking.mode === 'comparison-only' && tracking.newForecastsEnabled === false && tracking.total >= 2 && tracking.forecasts.some(f => f.modelVersion === 'ridge-30d-macro-v1') && tracking.forecasts.filter(f => f.prediction.targetDate > initial.rows.at(-1).date).every(f => f.comparison?.absoluteErrorPct === null));
   const immutable = tracking.forecasts.map(f => [f.id, f.issuedAt, f.prediction.predictedPrice]);
-  check('界面显示停用状态、实际日期与期间价差', await evaluate(`document.querySelector('#forecast-title').textContent.includes('已停止新增预测') && document.querySelector('#forecast-status').textContent.includes(${JSON.stringify(tracking.latestActual.date)}) && document.querySelector('#tracking-body tr').children.length === 8 && document.querySelector('#forecast-refresh').textContent.includes('更新实际数据')`));
+  check('界面显示停用状态、实际日期与期间价差', await evaluate(`document.querySelector('#forecast-title').textContent.includes('原模型留档') && document.querySelector('#forecast-status').textContent.includes(${JSON.stringify(tracking.latestActual.date)}) && document.querySelector('#tracking-body tr').children.length === 8 && document.querySelector('#forecast-refresh').textContent.includes('更新实际数据')`));
   await shot('tracking', '#forecast-section');
   await click('#tracking-export');
   const trackingFile = await wait(async () => (await readdir(downloadDir)).find(f => f === 'BitIndex_daily_comparison.csv'), '每日对照 CSV');

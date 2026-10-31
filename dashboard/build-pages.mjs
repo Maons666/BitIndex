@@ -20,7 +20,7 @@ export async function buildPages({ trackingRoot = process.env.BITINDEX_TRACKING_
   const prefix = `data/${version}`, publishedAt = new Date().toISOString();
   const manifest = { schema: 1, version, publishedAt, sourceFetchedAt: raw.fetchedAt, dataThrough: raw.rows.findLast(r => r.price !== null)?.date, market: `${prefix}/market.json`, tracking: `${prefix}/tracking.json`, csv: `${prefix}/daily-comparison.csv` };
   await mkdir(join(output, prefix), { recursive: true });
-  const assets = ['style.css', 'app.mjs', 'core.mjs', 'chart.mjs', 'forecast.mjs', 'data-client.mjs', 'favicon.svg'];
+  const assets = ['style.css', 'app.mjs', 'core.mjs', 'chart.mjs', 'forecast.mjs', 'outlook.mjs', 'outlook-core.mjs', 'data-client.mjs', 'favicon.svg'];
   for (const file of assets) await copyFile(join(root, 'dashboard/public', file), join(output, file));
   let html = await readFile(join(root, 'dashboard/public/index.html'), 'utf8');
   html = html.replace('最近核对', '数据获取时间')

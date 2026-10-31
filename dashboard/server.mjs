@@ -16,6 +16,7 @@ const files = new Map([
   ['/style.css', ['style.css', 'text/css']], ['/app.mjs', ['app.mjs', 'text/javascript']],
   ['/core.mjs', ['core.mjs', 'text/javascript']], ['/chart.mjs', ['chart.mjs', 'text/javascript']],
   ['/forecast.mjs', ['forecast.mjs', 'text/javascript']],
+  ['/outlook.mjs', ['outlook.mjs', 'text/javascript']], ['/outlook-core.mjs', ['outlook-core.mjs', 'text/javascript']],
   ['/runtime.mjs', ['runtime.mjs', 'text/javascript']], ['/data-client.mjs', ['data-client.mjs', 'text/javascript']],
   ['/favicon.svg', ['favicon.svg', 'image/svg+xml']]
 ]);

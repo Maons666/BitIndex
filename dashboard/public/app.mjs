@@ -1,6 +1,7 @@
 import { DEFAULTS, METRICS, compute, latest, valid, regime, validateSettings, toCsv, DAY, DEFAULT_SELECTION, cleanSelection, withPercentiles } from './core.mjs';
 import { HistoryChart, number, usd } from './chart.mjs';
 import { readMarket, isStatic } from './data-client.mjs';
+import { updateOutlook } from './outlook.mjs';
 // Existing servers may still have the previous static-file allowlist until restarted.
 // Keep the indicator dashboard usable during that upgrade.
 const { loadForecast } = await import('./forecast.mjs').catch(() => ({
@@ -149,7 +150,7 @@ function showStatus() {
   if (delayed.length) notices.push('部分指标数据较晚或不足：' + delayed.map(m => m.name).join('、') + '，具体日期见下表。');
   $('notice').textContent = notices.join(' '); $('notice').hidden = !notices.length;
 }
-function applyData(data) { state.raw = data; state.rows = withPercentiles(compute(data.rows, state.settings)); renderMarket(); renderCards(); renderSummary(); renderChart(); showStatus(); }
+function applyData(data) { state.raw = data; state.rows = withPercentiles(compute(data.rows, state.settings)); renderMarket(); renderCards(); renderSummary(); renderChart(); showStatus(); updateOutlook(data); }
 async function requestData(force = false) {
   const data = await readMarket(force);
   if (!Array.isArray(data.rows)) throw new Error('服务返回的数据格式不正确'); return data;

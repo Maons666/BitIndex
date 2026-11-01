@@ -48,7 +48,7 @@ export class HistoryChart {
     if (!this.rows.length || !this.metrics.length) return;
     const style = getComputedStyle(document.documentElement), muted = style.getPropertyValue('--muted').trim(), grid = style.getPropertyValue('--grid').trim();
     const isPi = this.piDetail(), right = this.options.showPrice && !isPi, normalized = this.options.mode === 'percentile';
-    const left = w < 500 ? 42 : 54, top = 23, width = w - left - (right ? (w < 500 ? 48 : 62) : 22), height = h - top - 31;
+    const left = w < 500 ? 48 : 56, top = 24, width = w - left - (right ? (w < 500 ? 52 : 64) : 24), height = h - top - 32;
     this.plot = { left, top, width, height };
     const series = this.series();
     const scaleFor = (keys, isLog, fixed = false) => {
@@ -71,7 +71,7 @@ export class HistoryChart {
     const secondary = right ? scaleFor(['price'], this.options.log) : null;
     this.scales = { primary, secondary };
     const x = i => left + (this.rows.length === 1 ? width / 2 : i / (this.rows.length - 1) * width);
-    ctx.font = `${w < 500 ? 9 : 10}px -apple-system, "Segoe UI", sans-serif`;
+    ctx.font = '12px -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif';
     ctx.lineWidth = 1; ctx.strokeStyle = grid; ctx.fillStyle = muted;
     for (let j = 0; j <= 4; j++) {
       const yy = top + j * height / 4;

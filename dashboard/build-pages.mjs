@@ -24,7 +24,7 @@ export async function buildPages({ trackingRoot = process.env.BITINDEX_TRACKING_
   for (const file of assets) await copyFile(join(root, 'dashboard/public', file), join(output, file));
   let html = await readFile(join(root, 'dashboard/public/index.html'), 'utf8');
   html = html.replace('最近核对', '数据获取时间')
-    .replace('更新实际数据 ↻', '刷新对照 ↻')
+    .replace('更新实际数据', '刷新对照')
     .replace('href="/api/tracking.csv"', `href="./${manifest.csv}"`)
     .replace('刷新会重新请求真实历史数据，数据源未发布新日线时数值保持不变。', '云端每天更新真实数据与历史预测对照；页面刷新读取最新已发布版本，不触发后台取数。数据源未发布新日线时数值保持不变。')
     .replace('自动任务只更新实际价格和历史预测对照，以纽约时间 09:00 为日界执行门槛，失败按小时重试，需要电脑开机、联网且当前用户已登录。', 'GitHub Actions 每小时检查一次，纽约时间 09:00 后更新实际价格与历史预测对照，最新完整 UTC 日线已获取时跳过重复取数；失败或日线延迟则重试。执行可能受平台排队影响，无需保持本机开机。')

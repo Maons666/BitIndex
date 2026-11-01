@@ -55,7 +55,7 @@ function renderCards() {
 }
 function renderMarket() {
   const price = latest(state.rows, 'price');
-  $('btc-price').textContent = usd(price?.price); $('btc-change').textContent = percent(change(price, 'price'));
+  $('btc-price').textContent = usd(price?.price); $('btc-change').textContent = percent(change(price, 'price')) + ' · 较前一日';
   $('btc-change').classList.toggle('negative', change(price, 'price') < 0);
   $('price-date').textContent = price?.date ?? '—'; $('coverage').textContent = state.rows.length ? state.rows[0].date + ' — ' + state.rows.at(-1).date : '—';
 }
@@ -87,7 +87,7 @@ function renderLegend() {
 function renderChart() {
   const metrics = selectedMetrics(), rows = selectedRows(), m = metric();
   $('chart-title').textContent = metrics.length === 1 ? m.name : metrics.length ? `${metrics.length} 项指数对比` : '选择要对比的指数';
-  $('chart-category').textContent = 'BITCOIN / INDEX COMPARISON';
+  $('chart-category').textContent = 'Bitcoin / 指数对比';
   document.querySelector('.selected-dot').style.background = m?.color ?? '#5366dc';
   $('model-settings').hidden = !state.selected.some(id => ['mining', 'ahr999'].includes(id));
   $('model-settings').textContent = '计算参数 ↗';
@@ -192,7 +192,7 @@ $('export').addEventListener('click', () => {
   const rows = selectedRows(), blob = new Blob([toCsv(rows, state.settings, state.selected)], { type: 'text/csv;charset=utf-8' });
   const url = URL.createObjectURL(blob), a = el('a'); a.href = url; a.download = `BitIndex_${rows[0].date}_${rows.at(-1).date}.csv`; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000); toast(`已导出 ${rows.length} 日、${state.selected.length} 项已选指标`);
 });
-function updateThemeButton() { const dark = document.documentElement.dataset.theme === 'dark'; $('theme').textContent = dark ? '☼' : '◐'; $('theme').setAttribute('aria-label', dark ? '切换浅色主题' : '切换深色主题'); }
+function updateThemeButton() { const dark = document.documentElement.dataset.theme === 'dark'; const label = dark ? '切换浅色主题' : '切换深色主题'; $('theme').setAttribute('aria-label', label); $('theme').title = label; }
 $('theme').addEventListener('click', () => { const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = next; save('bitindex.real.theme', next); updateThemeButton(); chart.draw(); renderLegend(); });
 for (const id of ['open-info', 'open-info-footer']) $(id).addEventListener('click', () => $('info-dialog').showModal());
 document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close()));

@@ -40,7 +40,7 @@ function render() {
     const base = saved ? f?.prediction.price : financial?.anchor.price;
     button.classList.toggle('active', on); button.setAttribute('aria-pressed', String(on));
     button.querySelector('.outlook-model-price').textContent = usd(price);
-    button.querySelector('.outlook-model-change').textContent = price && base ? percent((price / base - 1) * 100) : '';
+    button.querySelector('.outlook-model-change').textContent = price && base ? percent((price / base - 1) * 100) + (saved ? ' · 较原基准' : ' · 较最新收盘') : '';
     if (saved) button.querySelector('.outlook-model-formula').textContent = f ? '目标日 ' + f.prediction.targetDate + ' · UTC' : archiveError ? '留档加载失败，可刷新重试' : archives ? '暂无留档' : '正在读取留档…';
   });
   $('outlook-status').classList.remove('warn');

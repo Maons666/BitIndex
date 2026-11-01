@@ -10,7 +10,7 @@ export const ARCHIVE_MODELS = [
   { id: 'macro', name: '我的模型 · 外部因素', version: 'ridge-30d-macro-v1' }
 ];
 export function outlookOptions(value = {}) {
-  return { model: [...ARCHIVE_MODELS, ...MODELS].some(m => m.id === value.model) ? value.model : 'ridge', horizon: [7, 30, 90].includes(Number(value.horizon)) ? Number(value.horizon) : 30, lookback: [90, 180, 365].includes(Number(value.lookback)) ? Number(value.lookback) : 365, band: value.band !== false };
+  return { model: [...ARCHIVE_MODELS, ...MODELS].some(m => m.id === value.model) ? value.model : 'ridge', archiveView: value.archiveView === 'single' ? 'single' : 'curve', horizon: [7, 30, 90].includes(Number(value.horizon)) ? Number(value.horizon) : 30, lookback: [90, 180, 365].includes(Number(value.lookback)) ? Number(value.lookback) : 365, band: value.band !== false };
 }
 const positive = x => Number.isFinite(x) && x > 0;
 const validDate = date => typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) && Number.isFinite(Date.parse(date)) && new Date(Date.parse(date)).toISOString().slice(0, 10) === date;
@@ -39,9 +39,30 @@ export function archivedOutlookCsv(result, snapshot) {
   const columns = ['date', 'type', 'actual_price', 'predicted_price', 'lower80', 'upper80', 'base_date', 'base_price', 'forecast_id', 'model_version', 'issued_at', 'actual_source_fetched_at', 'actual_source'];
   const tail = [p.date, p.price, f.id, f.modelVersion, f.issuedAt, snapshot.fetchedAt, snapshot.source];
   const lines = result.history.map(r => [r.date, 'actual', r.price, '', '', '', ...tail]);
-  lines.push([p.targetDate, 'archived_target', '', p.predictedPrice, p.lower, p.upper, ...tail]);
+  for (const saved of result.forecasts || [f]) {
+    const target = saved.prediction;
+    lines.push([target.targetDate, 'archived_target', '', target.predictedPrice, target.lower, target.upper,
+      target.date, target.price, saved.id, saved.modelVersion, saved.issuedAt, snapshot.fetchedAt, snapshot.source]);
+  }
   const cell = v => '"' + String(v ?? '').replaceAll('"', '""') + '"';
   return '\uFEFF' + [columns, ...lines].map(row => row.map(cell).join(',')).join('\r\n');
+}
+export function buildArchivedCurve(rows, forecasts, model, today = new Date().toISOString().slice(0, 10)) {
+  const version = ARCHIVE_MODELS.find(m => m.id === model)?.version;
+  const saved = (forecasts || []).filter(f => f.modelVersion === version).slice().sort((a, b) =>
+    String(a.prediction?.targetDate).localeCompare(String(b.prediction?.targetDate)) || String(a.issuedAt).localeCompare(String(b.issuedAt)));
+  if (!saved.length) throw new Error('尚无该模型的预测留档');
+  for (const f of saved) {
+    const p = f.prediction;
+    if (!p || !validDate(p.date) || !validDate(p.targetDate) || !positive(p.price) || !positive(p.predictedPrice) || Date.parse(p.targetDate) - Date.parse(p.date) !== 30 * DAY || !Number.isFinite(Date.parse(f.issuedAt))) throw new Error('预测留档格式无效');
+  }
+  // Keep each genuine issue, with its original target date and signature. No reforecasting or interpolation.
+  const result = buildArchivedOutlook(rows, latestArchivedForecast(saved, model), model, today);
+  const from = Math.min(Date.parse(result.latest.date) - 30 * DAY, Date.parse(saved[0].prediction.targetDate) - 7 * DAY);
+  const history = rows.filter(r => validDate(r.date) && r.date < today && positive(r.price) && Date.parse(r.date) >= from)
+    .slice().sort((a, b) => a.date.localeCompare(b.date)).map(({ date, price }) => ({ date, price }));
+  return { ...result, view: 'curve', forecasts: saved, history,
+    future: saved.map(f => ({ date: f.prediction.targetDate, [model]: f.prediction.predictedPrice, forecast: f })) };
 }
 export function buildOutlook(rows, options = {}, today = new Date().toISOString().slice(0, 10)) {
   const { lookback, horizon } = outlookOptions(options);

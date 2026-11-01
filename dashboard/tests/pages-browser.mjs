@@ -97,6 +97,25 @@ try {
   const original = tracking.forecasts.filter(f => f.modelVersion === 'ridge-30d-v1').sort((a,b)=>b.issuedAt.localeCompare(a.issuedAt))[0];
   const macro = tracking.forecasts.filter(f => f.modelVersion === 'ridge-30d-macro-v1').sort((a,b)=>b.issuedAt.localeCompare(a.issuedAt))[0];
   check('默认我的模型价格、基准日与目标日和原留档一致', await evaluate(`document.querySelector('#outlook-chart').dataset.model==='ridge' && document.querySelector('#outlook-chart').dataset.anchor===${JSON.stringify(original.prediction.date)} && document.querySelector('#outlook-chart').dataset.target===${JSON.stringify(original.prediction.targetDate)} && Number(document.querySelector('#outlook-price').textContent.replace(/[^0-9.]/g,''))===${Number(original.prediction.predictedPrice.toFixed(2))}`));
+  const originalPoints = tracking.forecasts.filter(f=>f.modelVersion==='ridge-30d-v1').sort((a,b)=>a.prediction.targetDate.localeCompare(b.prediction.targetDate));
+  const expectedPoints = originalPoints.map(f=>({date:f.prediction.targetDate,price:f.prediction.predictedPrice,issuedAt:f.issuedAt}));
+  const drawnPoints = await evaluate(`Array.from(document.querySelectorAll('#outlook-chart [data-role="forecast-point"]')).map(p=>({date:p.dataset.date,price:Number(p.dataset.price),issuedAt:p.dataset.issuedAt}))`);
+  check('默认曲线包含原模型全部 7 期真实目标，日期、价格与签发时间逐点一致', drawnPoints.length===7 && JSON.stringify(drawnPoints)===JSON.stringify(expectedPoints) && await evaluate(`document.querySelector('#outlook-chart').dataset.archiveView==='curve' && document.querySelector('#outlook-anchor').textContent===document.querySelector('#btc-price').textContent`));
+  check('预测曲线只连接目标价点，不从当前价格补造预测线段', await evaluate(`(()=>{const p=document.querySelector('#outlook-chart [data-role="forecast"]');const d=document.querySelector('#outlook-chart [data-role="forecast-point"]');return p.getAttribute('d').split(' ').length===7 && p.getAttribute('d').split(' ')[0]==='M'+Number(d.getAttribute('cx')).toFixed(2)+','+Number(d.getAttribute('cy')).toFixed(2)})()`));
+  await click('#outlook-export');
+  const curveFile = await wait(async () => (await readdir(downloadDir)).find(f=>f.startsWith('BitIndex_archive_curve_')), '历次预测 CSV');
+  const curveCsv = await readFile(join(downloadDir, curveFile), 'utf8');
+  check('曲线 CSV 导出全部目标且保留各自的原始签发信息', curveCsv.split('\r\n').filter(l=>l.includes('"archived_target"')).length===7 && originalPoints.every(f=>curveCsv.includes(f.issuedAt) && curveCsv.includes(String(f.prediction.predictedPrice))));
+  await evaluate(`document.querySelector('#outlook-chart').focus()`);
+  await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'End', code: 'End', windowsVirtualKeyCode: 35 });
+  if (market.rows.filter(r=>r.price>0).at(-1).date < original.prediction.targetDate) {
+    check('曲线提示框区分目标日期、签发日期和原始预测期', await evaluate(`document.querySelector('#outlook-tooltip').textContent.includes('签发（纽约）') && document.querySelector('#outlook-tooltip').textContent.includes('原基准日') && document.querySelector('#outlook-tooltip').textContent.includes('30 天')`));
+  }
+  await shot('my-model-curve', '#outlook-section');
+  await click('[data-outlook-model="macro"]');
+  const macroPoints = tracking.forecasts.filter(f=>f.modelVersion==='ridge-30d-macro-v1').sort((a,b)=>a.prediction.targetDate.localeCompare(b.prediction.targetDate));
+  check('外部因素曲线也使用各自 7 期原始预测', JSON.stringify(await evaluate(`Array.from(document.querySelectorAll('#outlook-chart [data-role="forecast-point"]')).map(p=>Number(p.dataset.price))`)) === JSON.stringify(macroPoints.map(f=>f.prediction.predictedPrice)));
+  await click('[data-archive-view="single"]'); await click('[data-outlook-model="ridge"]');
   check('原模型仅画两个原始端点，实际日线继续更新', await evaluate(`document.querySelector('#outlook-chart [data-role="forecast"]').getAttribute('d').split(' ').length===2 && document.querySelector('#outlook-chart').dataset.actualThrough===${JSON.stringify(market.rows.filter(r=>r.price>0).at(-1).date)} && document.querySelector('#outlook-future-legend').textContent.includes('非逐日预测') && !!document.querySelector('#outlook-chart [data-role="archived-target"]')`));
   check('留档固定期限且不混用 GBM 区间', await evaluate(`Array.from(document.querySelectorAll('[data-outlook-horizon]')).every(b=>b.disabled) && document.querySelector('#outlook-lookback').disabled && document.querySelector('#outlook-band').disabled && !document.querySelector('#outlook-chart [data-role="interval"]') && document.querySelector('#outlook-range-label').textContent.includes('80%')`));
   await click('[data-outlook-model="macro"]');
@@ -109,7 +128,7 @@ try {
     check('中间日期不显示插值冒充的模型价格', await evaluate(`document.querySelector('#outlook-tooltip').textContent.includes('无逐日价格') && !document.querySelector('#outlook-tooltip').textContent.includes('$')`));
   }
   await click('#outlook-export');
-  const archiveFile = await wait(async () => (await readdir(downloadDir)).find(f=>f.startsWith('BitIndex_archive_')), '原模型 CSV');
+  const archiveFile = await wait(async () => (await readdir(downloadDir)).find(f=>f.startsWith('BitIndex_archive_single_')), '原模型 CSV');
   const archiveCsv = await readFile(join(downloadDir, archiveFile), 'utf8');
   check('原模型 CSV 只含一个预测目标并保留签发时间', archiveCsv.split('\r\n').filter(l=>l.includes('"archived_target"')).length===1 && archiveCsv.includes(String(macro.prediction.predictedPrice)) && archiveCsv.includes(macro.issuedAt));
   await click('[data-outlook-model="ridge"]'); await shot('my-model', '#outlook-section');
@@ -153,6 +172,7 @@ try {
   await send('Emulation.setDeviceMetricsOverride', { width: 400, height: 900, deviceScaleFactor: 1, mobile: false });
   await shot('mobile', '#forecast-section');
   await click('[data-outlook-model="ridge"]');
+  await click('[data-archive-view="curve"]');
   await shot('outlook-mobile', '#outlook-section');
   check('400px 模型卡片与曲线无页面溢出', await evaluate(`document.documentElement.scrollWidth <= window.innerWidth && document.querySelector('#outlook-chart').clientWidth > 0 && document.querySelectorAll('#outlook-models button').length===5`));
   check('400px 窄屏没有页面横向溢出', await evaluate(`document.documentElement.scrollWidth <= window.innerWidth`));

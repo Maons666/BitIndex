@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { buildOutlook, outlookCsv, outlookOptions, latestArchivedForecast, buildArchivedOutlook, archivedOutlookCsv } from '../public/outlook-core.mjs';
+import { buildOutlook, outlookCsv, outlookOptions, latestArchivedForecast, buildArchivedOutlook, buildArchivedCurve, archivedOutlookCsv } from '../public/outlook-core.mjs';
 
 const DAY = 86400000, start = Date.parse('2025-01-01');
 const fixture = (n = 400, growth = () => 0) => {
@@ -46,7 +46,7 @@ test('CSV 区分实际与未来，并保留模型口径、输入时间和来源'
   assert.ok(csv.includes('gbm_mean')); assert.ok(csv.includes('gbm_median')); assert.ok(csv.includes('2026-10-30T10:00:00Z'));
 });
 test('持久化参数中的无效模型与窗口恢复默认值', () => {
-  assert.deepEqual(outlookOptions({ model: 'other', horizon: -1, lookback: Infinity }), { model: 'ridge', horizon: 30, lookback: 365, band: true });
+  assert.deepEqual(outlookOptions({ model: 'other', horizon: -1, lookback: Infinity }), { model: 'ridge', archiveView: 'curve', horizon: 30, lookback: 365, band: true });
 });
 const saved = (version = 'ridge-30d-v1', issuedAt = '2026-01-25T01:22:00Z') => ({
   id: 'saved-' + version, modelVersion: version, issuedAt,
@@ -83,4 +83,23 @@ test('缺少或无效留档时不冒用金融模型，缺失实际值不补造�
   assert.throws(() => buildArchivedOutlook(rows, saved(), 'macro', today), /格式无效/);
   const r = buildArchivedOutlook(rows.map((p, i) => i === 395 ? { ...p, price: null } : p), saved(), 'ridge', today);
   assert.ok(r.history.every(p => p.date < today && p.date !== rows[395].date));
+});
+test('历次预测曲线按目标日排序，只绘制真实留档点且不补缺失日', () => {
+  const early = { ...saved(), id: 'earlier', issuedAt: '2026-01-23T01:22:00Z', prediction: { ...saved().prediction, date: '2026-01-22', targetDate: '2026-02-21', predictedPrice: 130 } };
+  const inputs = [saved(), saved('ridge-30d-macro-v1'), early], before = JSON.stringify(inputs);
+  const r = buildArchivedCurve(fixture(400), inputs, 'ridge', '2026-02-05');
+  assert.deepEqual(r.future.map(p => [p.date, p.ridge]), [['2026-02-21', 130], ['2026-02-23', 120]]);
+  assert.equal(r.future[0].forecast.issuedAt, early.issuedAt);
+  assert.ok(r.future.every(p => p.date !== '2026-02-22' && p.date !== r.anchor.date));
+  assert.equal(JSON.stringify(inputs), before);
+  const csv = archivedOutlookCsv(r, { fetchedAt: '2026-02-05T12:00:00Z', source: 'test' });
+  const targets = csv.split('\r\n').filter(l => l.includes('"archived_target"'));
+  assert.equal(targets.length, 2); assert.ok(targets[0].includes(early.issuedAt)); assert.ok(targets[0].includes('"2026-01-22","110","earlier"'));
+  const later = buildArchivedCurve(fixture(460), inputs, 'ridge', '2026-04-10');
+  assert.deepEqual(later.future, r.future); assert.ok(later.history.some(p => p.date === '2026-02-21'));
+});
+test('单份留档仍只有一个预测点，其他模型或无效预测不能混入曲线', () => {
+  assert.equal(buildArchivedCurve(fixture(400), [saved()], 'ridge', '2026-02-05').future.length, 1);
+  assert.throws(() => buildArchivedCurve(fixture(400), [saved()], 'macro', '2026-02-05'), /尚无/);
+  assert.throws(() => buildArchivedCurve(fixture(400), [{ ...saved(), prediction: { ...saved().prediction, predictedPrice: null } }], 'ridge', '2026-02-05'), /格式无效/);
 });

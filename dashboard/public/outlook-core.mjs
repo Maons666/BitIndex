@@ -5,10 +5,44 @@ export const MODELS = [
   { id: 'trend', name: '对数趋势', short: 'Log trend', formula: 'Ŝₕ = S₀ · exp(bh)', description: '估计历史对数价格的趋势斜率，从最新价格向前延伸。' },
   { id: 'baseline', name: '价格不变基准', short: 'No change', formula: 'Ŝₕ = S₀', description: '假设未来价格维持当前水平，作为模型比较的基准。' }
 ];
+export const ARCHIVE_MODELS = [
+  { id: 'ridge', name: '我的模型 · 原版', version: 'ridge-30d-v1' },
+  { id: 'macro', name: '我的模型 · 外部因素', version: 'ridge-30d-macro-v1' }
+];
 export function outlookOptions(value = {}) {
-  return { model: MODELS.some(m => m.id === value.model) ? value.model : 'gbm', horizon: [7, 30, 90].includes(Number(value.horizon)) ? Number(value.horizon) : 30, lookback: [90, 180, 365].includes(Number(value.lookback)) ? Number(value.lookback) : 365, band: value.band !== false };
+  return { model: [...ARCHIVE_MODELS, ...MODELS].some(m => m.id === value.model) ? value.model : 'ridge', horizon: [7, 30, 90].includes(Number(value.horizon)) ? Number(value.horizon) : 30, lookback: [90, 180, 365].includes(Number(value.lookback)) ? Number(value.lookback) : 365, band: value.band !== false };
 }
 const positive = x => Number.isFinite(x) && x > 0;
+const validDate = date => typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) && Number.isFinite(Date.parse(date)) && new Date(Date.parse(date)).toISOString().slice(0, 10) === date;
+export function latestArchivedForecast(forecasts, model) {
+  const version = ARCHIVE_MODELS.find(m => m.id === model)?.version;
+  if (!version) return null;
+  return (forecasts || []).filter(f => f.modelVersion === version && Number.isFinite(Date.parse(f.issuedAt))).slice()
+    .sort((a, b) => Date.parse(b.issuedAt) - Date.parse(a.issuedAt))[0] || null;
+}
+export function buildArchivedOutlook(rows, forecast, model, today = new Date().toISOString().slice(0, 10)) {
+  const p = forecast?.prediction;
+  if (!p) throw new Error('尚无该模型的预测留档');
+  if (forecast.modelVersion !== ARCHIVE_MODELS.find(m => m.id === model)?.version || !validDate(p.date) || !validDate(p.targetDate) || !positive(p.price) || !positive(p.predictedPrice) || p.targetDate <= p.date) throw new Error('预测留档格式无效');
+  const all = rows.filter(r => validDate(r.date) && r.date < today && positive(r.price)).slice().sort((a, b) => a.date.localeCompare(b.date));
+  if (!all.length) throw new Error('尚无可用的实际日线');
+  const latest = all.at(-1), from = Math.min(Date.parse(latest.date) - 90 * DAY, Date.parse(p.date) - 30 * DAY);
+  const history = all.filter(r => Date.parse(r.date) >= from).map(({ date, price }) => ({ date, price }));
+  if (Date.parse(history[0].date) > Date.parse(p.date)) throw new Error('实际日线尚未覆盖预测起点');
+  // The saved model predicts one endpoint. Never interpolate daily model outputs.
+  return { kind: 'archive', version: forecast.modelVersion, forecast, latest, anchor: { date: p.date, price: p.price },
+    horizon: (Date.parse(p.targetDate) - Date.parse(p.date)) / DAY, history,
+    future: [{ date: p.date, [model]: p.price }, { date: p.targetDate, [model]: p.predictedPrice }] };
+}
+export function archivedOutlookCsv(result, snapshot) {
+  const f = result.forecast, p = f.prediction;
+  const columns = ['date', 'type', 'actual_price', 'predicted_price', 'lower80', 'upper80', 'base_date', 'base_price', 'forecast_id', 'model_version', 'issued_at', 'actual_source_fetched_at', 'actual_source'];
+  const tail = [p.date, p.price, f.id, f.modelVersion, f.issuedAt, snapshot.fetchedAt, snapshot.source];
+  const lines = result.history.map(r => [r.date, 'actual', r.price, '', '', '', ...tail]);
+  lines.push([p.targetDate, 'archived_target', '', p.predictedPrice, p.lower, p.upper, ...tail]);
+  const cell = v => '"' + String(v ?? '').replaceAll('"', '""') + '"';
+  return '\uFEFF' + [columns, ...lines].map(row => row.map(cell).join(',')).join('\r\n');
+}
 export function buildOutlook(rows, options = {}, today = new Date().toISOString().slice(0, 10)) {
   const { lookback, horizon } = outlookOptions(options);
   const history = rows.filter(r => /^\d{4}-\d{2}-\d{2}$/.test(r.date) && r.date < today).slice().sort((a, b) => a.date.localeCompare(b.date));

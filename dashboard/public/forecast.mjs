@@ -1,5 +1,6 @@
 import { number, usd } from './chart.mjs';
 import { readComparisons } from './data-client.mjs';
+import { updateOutlookArchives } from './outlook.mjs';
 const $ = id => document.getElementById(id);
 const percent = n => Number.isFinite(n) ? number(n, 2) + '%' : '—';
 let requestId = 0;
@@ -15,6 +16,7 @@ export async function loadForecast(snapshot) {
     const data = await readComparisons(snapshot);
     if (id !== requestId) return;
     if (data.newForecastsEnabled !== false) throw new Error('请重启本地服务以应用停止新增预测的设置');
+    updateOutlookArchives(data, snapshot);
     $('tracking-export').href = snapshot?.trackingCsvUrl || '/api/tracking.csv';
     const a = data.latestActual, run = data.lastRun;
     $('forecast-status').textContent = a
@@ -41,6 +43,7 @@ export async function loadForecast(snapshot) {
     }));
   } catch (e) {
     if (id !== requestId) return;
+    updateOutlookArchives(null, snapshot, e.message);
     $('forecast-status').textContent = '对照记录暂不可用：' + e.message;
     $('forecast-status').classList.add('warn');
   } finally { if (id === requestId) $('forecast-refresh').disabled = false; }

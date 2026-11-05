@@ -27,8 +27,8 @@ export async function buildPages({ trackingRoot = process.env.BITINDEX_TRACKING_
     .replace('更新实际数据', '刷新对照')
     .replace('href="/api/tracking.csv"', `href="./${manifest.csv}"`)
     .replace('刷新会重新请求真实历史数据，数据源未发布新日线时数值保持不变。', '云端每天更新真实数据与历史预测对照；页面刷新读取最新已发布版本，不触发后台取数。数据源未发布新日线时数值保持不变。')
-    .replace('自动任务只更新实际价格和历史预测对照，以纽约时间 09:00 为日界执行门槛，失败按小时重试，需要电脑开机、联网且当前用户已登录。', 'GitHub Actions 每小时检查一次，纽约时间 09:00 后更新实际价格与历史预测对照，最新完整 UTC 日线已获取时跳过重复取数；失败或日线延迟则重试。执行可能受平台排队影响，无需保持本机开机。')
-    .replace('<div class="notice" id="notice"', '<p class="publication-note">每日自动更新 · 刷新读取最新发布数据 · <a href="https://github.com/' + repository + '/actions/workflows/pages.yml" target="_blank" rel="noreferrer">更新记录 ↗</a></p>\n    <div class="notice" id="notice"');
+    .replace('自动任务只更新实际价格和历史预测对照，以纽约时间 09:00 为日界执行门槛，失败按小时重试，需要电脑开机、联网且当前用户已登录。', 'GitHub Actions 每天纽约时间 09:23 自动更新一次实际价格与历史预测对照，按纽约时区自动调整夏令时；当天已成功获取最新完整 UTC 日线时跳过重复取数。失败保留已有数据，等待次日定时任务或在 Actions 手动补跑。代码发布使用已保存的数据，页面刷新读取最新发布版本。执行可能受平台排队影响，无需保持本机开机。')
+    .replace('<div class="notice" id="notice"', '<p class="publication-note">每天纽约时间 09:23 更新一次 · 刷新读取最新发布数据 · <a href="https://github.com/' + repository + '/actions/workflows/pages.yml" target="_blank" rel="noreferrer">更新记录 ↗</a></p>\n    <div class="notice" id="notice"');
   await writeFile(join(output, 'index.html'), html);
   await writeFile(join(output, 'runtime.mjs'), `export const deployment = ${JSON.stringify({ mode: 'pages', repository })};\n`);
   await writeFile(join(output, prefix, 'market.json'), JSON.stringify({ ...raw, publicationVersion: version }));

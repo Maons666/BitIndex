@@ -58,6 +58,8 @@ jobs:
           fi
       - name: Verify forecasts were neither added nor changed
         run: node dashboard/check-forecast-lock.mjs
+      - name: Compare agent-issued event scenarios using recorded actuals
+        run: node dashboard/update-event-comparisons.mjs
       - name: Save durable daily records
         working-directory: .cloud-state
         shell: bash

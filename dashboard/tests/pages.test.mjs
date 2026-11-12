@@ -16,7 +16,8 @@ test('Pages 发布仅含静态资源与真实来源快照，项目子路径可�
   const snapshot = { version: 1, source, fetchedAt: '2026-10-18T13:00:00Z', rows: Array.from({ length: 400 }, (_, i) => ({ date: new Date(Date.parse(date) - (399 - i) * 86400000).toISOString().slice(0, 10), price: 100 })) };
   await mkdir(cacheRoot); await writeFile(join(cacheRoot, 'coinmetrics-btc.json'), JSON.stringify(snapshot));
   await updateComparisons(trackingRoot, { ...snapshot, state: 'fresh' }, { now: new Date('2026-10-18T13:00:00Z') });
-  const result = await buildPages({ trackingRoot, cacheRoot, output, repository: 'test/BitIndex' });
+  const eventArchiveRoot = join(root, 'event-predictions');
+  const result = await buildPages({ trackingRoot, cacheRoot, output, repository: 'test/BitIndex', eventArchiveRoot });
   const manifest = JSON.parse(await readFile(join(output, 'data/manifest.json'), 'utf8'));
   const market = JSON.parse(await readFile(join(output, manifest.market), 'utf8'));
   const trackingText = await readFile(join(output, manifest.tracking), 'utf8'), tracking = JSON.parse(trackingText);
@@ -27,7 +28,11 @@ test('Pages 发布仅含静态资源与真实来源快照，项目子路径可�
   assert.ok(!/(?:src|href)="\/(?!\/)/.test(html)); assert.ok(html.includes('页面刷新读取最新已发布版本'));
   assert.ok((await readFile(join(output, manifest.csv), 'utf8')).includes('test-v1'));
   assert.ok(!await readdir(output).then(files => files.includes('predictions')));
-  assert.equal((await buildPages({ trackingRoot, cacheRoot, output })).version, result.version);
+  const predictionPage = await readFile(join(output, 'prediction.html'), 'utf8');
+  assert.ok(html.includes('./prediction.html')); assert.ok(!html.includes('id="outlook-section"'));
+  assert.ok(predictionPage.includes('./index.html')); assert.ok(predictionPage.includes('id="event-section"'));
+  assert.equal(JSON.parse(await readFile(join(output, manifest.events), 'utf8')).publicationVersion, manifest.version);
+  assert.equal((await buildPages({ trackingRoot, cacheRoot, output, eventArchiveRoot })).version, result.version);
 });
 test('预测锁阻止修改、删除及新增留档', async () => {
   const root = await mkdtemp(join(tmpdir(), 'bitindex-lock-')), path = join(root, 'forecasts/2026-10-18/test.json');

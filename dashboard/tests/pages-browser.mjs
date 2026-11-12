@@ -30,8 +30,8 @@ async function evaluate(expression) {
   return r.result.value;
 }
 async function click(selector) { return evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`); }
-async function ready() { await wait(() => evaluate(`document.querySelectorAll('[data-metric]').length === 12 && !document.querySelector('#refresh').disabled && document.querySelector('#btc-price').textContent !== '—'`), '真实数据'); }
-async function trackingReady() { await wait(() => evaluate(`document.querySelectorAll('#tracking-body tr').length > 0 && !document.querySelector('#forecast-refresh').disabled`), '历史预测对照'); }
+async function ready() { await wait(() => evaluate(`!!document.querySelector('#refresh') && !document.querySelector('#refresh').disabled && document.querySelector('#btc-price').textContent !== '—'`), '真实数据'); }
+async function trackingReady() { if (!await evaluate(`!!document.querySelector('#forecast-refresh')`)) return; await evaluate(`document.querySelector('#legacy-section').open=true`); await wait(() => evaluate(`document.querySelectorAll('#tracking-body tr').length > 0 && !document.querySelector('#forecast-refresh').disabled`), '历史预测对照'); }
 async function shot(name, target = null) {
   await wait(() => evaluate(`document.querySelector('#toast').hidden`), '提示收起', 5000);
   if (target) await evaluate(`document.documentElement.style.scrollBehavior='auto';document.querySelector(${JSON.stringify(target)}).scrollIntoView({behavior:'instant',block:'start'})`);
@@ -75,6 +75,33 @@ try {
   await click('#export');
   const indicatorFile = await wait(async () => (await readdir(downloadDir)).find(f=>f.endsWith('.csv')), '指标 CSV');
   check('指标 CSV 包含真实指标值', (await readFile(join(downloadDir, indicatorFile), 'utf8')).includes('pi'));
+  check('指数页只展示指数，不加载预测数据', await evaluate(`!document.querySelector('#outlook-section') && !document.querySelector('#event-section') && !!document.querySelector('nav a[href="./prediction.html"]')`) && !requests.some(r=>/\/(tracking|events)\.json/.test(r.url)));
+  await click('#select-default'); await click('[data-range="365"]');
+  await evaluate(`document.querySelector('#compare-mode').value='percentile';document.querySelector('#compare-mode').dispatchEvent(new Event('change'))`);
+  await shot('index-desktop');
+  await click('nav a[href="./prediction.html"]'); await ready();
+  await wait(()=>evaluate(`!!document.querySelector('#event-section') && !document.querySelector('#event-content').hidden`),'事件分析');
+  const events = await (await fetch(base+manifest.events)).json(), issue=events.forecasts[0];
+  check('预测页读取签发结果且保留返回入口', await evaluate(`!!document.querySelector('nav a[href="./index.html"]') && document.querySelector('#event-chart').dataset.forecastId===${JSON.stringify(issue.id)} && !document.querySelector('#legacy-section').open`));
+  check('实线与三条虚线按原始签发价格绘制', await evaluate(`document.querySelector('#event-chart [data-role="actual"]').getAttribute('stroke-dasharray')==='none' && document.querySelectorAll('#event-chart [data-scenario]').length===3 && Number(document.querySelector('#event-chart [data-scenario="base"]').dataset.price)===${issue.horizons[0].base}`));
+  await click('[data-event-horizon="30"]');
+  check('30 天情景切换取自已签发目标', await evaluate(`document.querySelector('#event-chart').dataset.targetDate===${JSON.stringify(issue.horizons[1].targetDate)} && Number(document.querySelector('#event-chart [data-scenario="base"]').dataset.price)===${issue.horizons[1].base}`));
+  check('事件库、来源和待核查行情可见', await evaluate(`document.querySelectorAll('#library-body tr').length===4 && document.querySelectorAll('#event-evidence article').length===4 && document.querySelectorAll('#event-research article').length===4 && document.querySelectorAll('#library-queue li').length>0 && document.querySelector('#event-evidence').textContent.includes('待积累')`));
+  await click('#event-export');
+  const eventFile=await wait(async()=> (await readdir(downloadDir)).find(f=>f===issue.id+'.json'),'事件分析导出');
+  check('导出保留事件证据与不可重算的原价格', JSON.stringify(JSON.parse(await readFile(join(downloadDir,eventFile),'utf8')))===JSON.stringify(issue));
+  await click('#library-export');
+  const libraryFile=await wait(async()=> (await readdir(downloadDir)).find(f=>f==='BitIndex_event_library.json'),'事件库导出');
+  check('导出的事件库包含分级与未归因线索', JSON.parse(await readFile(join(downloadDir,libraryFile),'utf8')).cases.length===4);
+  await click('#event-comparison-export');
+  const eventCsvFile=await wait(async()=> (await readdir(downloadDir)).find(f=>f==='BitIndex_event_comparisons.csv'),'新模型对照导出');
+  check('新对照导出包含无事件基准和不变价误差', (await readFile(join(downloadDir,eventCsvFile),'utf8')).includes('noEventsErrorPct'));
+  await shot('event-desktop','#event-section');
+  await send('Network.setBlockedURLs',{urls:['*/data/*/events.json*']});await click('#refresh');await ready();
+  check('事件数据失败时隐藏旧分析并提示失败',await evaluate(`document.querySelector('#event-content').hidden && document.querySelector('#event-export').disabled && document.querySelector('#event-status').textContent.includes('暂不可用')`));
+  await send('Network.setBlockedURLs',{urls:[]});await click('#refresh');await ready();
+  check('刷新只更新行情，不改变原事件预测',await evaluate(`Number(document.querySelector('#event-chart [data-scenario="base"]').dataset.price)===${issue.horizons[1].base}`));
+  await trackingReady();
   await click('#tracking-export');
   const csvFile = await wait(async () => (await readdir(downloadDir)).find(f=>f==='BitIndex_daily_comparison.csv'), '对照 CSV');
   check('对照 CSV 可下载', (await readFile(join(downloadDir, csvFile), 'utf8')).includes('actualSourceFetchedAt'));
@@ -91,8 +118,6 @@ try {
   await click('#open-info');
   check('统一说明解释云端定时更新', await evaluate(`document.querySelector('#info-dialog').textContent.includes('无需保持本机开机')`));
   await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
-  await click('#select-default'); await click('[data-range="365"]');
-  await evaluate(`document.querySelector('#compare-mode').value='percentile';document.querySelector('#compare-mode').dispatchEvent(new Event('change'))`);
   await wait(() => evaluate(`!document.querySelector('#outlook-content').hidden && document.querySelector('#outlook-chart [data-role="forecast"]') !== null`), '我的模型留档');
   const original = tracking.forecasts.filter(f => f.modelVersion === 'ridge-30d-v1').sort((a,b)=>b.issuedAt.localeCompare(a.issuedAt))[0];
   const macro = tracking.forecasts.filter(f => f.modelVersion === 'ridge-30d-macro-v1').sort((a,b)=>b.issuedAt.localeCompare(a.issuedAt))[0];
@@ -170,6 +195,8 @@ try {
   await shot('desktop'); await shot('tracking', '#forecast-section');
   await click('#theme');
   await send('Emulation.setDeviceMetricsOverride', { width: 400, height: 900, deviceScaleFactor: 1, mobile: false });
+  await shot('event-mobile','#event-section');
+  check('400px 事件页面没有溢出且导航可见',await evaluate(`document.documentElement.scrollWidth<=window.innerWidth && document.querySelector('nav').getBoundingClientRect().height>0`));
   await shot('mobile', '#forecast-section');
   await click('[data-outlook-model="ridge"]');
   await click('[data-archive-view="curve"]');

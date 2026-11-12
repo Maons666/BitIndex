@@ -30,8 +30,8 @@ async function evaluate(expression) {
   return r.result.value;
 }
 async function click(selector) { return evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`); }
-async function ready() { await wait(() => evaluate(`document.querySelectorAll('[data-metric]').length === 12 && !document.querySelector('#refresh').disabled && document.querySelector('#btc-price').textContent !== '—'`), '真实数据'); }
-async function trackingReady() { await wait(() => evaluate(`document.querySelectorAll('#tracking-body tr').length > 0 && !document.querySelector('#forecast-refresh').disabled`), '历史预测对照'); }
+async function ready() { await wait(() => evaluate(`!!document.querySelector('#refresh') && !document.querySelector('#refresh').disabled && document.querySelector('#btc-price').textContent !== '—'`), '真实数据'); }
+async function trackingReady() { if (!await evaluate(`!!document.querySelector('#forecast-refresh')`)) return; await evaluate(`document.querySelector('#legacy-section').open=true`); await wait(() => evaluate(`document.querySelectorAll('#tracking-body tr').length > 0 && !document.querySelector('#forecast-refresh').disabled`), '历史预测对照'); }
 async function shot(name, target = null) {
   await wait(() => evaluate(`document.querySelector('#toast').hidden`), '提示收起', 5000);
   if (target) await evaluate(`document.documentElement.style.scrollBehavior='auto';document.querySelector(${JSON.stringify(target)}).scrollIntoView({behavior:'instant',block:'start'})`);
@@ -60,7 +60,7 @@ try {
   check('页面没有损坏的中文文案', await evaluate(`!document.body.innerText.includes('???') && !document.body.innerText.includes('\u0024{state')`));
   const initial = await (await fetch(base + '/api/data')).json(); check('全历史及来源标识', initial.rows.length > 5000 && initial.source.includes('community-api.coinmetrics.io'));
   check('初始页面没有脚本异常', errors.length === 0); await shot('desktop');
-  await trackingReady();
+  await click('nav a[href="./prediction.html"]'); await ready(); await trackingReady();
   check('原模型、候选模型和预测导出接口已关闭', (await Promise.all(['/api/model', '/api/macro', '/api/model.csv'].map(p => fetch(base + p)))).every(r => r.status === 410));
   const tracking = await (await fetch(base + '/api/tracking')).json();
   check('仅对照模式保留两版历史预测且没有提前结算', tracking.mode === 'comparison-only' && tracking.newForecastsEnabled === false && tracking.total >= 2 && tracking.forecasts.some(f => f.modelVersion === 'ridge-30d-macro-v1') && tracking.forecasts.filter(f => f.prediction.targetDate > initial.rows.at(-1).date).every(f => f.comparison?.absoluteErrorPct === null));
@@ -73,6 +73,7 @@ try {
   check('每日对照导出含模型版本、实际日期和到期误差', trackingCsv.includes('actualObservedAt') && trackingCsv.includes('absoluteErrorPct') && trackingCsv.includes('ridge-30d-macro-v1'));
   await evaluate(`window.scrollTo(0,0)`);
 
+  await click('nav a[href="./index.html"]'); await ready();
   check('默认五项同图', await evaluate(`document.querySelector('#chart').dataset.series.split(',').length === 5 && document.querySelectorAll('#chart-legend button').length === 5`));
   await click('[data-metric="rsi"]'); await click('[data-metric="nupl"]');
   check('追加选择不替换原曲线', await evaluate(`document.querySelector('#chart').dataset.series.split(',').length === 7`));
@@ -124,12 +125,14 @@ try {
   check('刷新已保存本次真实获取时间并更新对照', trackedAfter.lastRun.mode === 'comparison-only' && trackedAfter.lastRun.archived === false && trackedAfter.lastRun.sourceFetchedAt === synced.fetchedAt && trackedAfter.latestActual.date === synced.rows.at(-1).date);
   const disk = JSON.parse(await readFile(join(root, '.cache/coinmetrics-btc.json'), 'utf8'));
   check('刷新真实数据可持久保存离线缓存', disk.fetchedAt === synced.fetchedAt);
+  await click('nav a[href="./prediction.html"]'); await ready(); await trackingReady();
   await send('Network.setBlockedURLs', { urls: ['*/api/tracking'] }); await click('#forecast-refresh'); await ready();
   await wait(() => evaluate(`document.querySelector('#forecast-status').textContent.includes('暂不可用')`), '对照断网提示');
   check('对照读取失败不展示过期关联结果', await evaluate(`document.querySelectorAll('#tracking-body tr').length === 0`));
   await send('Network.setBlockedURLs', { urls: [] }); await click('#forecast-refresh'); await ready(); await trackingReady();
   check('更新实际数据按钮未调用预测接口', requests.every(r => !/\/api\/(model|macro)/.test(new URL(r.url).pathname)));
   await evaluate(`window.scrollTo(0,0)`);
+  await click('nav a[href="./index.html"]'); await ready();
   await click('#open-info'); check('统一说明集中在一个对话框', await evaluate(`document.querySelector('#info-dialog').open && document.querySelectorAll('.method-list article').length === 12`));
   await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
   check('说明支持 Esc 关闭', await evaluate(`!document.querySelector('#info-dialog').open`));
@@ -143,6 +146,7 @@ try {
   await send('Emulation.setDeviceMetricsOverride', { width: 400, height: 900, deviceScaleFactor: 1, mobile: false }); await sleep(300); await shot('mobile-dark');
   check('400px 窄屏无页面横向溢出', await evaluate(`document.documentElement.scrollWidth <= window.innerWidth`));
   await click('#theme'); await shot('mobile');
+  await click('nav a[href="./prediction.html"]'); await ready(); await trackingReady();
   await evaluate(`document.querySelector('#forecast-section').scrollIntoView()`); await shot('forecast-mobile');
   check('400px 对照表格无页面横向溢出', await evaluate(`document.documentElement.scrollWidth <= window.innerWidth && document.querySelectorAll('#tracking-body tr').length > 0`));
   await evaluate(`window.scrollTo(0,0)`);

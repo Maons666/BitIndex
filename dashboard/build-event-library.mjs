@@ -1,0 +1,17 @@
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { join } from 'node:path';
+import { eventRoot } from './event-store.mjs';
+import { measureCase } from './event-library.mjs';
+import { fingerprint } from './event-model.mjs';
+const path = process.argv[2];
+if (!path) throw new Error('用法：node dashboard/build-event-library.mjs <真实行情快照.json>');
+const market = JSON.parse(await readFile(path, 'utf8'));
+const definitions = JSON.parse(await readFile(join(eventRoot, 'cases.json'), 'utf8'));
+const cases = definitions.map(d => measureCase(d, market.rows));
+const reviewedAt = new Date().toISOString(), byDate = new Map(market.rows.map(r => [r.date, r.price]));
+const research = { schema: 1, reviewedAt, source: market.source, sourceFetchedAt: market.fetchedAt, periods: cases.map(c => ({ ...c, startPrice: byDate.get(c.start), endPrice: byDate.get(c.end), returnPct: (byDate.get(c.end) / byDate.get(c.start) - 1) * 100 })) };
+const inputRows = market.rows.filter(r => cases.some(c => r.date >= new Date(Date.parse(c.anchorDate) - 60 * 86400000).toISOString().slice(0, 10) && r.date <= c.outcomes.at(-1).targetDate)).map(({ date, price }) => ({ date, price }));
+const library = { schema: 1, reviewedAt, source: market.source, sourceFetchedAt: market.fetchedAt, inputFingerprint: fingerprint(inputRows), methodology: 'pre-event-60d-standardized-residual-v1', selection: '用户指定的四个事后案例，存在选择偏差；不是完整训练集', cases };
+await mkdir(eventRoot, { recursive: true });
+for (const [file, data] of [['library.json', library], ['research.json', research], ['historical-prices.json', { source: market.source, fetchedAt: market.fetchedAt, rows: inputRows }]]) await writeFile(join(eventRoot, file), JSON.stringify(data, null, 2) + '\n');
+console.log(JSON.stringify(cases.map(c => ({ id: c.id, outcomes: c.outcomes })), null, 2));

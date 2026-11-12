@@ -5,14 +5,17 @@ import { join, dirname } from 'node:path';
 import { createDataStore } from './data.mjs';
 import { readTracking, trackingCsv, recordRun, TRACKING_MODE } from './tracking.mjs';
 import { createTrackingJob } from './tracking-job.mjs';
+import { readEventData, eventCsv } from './event-store.mjs';
+import { detectMoves } from './event-library.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const port = Number(process.env.PORT || 8787);
-const store = createDataStore(join(root, '..', '.cache', 'coinmetrics-btc.json'));
-const trackingRoot = join(root, '..', 'predictions');
-const trackingJob = createTrackingJob(join(root, '..'));
+const store = createDataStore(join(process.env.BITINDEX_CACHE_DIR || join(root, '..', '.cache'), 'coinmetrics-btc.json'));
+const trackingRoot = process.env.BITINDEX_TRACKING_DIR || join(root, '..', 'predictions');
+const trackingJob = createTrackingJob(join(root, '..'), { trackingRoot });
 const files = new Map([
   ['/', ['index.html', 'text/html']], ['/index.html', ['index.html', 'text/html']],
+  ['/prediction.html', ['prediction.html', 'text/html']], ['/prediction.mjs', ['prediction.mjs', 'text/javascript']],
   ['/style.css', ['style.css', 'text/css']], ['/app.mjs', ['app.mjs', 'text/javascript']],
   ['/core.mjs', ['core.mjs', 'text/javascript']], ['/chart.mjs', ['chart.mjs', 'text/javascript']],
   ['/forecast.mjs', ['forecast.mjs', 'text/javascript']],
@@ -30,6 +33,15 @@ const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${host}`);
   try {
     if (url.pathname === '/api/data' && req.method === 'GET') return json(res, 200, await store.get());
+    if (['/api/events', '/api/events.csv'].includes(url.pathname) && req.method === 'GET') {
+      const data = await readEventData(trackingRoot);
+      data.candidates = detectMoves((await store.get()).rows, data.library.cases);
+      if (url.pathname.endsWith('.csv')) {
+        res.writeHead(200, { 'Content-Type': 'text/csv; charset=utf-8', 'Cache-Control': 'no-store' });
+        return res.end(eventCsv(data.comparisons));
+      }
+      return json(res, 200, data);
+    }
     if (['/api/model', '/api/model.csv', '/api/macro'].includes(url.pathname)) {
       return json(res, 410, { mode: TRACKING_MODE, newForecastsEnabled: false, error: '已停止新增预测；请查看 /api/tracking 中的原预测与实际数据对照' });
     }

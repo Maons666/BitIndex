@@ -1,13 +1,6 @@
 import { DEFAULTS, METRICS, compute, latest, valid, regime, validateSettings, toCsv, DAY, DEFAULT_SELECTION, cleanSelection, withPercentiles } from './core.mjs';
 import { HistoryChart, number, usd } from './chart.mjs';
 import { readMarket, isStatic } from './data-client.mjs';
-import { updateOutlook } from './outlook.mjs';
-// Existing servers may still have the previous static-file allowlist until restarted.
-// Keep the indicator dashboard usable during that upgrade.
-const { loadForecast } = await import('./forecast.mjs').catch(() => ({
-  loadForecast() { document.getElementById('forecast-status').textContent = '对照模块加载失败，请重启本地服务后刷新页面'; }
-}));
-
 const $ = id => document.getElementById(id);
 const state = { raw: null, rows: [], selected: [...DEFAULT_SELECTION], mode: 'percentile', search: '', group: '全部', range: '365', showPrice: true, log: false, view: 'chart', page: 0, busy: false, settings: { ...DEFAULTS } };
 let toastTimer;
@@ -150,7 +143,7 @@ function showStatus() {
   if (delayed.length) notices.push('部分指标数据较晚或不足：' + delayed.map(m => m.name).join('、') + '，具体日期见下表。');
   $('notice').textContent = notices.join(' '); $('notice').hidden = !notices.length;
 }
-function applyData(data) { state.raw = data; state.rows = withPercentiles(compute(data.rows, state.settings)); renderMarket(); renderCards(); renderSummary(); renderChart(); showStatus(); updateOutlook(data); }
+function applyData(data) { state.raw = data; state.rows = withPercentiles(compute(data.rows, state.settings)); renderMarket(); renderCards(); renderSummary(); renderChart(); showStatus(); }
 async function requestData(force = false) {
   const data = await readMarket(force);
   if (!Array.isArray(data.rows)) throw new Error('服务返回的数据格式不正确'); return data;
@@ -162,7 +155,6 @@ async function load(force = false) {
     const beforeDate = latest(state.rows, 'price')?.date;
     let data = await requestData(force); applyData(data);
     if (!force && data.state === 'cached') { data = await requestData(true); applyData(data); }
-    void loadForecast(data);
     if (force) toast(isStatic ? '已读取最新发布的数据，后台定时更新真实日线' : data.state === 'stale' ? '刷新失败，已保留上次数据' : beforeDate === latest(state.rows, 'price')?.date ? '已重新核对真实数据，最新日线日期未变' : `${METRICS.length} 项指数已更新`);
   } catch (e) {
     const message = e.name === 'TimeoutError' ? '数据请求超时，请重试' : e.message === 'Failed to fetch' ? (isStatic ? '无法读取已发布数据，请检查网络后重试' : '无法连接本地服务，请检查启动窗口') : e.message;
@@ -181,7 +173,7 @@ $('select-none').addEventListener('click', () => setSelection([]));
 $('select-default').addEventListener('click', () => setSelection(DEFAULT_SELECTION));
 $('compare-mode').addEventListener('change', e => { state.mode = e.target.value; renderChart(); });
 $('refresh').addEventListener('click', () => load(true));
-$('forecast-refresh').addEventListener('click', () => load(true));
+
 $('ranges').addEventListener('click', e => { const b = e.target.closest('[data-range]'); if (!b) return; state.range = b.dataset.range; state.page = 0; document.querySelectorAll('[data-range]').forEach(n => { n.classList.toggle('active', n === b); n.setAttribute('aria-pressed', String(n === b)); }); renderChart(); });
 $('show-price').addEventListener('change', e => { state.showPrice = e.target.checked; renderChart(); });
 $('log-scale').addEventListener('change', e => { state.log = e.target.checked; renderChart(); });

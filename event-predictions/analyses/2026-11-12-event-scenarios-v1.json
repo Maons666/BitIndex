@@ -1,0 +1,101 @@
+{
+  "id": "2026-11-12-event-scenarios-v1",
+  "author": "Codex agent · 来源核查与情景研判",
+  "cutoffAt": "2026-11-12T16:09:33Z",
+  "summary": "近期价格趋势偏弱，ETF 赎回、通胀粘性及交易所安全事件构成压力；赔付进展提供部分修复。历史事件库目前只有四个精选案例，匹配样本少，因此事件对价格的数值调整大幅收缩，三种情景主要用于前瞻检验。",
+  "conditions": {
+    "base": "ETF 赎回压力逐步缓和，安全事件没有新的扩散，利率预期未出现明显转向。",
+    "weak": "ETF 流出持续、风险溢价上升，或出现新的交易对手与流动性压力。",
+    "strong": "ETF 转为持续净流入，安全事件影响消退，宏观风险偏好恢复。"
+  },
+  "coverageGaps": [
+    "事件库初始只有用户指定的四个案例，每个主要类别仅一个样本，存在事后选择偏差；等级是历史窗口的观察结果，不是事件的固定价格效应。",
+    "近期安全事件尚无同类已核实案例，不据此编造数值修正；仍作为情景失效风险列出。",
+    "价格基准是 11 月 10 日 UTC 收盘；ETF 资料截至 11 月 11 日。来源时间不同已分别记录，不能视为盘中实时报价。",
+    "未取得完整实时清算、杠杆、期权偏斜及市场一致预期数据；不判断 CPI 是否超预期，不把缺失数据记作零。",
+    "资金流可能追随价格；安全事件盗窃金额不是 BTC 卖出额。已公开信息可能已被价格消化，未消化比例属于人工判断。",
+    "出现新的战争、监管、交易所风险或资金流显著反转，需要重新核查并签发新版本；旧预测不会被覆盖。"
+  ],
+  "events": [
+    {
+      "id": "fed-2026-10-28",
+      "title": "利率维持高位，出现加息分歧",
+      "category": "macro",
+      "kind": "monetary-tightening",
+      "eventDate": "2026-10-28",
+      "publishedAt": "2026-10-28T18:00:00Z",
+      "verifiedAt": "2026-11-12T16:09:33Z",
+      "sourceName": "Federal Reserve",
+      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
+      "fact": "Fed 维持目标利率 3.75%—4.00%；两名委员支持提高 25 个基点。",
+      "inference": "利率维持高位可能压低风险资产估值，但维持利率不等于本次加息。",
+      "direction": -1,
+      "similarity": 0.35,
+      "confidence": 0.6,
+      "novelty": 0.2,
+      "rationale": "仅通过政策预期这一渠道部分匹配 1 月案例；提名和实际利率决议是不同触发。新闻已过去两周，未消化比例较低。"
+    },
+    {
+      "id": "cpi-2026-11-10",
+      "title": "通胀粘性仍在",
+      "category": "macro",
+      "kind": "monetary-tightening",
+      "eventDate": "2026-11-10",
+      "publishedAt": "2026-11-10T13:30:00Z",
+      "verifiedAt": "2026-11-12T16:09:33Z",
+      "sourceName": "BLS",
+      "url": "https://www.bls.gov/news.release/archives/cpi_11102026.htm",
+      "fact": "10 月 CPI 环比上涨 0.4%，核心环比上涨 0.3%；多数系列因 2025 年 10 月缺失调查而没有同比数据。",
+      "inference": "通胀粘性可能限制宽松预期；没有一致预期数据，不能判为超预期。",
+      "direction": -1,
+      "similarity": 0.4,
+      "confidence": 0.5,
+      "novelty": 0.3,
+      "rationale": "匹配政策收紧预期渠道而非完全同类新闻；降低相似度和影响把握，与 Fed 新闻同类平均，避免重复累加。"
+    },
+    {
+      "id": "etf-2026-11-11",
+      "title": "现货 ETF 资金继续净流出",
+      "category": "flows",
+      "kind": "fund-outflow",
+      "eventDate": "2026-11-11",
+      "publishedAt": "2026-11-12T16:09:33Z",
+      "verifiedAt": "2026-11-12T16:09:33Z",
+      "publicationTimeNote": "动态表未提供完整首次发布时间；保守以本次核查时刻作为可用时间。11 月 12 日未报告行不计为零。",
+      "sourceName": "Farside Investors · 数据汇总",
+      "url": "https://farside.co.uk/btc/",
+      "fact": "Farside 逐日总额汇总：11 月 2—10 日美国现货 BTC ETF 净流出 15.777 亿美元；计入 11 日后为 18.775 亿美元。",
+      "inference": "持续赎回说明需求承压，但价格与资金流有双向作用。",
+      "direction": -1,
+      "similarity": 0.75,
+      "confidence": 0.6,
+      "novelty": 0.4,
+      "rationale": "匹配 6 月持续赎回案例；当前仅美国现货 ETF，历史案例为更广的投资产品，统计范围不同，不能完全等同。"
+    },
+    {
+      "id": "binance-2026-10-29",
+      "title": "安全事件后的信心修复尚待观察",
+      "category": "security",
+      "kind": "security-breach",
+      "eventDate": "2026-10-29",
+      "publishedAt": "2026-11-03T23:59:59Z",
+      "verifiedAt": "2026-11-12T16:09:33Z",
+      "publicationTimeNote": "官方更新仅确认日期，保守按 UTC 日末处理。",
+      "sourceName": "Binance 官方更新",
+      "url": "https://www.binance.com/en/square/post/384328127385979",
+      "additionalSources": [
+        {
+          "title": "FBI 10 月 31 日公告",
+          "url": "https://www.fbi.gov/investigate/cyber/alerts/2026/north-korea-responsible-for-6-billion-binance-attack"
+        }
+      ],
+      "fact": "Binance 官方披露 10 月 29 日安全事件涉及约 63.4 亿美元资产，11 月 3 日称已补足 98% 受影响代币；FBI 确认盗窃超过 60 亿美元。",
+      "inference": "交易对手信心受损可能增加风险溢价，补偿进展部分抵消冲击。被盗金额不能等同于 BTC 卖压。",
+      "direction": -1,
+      "similarity": 0,
+      "confidence": 0.5,
+      "novelty": 0.25,
+      "rationale": "当前事件库没有同类案例，等级待积累，不生成伪精确的价格调整；保留为情景风险。"
+    }
+  ]
+}

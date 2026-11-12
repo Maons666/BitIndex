@@ -21,12 +21,19 @@ export async function readMarket(force = false) {
   if (!/^[a-f0-9]{64}$/.test(manifest.version)) throw new Error('发布版本无效');
   const data = await json(asset(manifest.market));
   if (data.publicationVersion !== manifest.version) throw new Error('数据版本不一致，请重试');
-  return { ...data, state: 'published', publication: manifest, trackingCsvUrl: asset(manifest.csv) };
+  return { ...data, state: 'published', publication: manifest, trackingCsvUrl: asset(manifest.csv), eventCsvUrl: manifest.eventCsv ? asset(manifest.eventCsv) : null };
 }
 export async function readComparisons(snapshot) {
   if (!isStatic) return json('/api/tracking');
   if (!snapshot?.publication) throw new Error('请先加载已发布数据');
   const data = await json(asset(snapshot.publication.tracking));
   if (data.publicationVersion !== snapshot.publication.version) throw new Error('对照版本不一致，请重试');
+  return data;
+}
+export async function readEvents(snapshot) {
+  if (!isStatic) return json('/api/events');
+  if (!snapshot?.publication?.events) throw new Error('当前发布版本还没有事件分析');
+  const data = await json(asset(snapshot.publication.events));
+  if (data.publicationVersion !== snapshot.publication.version) throw new Error('事件分析版本不一致，请重试');
   return data;
 }

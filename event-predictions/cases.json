@@ -1,0 +1,33 @@
+[
+  {
+    "id": "2026-01-fed-repricing", "kind": "monetary-tightening", "title": "偏鹰预期重估与资金撤离", "publishedAt": "2026-01-30T23:59:59Z", "publicationTimeNote": "仅确认公开日期；保守使用 UTC 日末作为可用时间", "candidateDriver": "Fed 主席提名带来的政策预期重估", "cofactors": "投资产品赎回、大户出售与地缘风险；无法识别单一原因的价格贡献", "start": "2026-01-20", "end": "2026-02-10", "conclusion": "政策预期重估与资金撤离同时出现，支持风险偏好下降的解释。1 月 28 日并未加息。", "limitation": "提名早于 2 月初低点，但早于提名前已经下跌；不能把全部跌幅归因于人事变化。",
+    "events": [
+      {"date":"2026-01-28","fact":"Fed 维持利率 3.50%—3.75%。","sourceName":"Federal Reserve","url":"https://www.federalreserve.gov/newsevents/pressreleases/monetary20260128a.htm"},
+      {"date":"2026-01-30","fact":"美国总统宣布提名 Kevin Warsh 为 Fed 主席。","sourceName":"美国政府归档","url":"https://www.govinfo.gov/content/pkg/DCPD-202600073/pdf/DCPD-202600073.pdf"},
+      {"date":"2026-02-02","fact":"CoinShares 报告上周 BTC 投资产品净流出 13.2 亿美元。","sourceName":"CoinShares","url":"https://coinshares.com/us/insights/research-data/fund-flows-02-02-26/"}
+    ]
+  },
+  {
+    "id":"2026-04-ceasefire", "kind":"geopolitical-easing", "title":"停火消息与机构资金回流", "publishedAt":"2026-04-08T23:59:59Z", "publicationTimeNote":"仅确认公开日期；保守使用 UTC 日末作为可用时间", "candidateDriver":"美国与伊朗停火降低地缘风险预期", "cofactors":"机构产品连续净流入；资金流可能既推动也追随价格", "start":"2026-04-01", "end":"2026-05-05", "conclusion":"停火消息缓和风险溢价，BTC 产品资金连续回流，与价格回升一致；这段上涨不能解释为 Fed 降息。", "limitation":"停火是暂时安排；同期仍有能源通胀压力。相关性不能分解各事件的独立贡献。",
+    "events":[
+      {"date":"2026-04-08","fact":"欧洲理事会发布多国领导人声明，欢迎美国与伊朗两周停火。","sourceName":"欧洲理事会","url":"https://www.consilium.europa.eu/en/press/press-releases/2026/04/08/leaders-statement-on-the-two-week-ceasefire-concluded-between-the-united-states-and-iran/"},
+      {"date":"2026-04-20","fact":"CoinShares 报告 BTC 产品单周流入 11.16 亿美元。","sourceName":"CoinShares","url":"https://coinshares.com/us/insights/research-data/fund-flows-20-04-26/"},
+      {"date":"2026-04-27","fact":"BTC 产品单周流入 9.33 亿美元；数字资产产品连续第四周流入。","sourceName":"CoinShares","url":"https://coinshares.com/us/insights/research-data/fund-flows-27-04-26/"},
+      {"date":"2026-04-29","fact":"Fed 继续维持 3.50%—3.75%，没有降息。","sourceName":"Federal Reserve","url":"https://www.federalreserve.gov/newsevents/pressreleases/monetary20260429a.htm"}
+    ]
+  },
+  {
+    "id":"2026-06-redemptions", "kind":"fund-outflow", "title":"连续赎回与企业买盘预期变化", "publishedAt":"2026-06-01T23:59:59Z", "publicationTimeNote":"仅确认公开日期；保守使用 UTC 日末作为可用时间", "candidateDriver":"投资产品持续赎回带来的需求压力", "cofactors":"Strategy 首次小额出售所引发的预期变化，以及地缘风险", "start":"2026-06-01", "end":"2026-06-06", "conclusion":"连续净流出是可量化的需求压力。企业小额出售可能影响买盘预期，其交易规模本身不足以解释整段跌幅。", "limitation":"32 BTC 不等于足以压低整个市场的卖压；不能用 6 月中旬决议解释 6 月初行情。",
+    "events":[
+      {"date":"2026-06-01","fact":"CoinShares 报告 BTC 产品单周流出 14.38 亿美元；数字资产产品连续三周净流出。","sourceName":"CoinShares","url":"https://coinshares.com/us/insights/research-data/fund-flows-01-06-26/"},
+      {"date":"2026-06-01","fact":"Strategy 向 SEC 披露 5 月 26—31 日出售 32 BTC，仍持有 843,706 BTC。","sourceName":"SEC 8-K","url":"https://www.sec.gov/Archives/edgar/data/1050446/000119312526249768/mstr-20260530.htm"}
+    ]
+  },
+  {
+    "id":"2026-08-liquidity", "kind":"liquidity-support", "title":"流动性与监管预期改善", "publishedAt":"2026-08-19T23:59:59Z", "publicationTimeNote":"仅确认公开日期；保守使用 UTC 日末作为可用时间", "candidateDriver":"国债流动性支持回购扩容公告", "cofactors":"SEC 加密监管提案及 ETF 资金回流", "start":"2026-08-16", "end":"2026-08-27", "conclusion":"财政部回购扩容与 SEC 提案可能改善风险偏好，但只是机制解释；上涨早于公告开始，仍需同时看资金流。", "limitation":"财政部回购不是 Fed QE；扩容 9 月才生效。SEC 文件是提案，不能当成已通过法律。",
+    "events":[
+      {"date":"2026-08-18","fact":"SEC 提出相关加密资产发行豁免与投资合约安全港框架。","sourceName":"SEC","url":"https://www.sec.gov/newsroom/speeches-statements/atkins-statement-regulation-crypto-assets-081826"},
+      {"date":"2026-08-19","fact":"财政部将长期国债流动性支持回购每次上限由 20 亿美元提高至至少 40 亿美元，9 月 9 日起实施。","sourceName":"美国财政部","url":"https://home.treasury.gov/news/press-releases/sb0607"}
+    ]
+  }
+]

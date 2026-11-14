@@ -26,7 +26,7 @@ export async function buildPages({ trackingRoot = process.env.BITINDEX_TRACKING_
   const prefix = `data/${version}`, publishedAt = new Date().toISOString();
   const manifest = { schema: 1, version, publishedAt, sourceFetchedAt: raw.fetchedAt, dataThrough: raw.rows.findLast(r => r.price !== null)?.date, market: `${prefix}/market.json`, tracking: `${prefix}/tracking.json`, csv: `${prefix}/daily-comparison.csv`, events: `${prefix}/events.json`, eventCsv: `${prefix}/event-comparisons.csv` };
   await mkdir(join(output, prefix), { recursive: true });
-  const assets = ['style.css', 'app.mjs', 'prediction.mjs', 'core.mjs', 'chart.mjs', 'forecast.mjs', 'outlook.mjs', 'outlook-core.mjs', 'data-client.mjs', 'favicon.svg'];
+  const assets = ['style.css', 'app.mjs', 'prediction.mjs', 'evaluation.mjs', 'evaluation-core.mjs', 'core.mjs', 'chart.mjs', 'forecast.mjs', 'outlook.mjs', 'outlook-core.mjs', 'data-client.mjs', 'favicon.svg'];
   for (const file of assets) await copyFile(join(root, 'dashboard/public', file), join(output, file));
   for (const page of ['index.html', 'prediction.html']) {
   let html = await readFile(join(root, 'dashboard/public', page), 'utf8');

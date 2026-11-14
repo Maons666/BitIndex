@@ -1,0 +1,2961 @@
+{
+  "schema": 1,
+  "id": "2026-11-13-rolling-30d",
+  "modelVersion": "event-scenarios-v1",
+  "mode": "retrospective-current-model",
+  "reconstructedAt": "2026-11-14T04:08:16.569Z",
+  "source": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics",
+  "sourceFetchedAt": "2026-11-13T20:55:42.084Z",
+  "inputFingerprint": "90dcf9cd7fddee982c0842eee15d2253bbd64e5fdae11333ab00a21a4ceac766",
+  "targetStart": "2026-10-14",
+  "targetEnd": "2026-11-12",
+  "originStart": "2026-09-14",
+  "originEnd": "2026-10-13",
+  "protocol": {
+    "horizon": 30,
+    "cutoffTimeUTC": "16:00",
+    "priceLagDays": 2,
+    "parameterTuning": false,
+    "repeatedStreams": "latest-available-only",
+    "interval": "scenario-envelope-not-confidence-interval",
+    "actualVintage": "current-download",
+    "independentSamples": false
+  },
+  "limitations": [
+    "今天重建的 agent 判断，不是当时发出的预测，也不是盲测。",
+    "仅使用历史截止日前的事件和行情；原始历史发布版本不可得，假定日线滞后 2 个日历日。",
+    "事件库和模型是在今天选定的，案例选择仍有事后偏差；30 天收益窗口重叠，样本不独立。",
+    "没有当时的预期共识和完整新闻流；未找到类似历史事件时，事件调整为零。"
+  ],
+  "evidence": {
+    "author": "Codex agent · 历史原文重建",
+    "coverageStart": "2026-08-17",
+    "coverageEnd": "2026-10-13",
+    "verifiedAt": "2026-11-14T04:04:07Z",
+    "selectionMethod": "先按政策、通胀、就业、资金流及监管渠道检索一手资料；研究任务不提供目标期价格。各报告评分固定后运行回放；不是盲测，也不保证覆盖全部事件。",
+    "rubric": "模型参数保持 event-scenarios-v1；所有记录 novelty=0.5。直接政策动作 confidence=0.6，政策讲话 0.5，混合通胀 0.35，全行业流量 0.3；无方向共识的就业和代币化股票豁免方向为0。不把资金流入反转套用资金流出案例。",
+    "coverageGaps": [
+      "缺少当时完整新闻流、期货隐含预期、杠杆仓位与地缘风险的逐时记录。",
+      "部分资金流仅全数字资产产品口径，不能当成 BTC 或美国现货 ETF 独立流量。",
+      "事件评分由今天的 agent 重建，保留事后认识风险；没有事前不可变网页快照。"
+    ],
+    "events": [
+      {
+        "id": "sec-0818",
+        "stream": "regulation",
+        "category": "policy",
+        "kind": "regulation-easing",
+        "publishedAt": "2026-08-18T23:59:59Z",
+        "availableAt": "2026-08-19T12:00:00.000Z",
+        "verifiedAt": "2026-11-14T04:04:07Z",
+        "title": "SEC 加密资产监管提案",
+        "fact": "SEC 主席说明加密资产发行豁免及投资合同安全港提案。",
+        "inference": "可能降低监管不确定性；仍是提案，对 BTC 的作用间接。",
+        "url": "https://www.sec.gov/newsroom/speeches-statements/atkins-statement-regulation-crypto-assets-081826",
+        "direction": 0.25,
+        "similarity": 0.3,
+        "confidence": 0.3,
+        "novelty": 0.5,
+        "rationale": "本批回放先固定证据与评分，再计算误差。按经济渠道判断方向；缺少市场预期共识，未消化比例统一假设为 0.5。相似度反映与历史案例的机制距离，影响把握反映对 BTC 的直接程度，均未经收益校准。",
+        "publicationTimeNote": "只确认公开日期；publishedAt 用 UTC 日末表示，availableAt 保守延至次日 12:00 UTC；均非实际抓取时间"
+      },
+      {
+        "id": "treasury-0819",
+        "stream": "treasury-liquidity",
+        "category": "macro",
+        "kind": "liquidity-support",
+        "publishedAt": "2026-08-19T23:59:59Z",
+        "availableAt": "2026-08-20T12:00:00.000Z",
+        "verifiedAt": "2026-11-14T04:04:07Z",
+        "title": "国债流动性支持回购扩容",
+        "fact": "财政部拟将长期国债流动性支持回购每次上限从 20 亿提高到至少 40 亿美元，9 月 9 日起实施。",
+        "inference": "可能改善国债流动性；不是美联储 QE，不能等同于净新增货币。",
+        "url": "https://home.treasury.gov/news/press-releases/sb0607",
+        "direction": 0.25,
+        "similarity": 0.5,
+        "confidence": 0.3,
+        "novelty": 0.5,
+        "rationale": "本批回放先固定证据与评分，再计算误差。按经济渠道判断方向；缺少市场预期共识，未消化比例统一假设为 0.5。相似度反映与历史案例的机制距离，影响把握反映对 BTC 的直接程度，均未经收益校准。",
+        "publicationTimeNote": "只确认公开日期；publishedAt 用 UTC 日末表示，availableAt 保守延至次日 12:00 UTC；均非实际抓取时间"
+      },
+      {
+        "id": "flows-0827",
+        "stream": "fund-flows",
+        "category": "flows",
+        "kind": "fund-inflow",
+        "publishedAt": "2026-08-27T23:59:59Z",
+        "availableAt": "2026-08-28T12:00:00.000Z",
+        "verifiedAt": "2026-11-14T04:04:07Z",
+        "title": "投资产品部分周流入",
+        "fact": "CoinShares 报告当周前三个交易日全球数字资产产品流入约 16.5 亿美元，其中 BTC 9.76 亿。",
+        "inference": "已观察到需求增加；仅部分周、全球投资产品口径，不能外推未来流量。",
+        "url": "https://coinshares.com/us/insights/research-data/market-update-27-08-2026/",
+        "direction": 1,
+        "similarity": 0.5,
+        "confidence": 0.5,
+        "novelty": 0.5,
+        "rationale": "本批回放先固定证据与评分，再计算误差。按经济渠道判断方向；缺少市场预期共识，未消化比例统一假设为 0.5。相似度反映与历史案例的机制距离，影响把握反映对 BTC 的直接程度，均未经收益校准。",
+        "publicationTimeNote": "只确认公开日期；publishedAt 用 UTC 日末表示，availableAt 保守延至次日 12:00 UTC；均非实际抓取时间"
+      },
+      {
+        "id": "fed-0828",
+        "stream": "fed-policy",
+        "category": "macro",
+        "kind": "monetary-tightening",
+        "publishedAt": "2026-08-28T23:59:59Z",
+        "availableAt": "2026-08-29T12:00:00.000Z",
+        "verifiedAt": "2026-11-14T04:04:07Z",
+        "title": "Jackson Hole 偏鹰政策表述",
+        "fact": "Warsh 表示通胀仍高于目标，夏季读数不足以确认趋势明显改善；没有承诺具体决策。",
+        "inference": "削弱宽松预期可能约束风险偏好；不是已经加息，缺少市场预期基准。",
+        "url": "https://www.federalreserve.gov/newsevents/speech/warsh20260828a.htm",
+        "direction": -1,
+        "similarity": 0.5,
+        "confidence": 0.5,
+        "novelty": 0.5,
+        "rationale": "本批回放先固定证据与评分，再计算误差。按经济渠道判断方向；缺少市场预期共识，未消化比例统一假设为 0.5。相似度反映与历史案例的机制距离，影响把握反映对 BTC 的直接程度，均未经收益校准。",
+        "publicationTimeNote": "只确认公开日期；publishedAt 用 UTC 日末表示，availableAt 保守延至次日 12:00 UTC；均非实际抓取时间"
+      },
+      {
+        "id": "jobs-0904",
+        "stream": "employment",
+        "category": "macro",
+        "kind": "employment-mixed",
+        "publishedAt": "2026-09-04T12:30:00Z",
+        "availableAt": "2026-09-04T12:30:00Z",
+        "verifiedAt": "2026-11-14T04:04:07Z",
+        "title": "8 月就业首次公布",
+        "fact": "当时首发值为非农增加 16.2 万，失业率 4.1%。",
+        "inference": "就业稳定兼具增长支持和降息必要性下降的作用，方向保持中性。",
+        "url": "https://www.bls.gov/news.release/archives/empsit_09042026.htm",
+        "direction": 0,
+        "similarity": 0.3,
+        "confidence": 0.3,
+        "novelty": 0.5,
+        "rationale": "本批回放先固定证据与评分，再计算误差。按经济渠道判断方向；缺少市场预期共识，未消化比例统一假设为 0.5。相似度反映与历史案例的机制距离，影响把握反映对 BTC 的直接程度，均未经收益校准。",
+        "publicationTimeNote": "官方明确发布时间，已转 UTC"
+      },
+      {
+        "id": "cpi-0911",
+        "stream": "inflation",
+        "category": "macro",
+        "kind": "monetary-tightening",
+        "publishedAt": "2026-09-11T12:30:00Z",
+        "availableAt": "2026-09-11T12:30:00Z",
+        "verifiedAt": "2026-11-14T04:04:07Z",
+        "title": "8 月月度通胀压力",
+        "fact": "总体 CPI 环比 +0.4%、同比 +3.4%；核心环比 +0.3%、同比 +2.4%。",
+        "inference": "月度涨幅不利宽松，但核心同比改善；无预期共识，不能称为全面超预期。",
+        "url": "https://www.bls.gov/news.release/archives/cpi_09112026.htm",
+        "direction": -0.5,
+        "similarity": 0.4,
+        "confidence": 0.35,
+        "novelty": 0.5,
+        "rationale": "本批回放先固定证据与评分，再计算误差。按经济渠道判断方向；缺少市场预期共识，未消化比例统一假设为 0.5。相似度反映与历史案例的机制距离，影响把握反映对 BTC 的直接程度，均未经收益校准。",
+        "publicationTimeNote": "官方明确发布时间，已转 UTC"
+      },
+      {
+        "id": "flows-0911",
+        "stream": "fund-flows",
+        "category": "flows",
+        "kind": "fund-outflow",
+        "publishedAt": "2026-09-11T23:59:59Z",
+        "availableAt": "2026-09-12T12:00:00.000Z",
+        "verifiedAt": "2026-11-14T04:04:07Z",
+        "title": "全数字资产产品转为部分周流出",
+        "fact": "CoinShares 报告前一周产品流入约 13 亿美元，本周截至报告日流出约 2.43 亿美元；没有 BTC 分项。",
+        "inference": "广义产品需求减弱，对 BTC 的指向较弱，采用较低相似度与影响把握。",
+        "url": "https://coinshares.com/us/insights/research-data/market-update-11-09-2026/",
+        "direction": -1,
+        "similarity": 0.3,
+        "confidence": 0.3,
+        "novelty": 0.5,
+        "rationale": "本批回放先固定证据与评分，再计算误差。按经济渠道判断方向；缺少市场预期共识，未消化比例统一假设为 0.5。相似度反映与历史案例的机制距离，影响把握反映对 BTC 的直接程度，均未经收益校准。",
+        "publicationTimeNote": "只确认公开日期；publishedAt 用 UTC 日末表示，availableAt 保守延至次日 12:00 UTC；均非实际抓取时间"
+      },
+      {
+        "id": "fed-0916",
+        "stream": "fed-policy",
+        "category": "macro",
+        "kind": "monetary-tightening",
+        "publishedAt": "2026-09-16T18:00:00Z",
+        "availableAt": "2026-09-16T18:00:00Z",
+        "verifiedAt": "2026-11-14T04:04:07Z",
+        "title": "美联储加息 25 个基点",
+        "fact": "FOMC 以 12 比 0 决定加息 25bp，目标区间升至 3.75%—4.00%。",
+        "inference": "提高无风险利率与融资成本；实际价格冲击取决于事前计价程度。",
+        "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a.htm",
+        "direction": -1,
+        "similarity": 0.5,
+        "confidence": 0.6,
+        "novelty": 0.5,
+        "rationale": "本批回放先固定证据与评分，再计算误差。按经济渠道判断方向；缺少市场预期共识，未消化比例统一假设为 0.5。相似度反映与历史案例的机制距离，影响把握反映对 BTC 的直接程度，均未经收益校准。",
+        "publicationTimeNote": "官方明确发布时间，已转 UTC"
+      },
+      {
+        "id": "sec-0917",
+        "stream": "regulation",
+        "category": "policy",
+        "kind": "regulation-easing",
+        "publishedAt": "2026-09-17T23:59:59Z",
+        "availableAt": "2026-09-18T12:00:00.000Z",
+        "verifiedAt": "2026-11-14T04:04:07Z",
+        "title": "代币化股票交易临时豁免",
+        "fact": "SEC 发布附条件临时豁免，允许符合条件场所交易代币化 NMS 股票。",
+        "inference": "对象是股票，并非 BTC；只展示监管主题，不赋予 BTC 均值推动方向。",
+        "url": "https://www.sec.gov/newsroom/press-releases/2026-90-sec-issues-innovation-exemption-facilitate-trading-tokenized-nms-stock-request-comment",
+        "direction": 0,
+        "similarity": 0.2,
+        "confidence": 0.2,
+        "novelty": 0.5,
+        "rationale": "本批回放先固定证据与评分，再计算误差。按经济渠道判断方向；缺少市场预期共识，未消化比例统一假设为 0.5。相似度反映与历史案例的机制距离，影响把握反映对 BTC 的直接程度，均未经收益校准。",
+        "publicationTimeNote": "只确认公开日期；publishedAt 用 UTC 日末表示，availableAt 保守延至次日 12:00 UTC；均非实际抓取时间"
+      },
+      {
+        "id": "flows-0925",
+        "stream": "fund-flows",
+        "category": "flows",
+        "kind": "fund-inflow",
+        "publishedAt": "2026-09-25T23:59:59Z",
+        "availableAt": "2026-09-26T12:00:00.000Z",
+        "verifiedAt": "2026-11-14T04:04:07Z",
+        "title": "全数字资产产品资金回流",
+        "fact": "CoinShares 报告过去五个交易日全球数字资产投资产品流入约 35 亿美元；没有 BTC 分项。",
+        "inference": "产品需求恢复，但不能直接视为 BTC ETF 流量；剔除原文缺少来源的巨鲸论断。",
+        "url": "https://coinshares.com/us/insights/research-data/market-update-25-09-2026/",
+        "direction": 1,
+        "similarity": 0.3,
+        "confidence": 0.3,
+        "novelty": 0.5,
+        "rationale": "本批回放先固定证据与评分，再计算误差。按经济渠道判断方向；缺少市场预期共识，未消化比例统一假设为 0.5。相似度反映与历史案例的机制距离，影响把握反映对 BTC 的直接程度，均未经收益校准。",
+        "publicationTimeNote": "只确认公开日期；publishedAt 用 UTC 日末表示，availableAt 保守延至次日 12:00 UTC；均非实际抓取时间"
+      },
+      {
+        "id": "jobs-1002",
+        "stream": "employment",
+        "category": "macro",
+        "kind": "employment-mixed",
+        "publishedAt": "2026-10-02T12:30:00Z",
+        "availableAt": "2026-10-02T12:30:00Z",
+        "verifiedAt": "2026-11-14T04:04:07Z",
+        "title": "9 月就业放缓及历史修订",
+        "fact": "9 月非农初值 +2.9 万，失业率 4.2%；本次将 8 月增幅由 16.2 万修订至 13.3 万，7 月由 2.1 万修订为 −1 万。",
+        "inference": "既削弱继续紧缩理由，也增加增长担忧，均值方向保持中性；修订只从本次公开后可用。",
+        "url": "https://www.bls.gov/news.release/archives/empsit_10022026.htm",
+        "direction": 0,
+        "similarity": 0.3,
+        "confidence": 0.3,
+        "novelty": 0.5,
+        "rationale": "本批回放先固定证据与评分，再计算误差。按经济渠道判断方向；缺少市场预期共识，未消化比例统一假设为 0.5。相似度反映与历史案例的机制距离，影响把握反映对 BTC 的直接程度，均未经收益校准。",
+        "publicationTimeNote": "官方明确发布时间，已转 UTC"
+      },
+      {
+        "id": "fed-minutes-1007",
+        "stream": "fed-policy",
+        "category": "macro",
+        "kind": "monetary-tightening",
+        "publishedAt": "2026-10-07T18:00:00Z",
+        "availableAt": "2026-10-07T18:00:00Z",
+        "verifiedAt": "2026-11-14T04:04:07Z",
+        "title": "9 月会议纪要公开",
+        "fact": "10 月 7 日发布的 9 月会议纪要称，多数与会者认为年底前可能适合再次加息，未来仍取决于新增信息。",
+        "inference": "提供偏鹰路径信息；属于 9 月判断，不能当成 10 月新决策，也不能提前回填到 9 月。",
+        "url": "https://www.federalreserve.gov/monetarypolicy/fomcminutes20260916.htm",
+        "direction": -1,
+        "similarity": 0.5,
+        "confidence": 0.5,
+        "novelty": 0.5,
+        "rationale": "本批回放先固定证据与评分，再计算误差。按经济渠道判断方向；缺少市场预期共识，未消化比例统一假设为 0.5。相似度反映与历史案例的机制距离，影响把握反映对 BTC 的直接程度，均未经收益校准。",
+        "publicationTimeNote": "官方明确发布时间，已转 UTC",
+        "additionalSources": [
+          {
+            "title": "纪要公开时间",
+            "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261007a.htm"
+          }
+        ]
+      }
+    ]
+  },
+  "rows": [
+    {
+      "mode": "retrospective",
+      "asOf": "2026-09-14T16:00:00.000Z",
+      "targetDate": "2026-10-14",
+      "anchor": {
+        "date": "2026-09-12",
+        "price": 77252.4105082525
+      },
+      "actualPrice": 81498.5160066511,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 78384.60599091543,
+      "unchanged": 77252.4105082525,
+      "base": 78351.16424348294,
+      "weak": 67749.79242788309,
+      "strong": 90611.42061569938,
+      "trendLogReturn": 0.014549436638718395,
+      "eventLogAdjustment": -0.00042672770727382865,
+      "eventAdjustmentPct": -0.0426636671955305,
+      "eventScore": -0.00587053753975216,
+      "channelScores": {
+        "policy": 0,
+        "macro": -0.0015509335317982625,
+        "flows": -0.004319604007953897
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "f1403595d646ae7d1fdc98647f84f1aacc5f27f677b02e23fff58eef5eb71d54",
+      "analysisFingerprint": "1174680904e38ab3d8354299b83dd531a211d74dd2ebfb68ef1a0cbdb61d09e1",
+      "libraryFingerprint": "36ef079a8d628d80bcb5d73573d6f512a5ae977648a206cd532a115514fd6ee7",
+      "events": [
+        {
+          "id": "sec-0818",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "treasury-0819",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "flows-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.004319604007953897,
+          "matches": [
+            {
+              "id": "2026-06-redemptions",
+              "title": "连续赎回与企业买盘预期变化",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.9501674257351602,
+              "returnPct": -20.48175998334887,
+              "targetDate": "2026-06-30"
+            }
+          ]
+        },
+        {
+          "id": "fed-0828",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0029997250055235395,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "jobs-0904",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0032040091216695107,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-09-15T16:00:00.000Z",
+      "targetDate": "2026-10-15",
+      "anchor": {
+        "date": "2026-09-13",
+        "price": 76759.2585653887
+      },
+      "actualPrice": 82116.2331746055,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 77052.2471520236,
+      "unchanged": 76759.2585653887,
+      "base": 77022.41231335972,
+      "weak": 66581.28334011314,
+      "strong": 89100.89594195415,
+      "trendLogReturn": 0.0038097142295831677,
+      "eventLogAdjustment": -0.0003872776891449468,
+      "eventAdjustmentPct": -0.03872027068206885,
+      "eventScore": -0.0053170847717031455,
+      "channelScores": {
+        "policy": 0,
+        "macro": -0.0014047172014500847,
+        "flows": -0.003912367570253061
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "bf6f24270c7fa4fc667109df78a678bf3468237156809ad375f38a9bf383e5b6",
+      "analysisFingerprint": "64b472adadda79695c5cee35dc62a0dc684840d9c51b73efc6537eecb1f56b11",
+      "libraryFingerprint": "36ef079a8d628d80bcb5d73573d6f512a5ae977648a206cd532a115514fd6ee7",
+      "events": [
+        {
+          "id": "sec-0818",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "treasury-0819",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "flows-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.003912367570253061,
+          "matches": [
+            {
+              "id": "2026-06-redemptions",
+              "title": "连续赎回与企业买盘预期变化",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.9501674257351602,
+              "returnPct": -20.48175998334887,
+              "targetDate": "2026-06-30"
+            }
+          ]
+        },
+        {
+          "id": "fed-0828",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.002716921923786848,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "jobs-0904",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0029019468820134903,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-09-16T16:00:00.000Z",
+      "targetDate": "2026-10-16",
+      "anchor": {
+        "date": "2026-09-14",
+        "price": 78278.7924649912
+      },
+      "actualPrice": 81538.2951464407,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 80731.37757408553,
+      "unchanged": 78278.7924649912,
+      "base": 80703.20647285171,
+      "weak": 69814.0358040384,
+      "strong": 93290.80406239728,
+      "trendLogReturn": 0.030850600663046953,
+      "eventLogAdjustment": -0.00034900949738971894,
+      "eventAdjustmentPct": -0.034894860065981526,
+      "eventScore": -0.004815809502628791,
+      "channelScores": {
+        "macro": -0.0012722856109519108,
+        "flows": -0.00354352389167688
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "af96df381232aef0a7c8e2beffa6baf2f98d3766732940f1daa0a10355646098",
+      "analysisFingerprint": "010b71f06396c5695e14ecd6348f6d4e71a8ca4c49e6d776e16aec1d62b6a8e2",
+      "libraryFingerprint": "36ef079a8d628d80bcb5d73573d6f512a5ae977648a206cd532a115514fd6ee7",
+      "events": [
+        {
+          "id": "treasury-0819",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "flows-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.00354352389167688,
+          "matches": [
+            {
+              "id": "2026-06-redemptions",
+              "title": "连续赎回与企业买盘预期变化",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.9501674257351602,
+              "returnPct": -20.48175998334887,
+              "targetDate": "2026-06-30"
+            }
+          ]
+        },
+        {
+          "id": "fed-0828",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0024607804803311664,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "jobs-0904",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.002628361963476477,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-09-17T16:00:00.000Z",
+      "targetDate": "2026-10-17",
+      "anchor": {
+        "date": "2026-09-15",
+        "price": 75650.4287918118
+      },
+      "actualPrice": 81268.9431190474,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 75821.40325038404,
+      "unchanged": 75650.4287918118,
+      "base": 75765.66660611163,
+      "weak": 65117.14975288605,
+      "strong": 88155.52059715324,
+      "trendLogReturn": 0.002257509252766223,
+      "eventLogAdjustment": -0.0007353746838293478,
+      "eventAdjustmentPct": -0.07351043621331987,
+      "eventScore": -0.009710654105924805,
+      "channelScores": {
+        "flows": -0.003209453443576282,
+        "macro": -0.006501200662348522
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "ed62b716f8cbd17f1573676573e4601767c40b8cd40a7f95d7032e7c356335a2",
+      "analysisFingerprint": "3c88135eff6ea00feeeac0499807a53f7bb9607bde749abe09c18ffda3bdbe9c",
+      "libraryFingerprint": "36ef079a8d628d80bcb5d73573d6f512a5ae977648a206cd532a115514fd6ee7",
+      "events": [
+        {
+          "id": "flows-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.003209453443576282,
+          "matches": [
+            {
+              "id": "2026-06-redemptions",
+              "title": "连续赎回与企业买盘预期变化",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.9501674257351602,
+              "returnPct": -20.48175998334887,
+              "targetDate": "2026-06-30"
+            }
+          ]
+        },
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.017123032358473775,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "jobs-0904",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0023805696285717913,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-09-18T16:00:00.000Z",
+      "targetDate": "2026-10-18",
+      "anchor": {
+        "date": "2026-09-16",
+        "price": 76082.3769918527
+      },
+      "actualPrice": 81935.1692647925,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 75833.86273587948,
+      "unchanged": 76082.3769918527,
+      "base": 75788.99096861272,
+      "weak": 66244.96581339308,
+      "strong": 86708.04009803222,
+      "trendLogReturn": -0.0032717302389503222,
+      "eventLogAdjustment": -0.0005918866118191082,
+      "eventAdjustmentPct": -0.05917114814926183,
+      "eventScore": -0.008795169219217564,
+      "channelScores": {
+        "flows": -0.002906877933200324,
+        "macro": -0.005888291286017241,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "1e35acba5f98736dd9183997b2f8b0ea6d783e779492228c9c71b9264e8f8557",
+      "analysisFingerprint": "6234b52bc960a8468e85d319ed5073319dfa11ff7579338a5ae4645ad65d823f",
+      "libraryFingerprint": "36ef079a8d628d80bcb5d73573d6f512a5ae977648a206cd532a115514fd6ee7",
+      "events": [
+        {
+          "id": "flows-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.002906877933200324,
+          "matches": [
+            {
+              "id": "2026-06-redemptions",
+              "title": "连续赎回与企业买盘预期变化",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.9501674257351602,
+              "returnPct": -20.48175998334887,
+              "targetDate": "2026-06-30"
+            }
+          ]
+        },
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.01550873561102631,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "jobs-0904",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0021561382470254103,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-09-19T16:00:00.000Z",
+      "targetDate": "2026-10-19",
+      "anchor": {
+        "date": "2026-09-17",
+        "price": 76386.9018813968
+      },
+      "actualPrice": 81918.1984864816,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 76835.57220661646,
+      "unchanged": 76386.9018813968,
+      "base": 76798.05270917335,
+      "weak": 67934.97194386643,
+      "strong": 86817.44808541823,
+      "trendLogReturn": 0.00585647256088427,
+      "eventLogAdjustment": -0.0004884282097694106,
+      "eventAdjustmentPct": -0.04883089481291236,
+      "eventScore": -0.007965992893050855,
+      "channelScores": {
+        "flows": -0.002632828133226089,
+        "macro": -0.005333164759824767,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "3c68b558c506647fe468ab5aa87e2652a0c217d0fc861138da2e37e7114cc3eb",
+      "analysisFingerprint": "2f005ca5f493ccb5434b70060ebbbd8d2f4ad9e8285dd49066a5fdcbb3da0456",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "flows-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.002632828133226089,
+          "matches": [
+            {
+              "id": "2026-06-redemptions",
+              "title": "连续赎回与企业买盘预期变化",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.9501674257351602,
+              "returnPct": -20.48175998334887,
+              "targetDate": "2026-06-30"
+            }
+          ]
+        },
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.01404662884571889,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "jobs-0904",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0019528654337554107,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-09-20T16:00:00.000Z",
+      "targetDate": "2026-10-20",
+      "anchor": {
+        "date": "2026-09-18",
+        "price": 80944.1551838106
+      },
+      "actualPrice": 82898.9101560549,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 84637.63689028089,
+      "unchanged": 80944.1551838106,
+      "base": 84600.62049388244,
+      "weak": 74939.48578726992,
+      "strong": 95507.26046169024,
+      "trendLogReturn": 0.04461957345925212,
+      "eventLogAdjustment": -0.0004374471536269855,
+      "eventAdjustmentPct": -0.04373514875709583,
+      "eventScore": -0.00721498827259426,
+      "channelScores": {
+        "flows": -0.0023846147442026346,
+        "macro": -0.004830373528391625,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "62ae8ddd8b76b95cee668dddc403f0294953d0fc278e1c3ebdec0bddf62ffe25",
+      "analysisFingerprint": "5bd636adcba07fff323ef1f06ffa00b6fd14fb04b3211caf6c18dfc1575d3b52",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "flows-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0023846147442026346,
+          "matches": [
+            {
+              "id": "2026-06-redemptions",
+              "title": "连续赎回与企业买盘预期变化",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.9501674257351602,
+              "returnPct": -20.48175998334887,
+              "targetDate": "2026-06-30"
+            }
+          ]
+        },
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.012722364148699601,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "jobs-0904",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0017687564364752741,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-09-21T16:00:00.000Z",
+      "targetDate": "2026-10-21",
+      "anchor": {
+        "date": "2026-09-19",
+        "price": 81262.3455507422
+      },
+      "actualPrice": 84176.0796455874,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 85531.92080695083,
+      "unchanged": 81262.3455507422,
+      "base": 85498.1813747497,
+      "weak": 75773.09138716191,
+      "strong": 96471.43708364137,
+      "trendLogReturn": 0.051206894131755866,
+      "eventLogAdjustment": -0.00039454379326680513,
+      "eventAdjustmentPct": -0.03944659710994891,
+      "eventScore": -0.006534785615875187,
+      "channelScores": {
+        "flows": -0.0021598020039769487,
+        "macro": -0.0043749836118982385,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "ffdb1cd448dd48b5e7c45c5c230dcdfb763c1f03f9caf7e8ea5ee8efbcd6c86d",
+      "analysisFingerprint": "796b491395f4fc3bd0c2198fc5e3089af344bf0fac21f6e196bc359afd571ccf",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "flows-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0021598020039769487,
+          "matches": [
+            {
+              "id": "2026-06-redemptions",
+              "title": "连续赎回与企业买盘预期变化",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.9501674257351602,
+              "returnPct": -20.48175998334887,
+              "targetDate": "2026-06-30"
+            }
+          ]
+        },
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.01152294627485996,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "jobs-0904",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.001602004560834755,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-09-22T16:00:00.000Z",
+      "targetDate": "2026-10-22",
+      "anchor": {
+        "date": "2026-09-20",
+        "price": 81194.7440397662
+      },
+      "actualPrice": 81257.0175825248,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 85701.15543122024,
+      "unchanged": 81194.7440397662,
+      "base": 85670.57975878502,
+      "weak": 75939.04704207573,
+      "strong": 96649.20119605609,
+      "trendLogReturn": 0.05401579129245831,
+      "eventLogAdjustment": -0.00035683448878832453,
+      "eventAdjustmentPct": -0.035677083093410555,
+      "eventScore": -0.005918709973189545,
+      "channelScores": {
+        "flows": -0.001956183785126531,
+        "macro": -0.003962526188063014,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "8ddefbfa3ec89ea0edd099a2d39eda73ab149d1acf61d1118fc015881d019aa3",
+      "analysisFingerprint": "a412193dea24f2f5435d07c872e753aae9a9d01b7c58add2ada2fa8bddfb54d9",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "flows-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.001956183785126531,
+          "matches": [
+            {
+              "id": "2026-06-redemptions",
+              "title": "连续赎回与企业买盘预期变化",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.9501674257351602,
+              "returnPct": -20.48175998334887,
+              "targetDate": "2026-06-30"
+            }
+          ]
+        },
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.010436605123182298,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "jobs-0904",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.001450973441006745,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-09-23T16:00:00.000Z",
+      "targetDate": "2026-10-23",
+      "anchor": {
+        "date": "2026-09-21",
+        "price": 86505.297748235
+      },
+      "actualPrice": 80924.1837657744,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 95446.66825383384,
+      "unchanged": 86505.297748235,
+      "base": 95413.330710632,
+      "weak": 83754.0771803961,
+      "strong": 108695.64782724739,
+      "trendLogReturn": 0.0983619861861788,
+      "eventLogAdjustment": -0.0003493402883973719,
+      "eventAdjustmentPct": -0.034927927618366716,
+      "eventScore": -0.005360715684632564,
+      "channelScores": {
+        "flows": -0.0017717619458384399,
+        "macro": -0.0035889537387941237,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "d5efcb30b390a9144ea1279d09115853611e20670ba3b13e0eea7b1c28e20f1f",
+      "analysisFingerprint": "2086c3b6c3a5b873a47733a70b80083a07d89444f070393874bf073aa6509698",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "flows-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0017717619458384399,
+          "matches": [
+            {
+              "id": "2026-06-redemptions",
+              "title": "连续赎回与企业买盘预期变化",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.9501674257351602,
+              "returnPct": -20.48175998334887,
+              "targetDate": "2026-06-30"
+            }
+          ]
+        },
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.009452680234644132,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "jobs-0904",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0013141809817382385,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-09-24T16:00:00.000Z",
+      "targetDate": "2026-10-24",
+      "anchor": {
+        "date": "2026-09-22",
+        "price": 86205.2717985915
+      },
+      "actualPrice": 80699.3131272238,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 97483.80582527253,
+      "unchanged": 86205.2717985915,
+      "base": 97452.96993764005,
+      "weak": 85545.80550647892,
+      "strong": 111017.49867732909,
+      "trendLogReturn": 0.12295493655301014,
+      "eventLogAdjustment": -0.0003163680918491281,
+      "eventAdjustmentPct": -0.031631805274145997,
+      "eventScore": -0.004855327052962402,
+      "channelScores": {
+        "flows": -0.001604726721788141,
+        "macro": -0.003250600331174261,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "a39cfd9a6e73a3763149b0e881232f376823cad4142d5f90f6f0695727a7fc79",
+      "analysisFingerprint": "3f1072039bd517509478c2143bd55fdec9d7e08a90553c83e296a803d090ec04",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "flows-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.001604726721788141,
+          "matches": [
+            {
+              "id": "2026-06-redemptions",
+              "title": "连续赎回与企业买盘预期变化",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.9501674257351602,
+              "returnPct": -20.48175998334887,
+              "targetDate": "2026-06-30"
+            }
+          ]
+        },
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.008561516179236887,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "jobs-0904",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0011902848142858957,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-09-25T16:00:00.000Z",
+      "targetDate": "2026-10-25",
+      "anchor": {
+        "date": "2026-09-23",
+        "price": 84434.3188651724
+      },
+      "actualPrice": 80038.9058032613,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 93011.09860461683,
+      "unchanged": 84434.3188651724,
+      "base": 92983.94022389532,
+      "weak": 81419.22568411629,
+      "strong": 106191.2965508299,
+      "trendLogReturn": 0.09674488528840634,
+      "eventLogAdjustment": -0.0002920333906278029,
+      "eventAdjustmentPct": -0.0291990753027771,
+      "eventScore": -0.004397584609608782,
+      "channelScores": {
+        "macro": -0.0029441456430086203,
+        "flows": -0.001453438966600162,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "4c21946434bb7cbf41a3573aeb9b4e4b0f33f3ab27dd09d53affcceee6a6dd12",
+      "analysisFingerprint": "2bcbbf6f1731d2ff37cc3c07b248326bd3d26d60085862ceee1d36cc5180c59b",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.007754367805513156,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "jobs-0904",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.001078069123512705,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "flows-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.001453438966600162,
+          "matches": [
+            {
+              "id": "2026-06-redemptions",
+              "title": "连续赎回与企业买盘预期变化",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.9501674257351602,
+              "returnPct": -20.48175998334887,
+              "targetDate": "2026-06-30"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-09-26T16:00:00.000Z",
+      "targetDate": "2026-10-26",
+      "anchor": {
+        "date": "2026-09-24",
+        "price": 84386.5778094565
+      },
+      "actualPrice": 79949.9343292344,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 92297.79812657757,
+      "unchanged": 84386.5778094565,
+      "base": 92281.57170879755,
+      "weak": 80880.6756117619,
+      "strong": 105289.53192630775,
+      "trendLogReturn": 0.08961192734599924,
+      "eventLogAdjustment": -0.0001758204921415952,
+      "eventAdjustmentPct": -0.017580503662473213,
+      "eventScore": -0.0026665823799123835,
+      "channelScores": {
+        "macro": -0.0026665823799123835,
+        "flows": 0,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "7b777f25c9037e98915461dd23648ed9a9c0a58b22893f5d89af42800bc12071",
+      "analysisFingerprint": "76730d70318e2b59621f8e3c60889a2d4c77250c4a03edefe7cf6fa98ced9ba1",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "jobs-0904",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0009764327168777054,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "flows-0925",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.007023314422859445,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-09-27T16:00:00.000Z",
+      "targetDate": "2026-10-27",
+      "anchor": {
+        "date": "2026-09-25",
+        "price": 84062.1558929047
+      },
+      "actualPrice": 80800.5373719316,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 88013.62439623337,
+      "unchanged": 84062.1558929047,
+      "base": 88000.1872501378,
+      "weak": 77548.47984177047,
+      "strong": 99860.53848973186,
+      "trendLogReturn": 0.04593514885840616,
+      "eventLogAdjustment": -0.00015268286046412875,
+      "eventAdjustmentPct": -0.015267120502937548,
+      "eventScore": -0.0024151867641958127,
+      "channelScores": {
+        "macro": -0.0024151867641958127,
+        "flows": 0,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "2220313b5576e1eba07d9d225d78adc8b624275b4a390085f9e6955bc88d30de",
+      "analysisFingerprint": "aeb1d283c4752d1b83107013970745680e00447b2cdb1e160e977d6ddd574caf",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "jobs-0904",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0008843782182376371,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "flows-0925",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.006361182074349801,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-09-28T16:00:00.000Z",
+      "targetDate": "2026-10-28",
+      "anchor": {
+        "date": "2026-09-26",
+        "price": 84386.4961173115
+      },
+      "actualPrice": 81237.4378259731,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 88296.6634361342,
+      "unchanged": 84386.4961173115,
+      "base": 88284.46060597424,
+      "weak": 77804.4184511215,
+      "strong": 100176.13574715266,
+      "trendLogReturn": 0.045294930025017874,
+      "eventLogAdjustment": -0.00013821217013529574,
+      "eventAdjustmentPct": -0.0138202619273331,
+      "eventScore": -0.0021874918059491192,
+      "channelScores": {
+        "macro": -0.0021874918059491192,
+        "flows": 0,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "93d7fcb732076567bce8303e229215152ad2973ed2d042811e8d2d69699f4421",
+      "analysisFingerprint": "a5c7f734544b2d3ee620058286516e76d02a81e1f426d12c8eaacd26932b08df",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "jobs-0904",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0008010022804173777,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "flows-0925",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.00576147313742998,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-09-29T16:00:00.000Z",
+      "targetDate": "2026-10-29",
+      "anchor": {
+        "date": "2026-09-27",
+        "price": 84392.4723819229
+      },
+      "actualPrice": 78193.4264043074,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 88493.82506837549,
+      "unchanged": 84392.4723819229,
+      "base": 88482.75189629149,
+      "weak": 77982.70429411827,
+      "strong": 100396.58734598642,
+      "trendLogReturn": 0.04745456850430076,
+      "eventLogAdjustment": -0.0001251371485239909,
+      "eventAdjustmentPct": -0.012512931919761439,
+      "eventScore": -0.001981263094031507,
+      "channelScores": {
+        "macro": -0.001981263094031507,
+        "flows": 0,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "71fb88e8c08177b9688f433f85cd51145401f323221181f4b51ae67f6ca1e6ec",
+      "analysisFingerprint": "87fb5b47c9f2a73fe8081f057a6b86b5ebb0e5959ac357b4be6a52aafb80065a",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "jobs-0904",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0007254867205033727,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "flows-0925",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.005218302561591149,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-09-30T16:00:00.000Z",
+      "targetDate": "2026-10-30",
+      "anchor": {
+        "date": "2026-09-28",
+        "price": 83516.7629809001
+      },
+      "actualPrice": 77109.5907473057,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 82205.66009633339,
+      "unchanged": 83516.7629809001,
+      "base": 82196.32407447908,
+      "weak": 72423.23190817067,
+      "strong": 93288.23794999077,
+      "trendLogReturn": -0.01582320865946113,
+      "eventLogAdjustment": -0.00011357553756341115,
+      "eventAdjustmentPct": -0.011356908810622457,
+      "eventScore": -0.0017944768693970619,
+      "channelScores": {
+        "macro": -0.0017944768693970619,
+        "flows": 0,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "c5525c56b99c38508bc7a4e97083bb6d4ed9ee8ae1a201a490adf5680b9b9293",
+      "analysisFingerprint": "c980c976631efaebb6a2ab01c1713e970325cd0a2cd6a1b094750ae93e701c9d",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "jobs-0904",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0006570904908691193,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "flows-0925",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.004726340117322066,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-10-01T16:00:00.000Z",
+      "targetDate": "2026-10-31",
+      "anchor": {
+        "date": "2026-09-29",
+        "price": 83674.6569854062
+      },
+      "actualPrice": 77401.0172870368,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 82985.83859018188,
+      "unchanged": 83674.6569854062,
+      "base": 82977.40492712488,
+      "weak": 73222.6495542331,
+      "strong": 94031.69334019275,
+      "trendLogReturn": -0.008266173877215871,
+      "eventLogAdjustment": -0.0001016329023889141,
+      "eventAdjustmentPct": -0.010162773794042401,
+      "eventScore": -0.0016253001655871305,
+      "channelScores": {
+        "macro": -0.0016253001655871305,
+        "flows": 0,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "30351f31508956f9ea86cacfbfedc58072de8652873ccd02be5d91d2ea100c76",
+      "analysisFingerprint": "9c77ca62782682ede0b2bebeced90b6953eade3ff593fa8f2aeb09931b89036e",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "jobs-0904",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0005951424071429479,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "flows-0925",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.004280758089618444,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-10-02T16:00:00.000Z",
+      "targetDate": "2026-11-01",
+      "anchor": {
+        "date": "2026-09-30",
+        "price": 83579.6739176914
+      },
+      "actualPrice": 78135.0802893045,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 84231.66693967735,
+      "unchanged": 83579.6739176914,
+      "base": 84223.91844312359,
+      "weak": 74328.35871556327,
+      "strong": 95436.90403631401,
+      "trendLogReturn": 0.007770586890884218,
+      "eventLogAdjustment": -0.00009199453424604356,
+      "eventAdjustmentPct": -0.009199030287865284,
+      "eventScore": -0.0014720728215043104,
+      "channelScores": {
+        "macro": -0.0014720728215043104,
+        "flows": 0,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "c8b9ae606a7f02e88b3d35406c238e66bb51934b174199f8f1ddb86533758e11",
+      "analysisFingerprint": "aa58784625656a09139e98700b56de3db9fc12191e92b64669de05a1b275da18",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0005390345617563527,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "flows-0925",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.003877183902756578,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "jobs-1002",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-10-03T16:00:00.000Z",
+      "targetDate": "2026-11-02",
+      "anchor": {
+        "date": "2026-10-01",
+        "price": 84777.2412468031
+      },
+      "actualPrice": 76680.7491297195,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 85818.79433316618,
+      "unchanged": 84777.2412468031,
+      "base": 85811.69920576103,
+      "weak": 75802.61424933276,
+      "strong": 97142.39797006507,
+      "trendLogReturn": 0.012210905424925787,
+      "eventLogAdjustment": -0.00008267910046629575,
+      "eventAdjustmentPct": -0.008267568264364034,
+      "eventScore": -0.001333291189956191,
+      "channelScores": {
+        "macro": -0.001333291189956191,
+        "flows": 0,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "c820e9e83e7da59ce301a59efcb991019eaabf2d972867c831c8fced8a202842",
+      "analysisFingerprint": "5318198d672e2eab97c5b3f08875c2be87d6e077cf9d99d41d7ea2033346fabd",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0004882163584388528,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "flows-0925",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.003511657211429721,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "jobs-1002",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-10-04T16:00:00.000Z",
+      "targetDate": "2026-11-03",
+      "anchor": {
+        "date": "2026-10-02",
+        "price": 84517.5188820339
+      },
+      "actualPrice": 77655.7376776739,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 85889.7816583501,
+      "unchanged": 84517.5188820339,
+      "base": 85883.34544410587,
+      "weak": 75859.10278852092,
+      "strong": 97232.22070308689,
+      "trendLogReturn": 0.016106028744768484,
+      "eventLogAdjustment": -0.0000749385466260537,
+      "eventAdjustmentPct": -0.007493573880335003,
+      "eventScore": -0.0012075933820979063,
+      "channelScores": {
+        "macro": -0.0012075933820979063,
+        "flows": 0,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "e98aec5b4e5c0ae801329c80f7dbaab6281d6064b56ce04cc223724625ef134c",
+      "analysisFingerprint": "46336aa84209651b26af32ed753612f680b448612ac56222f05301fdf9d43bcd",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.00044218910911881853,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "flows-0925",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0031805910371749003,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "jobs-1002",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-10-05T16:00:00.000Z",
+      "targetDate": "2026-11-04",
+      "anchor": {
+        "date": "2026-10-03",
+        "price": 84756.1407678667
+      },
+      "actualPrice": 80487.5875787084,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 86080.4544627244,
+      "unchanged": 84756.1407678667,
+      "base": 86074.61576613283,
+      "weak": 76034.0192292005,
+      "strong": 97441.11325949836,
+      "trendLogReturn": 0.015504174865020605,
+      "eventLogAdjustment": -0.00006783066668959282,
+      "eventAdjustmentPct": -0.006782836624197319,
+      "eventScore": -0.0010937459029745596,
+      "channelScores": {
+        "macro": -0.0010937459029745596,
+        "flows": 0,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "d0f17023c1313c54464927009c28f9002b148b31dc8dd9c072b63431dfdccad3",
+      "analysisFingerprint": "fd93148208851adc0b476b9779605f766a12619949d1690af0ae931f985f05d9",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.00040050114020868884,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "flows-0925",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.0028807365687149897,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "jobs-1002",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-10-06T16:00:00.000Z",
+      "targetDate": "2026-11-05",
+      "anchor": {
+        "date": "2026-10-04",
+        "price": 86520.8001186441
+      },
+      "actualPrice": 75803.1273068206,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 89584.60330401006,
+      "unchanged": 86520.8001186441,
+      "base": 89579.07591490918,
+      "weak": 79087.1565563901,
+      "strong": 101462.88210586456,
+      "trendLogReturn": 0.03479861825973294,
+      "eventLogAdjustment": -0.00006170211648630744,
+      "eventAdjustmentPct": -0.006170021294982231,
+      "eventScore": -0.0009906315470157535,
+      "channelScores": {
+        "macro": -0.0009906315470157535,
+        "flows": 0,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "8748efecaf4dca8f613376f4044b4ec0918f3b2009b9bfd1c11790e716f4fa74",
+      "analysisFingerprint": "4fc3029f52688c31729751e0ae020947b77b2260d3236e0b524bd16033f5d952",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.00036274336025168634,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "flows-0925",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.002609151280795574,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "jobs-1002",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-10-07T16:00:00.000Z",
+      "targetDate": "2026-11-06",
+      "anchor": {
+        "date": "2026-10-05",
+        "price": 85834.5284942957
+      },
+      "actualPrice": 75826.5258667446,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 89186.57019983929,
+      "unchanged": 85834.5284942957,
+      "base": 89181.58243803182,
+      "weak": 78728.9310406614,
+      "strong": 101022.007297975,
+      "trendLogReturn": 0.03830911440903265,
+      "eventLogAdjustment": -0.00005592659603193699,
+      "eventAdjustmentPct": -0.005592503216900191,
+      "eventScore": -0.0008972384346985309,
+      "channelScores": {
+        "macro": -0.0008972384346985309,
+        "flows": 0,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "c711f4d23fb80d18401fc6ad20551050e8dddea421d700216735cdc4a241c119",
+      "analysisFingerprint": "f5d2f3e7ed009e5a072eb498b507bb4b49a80f54aabb178c3e854e953fd6d24a",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.00032854524543455963,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "flows-0925",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "fed-0916",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.002363170058661033,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "jobs-1002",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-10-08T16:00:00.000Z",
+      "targetDate": "2026-11-07",
+      "anchor": {
+        "date": "2026-10-06",
+        "price": 85523.2317733255
+      },
+      "actualPrice": 75724.4061539509,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 88548.09957608707,
+      "unchanged": 85523.2317733255,
+      "base": 88521.28511407993,
+      "weak": 78139.22057717045,
+      "strong": 100282.77554303683,
+      "trendLogReturn": 0.03475784672568797,
+      "eventLogAdjustment": -0.0003028695475396018,
+      "eventAdjustmentPct": -0.030282368718825836,
+      "eventScore": -0.004855588278544318,
+      "channelScores": {
+        "macro": -0.004855588278544318,
+        "flows": 0,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "0acb557456c5b21a4874e9df1f208ad49a5809fa34789df5526c85093abef285",
+      "analysisFingerprint": "4b9d9b31095ef5310d82af7ca2f537295d0c2f6e1fe55e2fe77e5a56210c42a3",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "cpi-0911",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.00029757120357147397,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "flows-0925",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "fed-minutes-1007",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.014269193632061479,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "jobs-1002",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-10-09T16:00:00.000Z",
+      "targetDate": "2026-11-08",
+      "anchor": {
+        "date": "2026-10-07",
+        "price": 83273.7243755582
+      },
+      "actualPrice": 74967.7164066861,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 84078.65890392671,
+      "unchanged": 83273.7243755582,
+      "base": 84044.2207854265,
+      "weak": 74035.63612799387,
+      "strong": 95405.82639444272,
+      "trendLogReturn": 0.009619710456383561,
+      "eventLogAdjustment": -0.00040967795752129365,
+      "eventAdjustmentPct": -0.04095940509655227,
+      "eventScore": -0.006461973171260963,
+      "channelScores": {
+        "flows": 0,
+        "macro": -0.006461973171260963,
+        "policy": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "be0d159b80172c6308f7965a8326063c33e3778ab83e52ad38b13a4a117ca792",
+      "analysisFingerprint": "758fa0bce3fe91a05f64d9799d874d7fc0ce13b9860352d976327af106edc151",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "flows-0925",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "fed-minutes-1007",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.012923946342521926,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "jobs-1002",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-10-10T16:00:00.000Z",
+      "targetDate": "2026-11-09",
+      "anchor": {
+        "date": "2026-10-08",
+        "price": 81731.8801367154
+      },
+      "actualPrice": 75161.1324418469,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 80394.79298980114,
+      "unchanged": 81731.8801367154,
+      "base": 80364.7205414167,
+      "weak": 70719.97581089988,
+      "strong": 91324.80934339591,
+      "trendLogReturn": -0.016494725226438564,
+      "eventLogAdjustment": -0.0003741296309580822,
+      "eventAdjustmentPct": -0.037405965319492473,
+      "eventScore": -0.005852762019049537,
+      "channelScores": {
+        "macro": -0.005852762019049537,
+        "policy": 0,
+        "flows": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "037ee05ddc6c7ea7412883987919f1511f4ed2820e4ed0230d55c4fc9d60f2be",
+      "analysisFingerprint": "5bb8200c06a5396b98a87310f2dff346c7532c332c2cd85f6ae303b617ccef28",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "fed-minutes-1007",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.011705524038099074,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "flows-0925",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "jobs-1002",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-10-11T16:00:00.000Z",
+      "targetDate": "2026-11-10",
+      "anchor": {
+        "date": "2026-10-09",
+        "price": 82562.555254436
+      },
+      "actualPrice": 73661.004978235,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 82131.82749043907,
+      "unchanged": 82562.555254436,
+      "base": 82104.15002527859,
+      "weak": 72300.08967512661,
+      "strong": 93237.6637658942,
+      "trendLogReturn": -0.0052306428290214676,
+      "eventLogAdjustment": -0.00033704509622253266,
+      "eventAdjustmentPct": -0.03369883029048504,
+      "eventScore": -0.005300985061958167,
+      "channelScores": {
+        "macro": -0.005300985061958167,
+        "policy": 0,
+        "flows": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "c8c48902e022e796b6d9dc7b95989c6a5e5c6a7db552d87442fc2ff0f7fbff9f",
+      "analysisFingerprint": "7e462e19b9965494ae45c3bbc69caa56a7b27427b19a6f0feef265c33548ca4f",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "fed-minutes-1007",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.010601970123916334,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "flows-0925",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "jobs-1002",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-10-12T16:00:00.000Z",
+      "targetDate": "2026-11-11",
+      "anchor": {
+        "date": "2026-10-10",
+        "price": 82948.8590383986
+      },
+      "actualPrice": 73805.5216852425,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 82699.2339299793,
+      "unchanged": 82948.8590383986,
+      "base": 82674.03460255357,
+      "weak": 72817.47598995341,
+      "strong": 93864.77496703192,
+      "trendLogReturn": -0.0030139229846437767,
+      "eventLogAdjustment": -0.00030475696398056887,
+      "eventAdjustmentPct": -0.030471053029412776,
+      "eventScore": -0.004801227614524984,
+      "channelScores": {
+        "macro": -0.004801227614524984,
+        "policy": 0,
+        "flows": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "d2c18d77056affb67b9e708d20c8e2fb9db0729f6612101b3bc109968818f165",
+      "analysisFingerprint": "12e11c2f4476039d43fc5f9262e16c9ebd01a6967ac9e15821b4cbefcfcd6b7c",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "fed-minutes-1007",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.009602455229049968,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "flows-0925",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "jobs-1002",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    },
+    {
+      "mode": "retrospective",
+      "asOf": "2026-10-13T16:00:00.000Z",
+      "targetDate": "2026-11-12",
+      "anchor": {
+        "date": "2026-10-11",
+        "price": 83636.6057580362
+      },
+      "actualPrice": 71280.4157896201,
+      "actualSourceFetchedAt": "2026-11-13T20:55:42.084Z",
+      "horizon": 30,
+      "elapsedFromAnchor": 32,
+      "noEvents": 82807.60482528867,
+      "unchanged": 83636.6057580362,
+      "base": 82784.7672522734,
+      "weak": 72921.60646655233,
+      "strong": 93981.98999025836,
+      "trendLogReturn": -0.009961389283865404,
+      "eventLogAdjustment": -0.0002758288062852075,
+      "eventAdjustmentPct": -0.02757907690174033,
+      "eventScore": -0.004348585467992624,
+      "channelScores": {
+        "macro": -0.004348585467992624,
+        "policy": 0,
+        "flows": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval",
+      "inputFingerprint": "978362bceed692712eec4a2352d6a4dc9cd8ce8a00c36de8f812772b55d54fe4",
+      "analysisFingerprint": "b0a506fc94ca79c379183f08137fd829d0f157cec43a33e7ae8dcd0a27fcfd25",
+      "libraryFingerprint": "f3e2a0cb5412d475d4f3791940cff7f2c4e6a47011ef90e6ccb3ddb2fdec3efa",
+      "events": [
+        {
+          "id": "fed-minutes-1007",
+          "level": 3,
+          "count": 1,
+          "contribution": -0.008697170935985248,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ]
+        },
+        {
+          "id": "sec-0917",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "flows-0925",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        },
+        {
+          "id": "jobs-1002",
+          "level": null,
+          "count": 0,
+          "contribution": 0,
+          "matches": []
+        }
+      ]
+    }
+  ]
+}

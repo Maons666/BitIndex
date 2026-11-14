@@ -16,6 +16,7 @@ const trackingJob = createTrackingJob(join(root, '..'), { trackingRoot });
 const files = new Map([
   ['/', ['index.html', 'text/html']], ['/index.html', ['index.html', 'text/html']],
   ['/prediction.html', ['prediction.html', 'text/html']], ['/prediction.mjs', ['prediction.mjs', 'text/javascript']],
+  ['/evaluation.mjs', ['evaluation.mjs', 'text/javascript']], ['/evaluation-core.mjs', ['evaluation-core.mjs', 'text/javascript']],
   ['/style.css', ['style.css', 'text/css']], ['/app.mjs', ['app.mjs', 'text/javascript']],
   ['/core.mjs', ['core.mjs', 'text/javascript']], ['/chart.mjs', ['chart.mjs', 'text/javascript']],
   ['/forecast.mjs', ['forecast.mjs', 'text/javascript']],

@@ -2,6 +2,7 @@ import { readMarket, readEvents, isStatic } from './data-client.mjs';
 import { usd, number } from './chart.mjs';
 import { updateOutlook } from './outlook.mjs';
 import { loadForecast } from './forecast.mjs';
+import { updateEvaluation } from './evaluation.mjs';
 const $ = id => document.getElementById(id), DAY = 86400000;
 const state = { snapshot: null, events: null, horizon: 7, id: null, busy: false };
 const pct = v => Number.isFinite(v) ? (v > 0 ? '+' : '') + number(v, 2) + '%' : '—';
@@ -123,13 +124,13 @@ async function load(force = false) {
   try {
     const data = await readMarket(force); state.snapshot = data; market(data); updateOutlook(data);
     void loadForecast(data);
-    state.events = null; $('event-content').hidden = true; $('event-export').disabled = true; $('event-status').textContent = '正在读取对应版本的分析…';
+    state.events = null; updateEvaluation(null); $('event-content').hidden = true; $('event-export').disabled = true; $('event-status').textContent = '正在读取对应版本的分析…';
     $('event-comparison-body').replaceChildren(); $('event-research').replaceChildren(); $('library-body').replaceChildren(); $('library-queue').replaceChildren(); $('event-comparison-status').textContent = '正在读取…'; $('event-comparison-export').removeAttribute('href');
     try {
       state.events = await readEvents(data);
       if (!state.events.forecasts.some(f => f.id === state.id)) state.id = state.events.forecasts[0]?.id;
       $('event-issue').replaceChildren(...state.events.forecasts.map(f => { const n = el('option', '', time(f.issuedAt)); n.value = f.id; n.selected = f.id === state.id; return n; }));
-      render(); comparisons(); research();
+      render(); comparisons(); research(); updateEvaluation(state.events);
     } catch (e) { $('event-status').textContent = '事件分析暂不可用：' + e.message; $('event-status').classList.add('warn'); $('event-comparison-status').textContent = '未取得同一发布版本的对照记录'; }
   } catch (e) { $('notice').textContent = '刷新失败：' + e.message + '。已显示内容保留原时间。'; $('notice').hidden = false; $('status-text').textContent = '连接失败 · 保留上次数据和签发时间'; $('status-dot').classList.add('warn'); }
   finally { state.busy = false; $('refresh').disabled = false; $('refresh-label').textContent = '刷新数据'; }

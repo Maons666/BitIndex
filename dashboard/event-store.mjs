@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { writeOnce } from './tracking.mjs';
 import { buildEventForecast, compareEventForecast } from './event-model.mjs';
+import { buildReplay } from './replay.mjs';
 export const eventRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../event-predictions');
 async function readJson(path) { return JSON.parse(await readFile(path, 'utf8')); }
 async function listJson(path) {
@@ -46,5 +47,13 @@ export async function readEventData(trackingRoot, { archiveRoot = eventRoot } = 
   comparisons.sort((a, b) => a.date.localeCompare(b.date) || a.forecastId.localeCompare(b.forecastId) || a.horizon - b.horizon);
   const research = await readJson(join(archiveRoot, 'research.json')).catch(e => { if (e.code === 'ENOENT') return { periods: [] }; throw e; });
   const library = await readJson(join(archiveRoot, 'library.json')).catch(e => { if (e.code === 'ENOENT') return { cases: [] }; throw e; });
-  return { schema: 1, updateMode: 'agent-triggered-free', forecasts, comparisons, research, library };
+  const replays = [];
+  for (const file of (await listJson(join(archiveRoot, 'replays'))).filter(f => f.endsWith('.report.json'))) {
+    const saved = await readJson(join(archiveRoot, 'replays', file));
+    const input = await readJson(join(archiveRoot, 'replays', file.replace('.report.json', '.input.json')));
+    if (JSON.stringify(saved) !== JSON.stringify(buildReplay(input))) throw new Error('历史回放不能由留档输入复算：' + file);
+    replays.push(saved);
+  }
+  replays.sort((a, b) => b.reconstructedAt.localeCompare(a.reconstructedAt));
+  return { schema: 1, updateMode: 'agent-triggered-free', forecasts, comparisons, research, library, replays };
 }

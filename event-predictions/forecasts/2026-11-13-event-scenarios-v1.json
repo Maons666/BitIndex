@@ -1,0 +1,371 @@
+{
+  "schema": 1,
+  "id": "2026-11-13-event-scenarios-v1",
+  "modelVersion": "event-scenarios-v1",
+  "issuedAt": "2026-11-14T02:51:05.168Z",
+  "analysisCutoffAt": "2026-11-14T02:51:01Z",
+  "author": "Codex agent · 纽约 11 月 13 日事件复核",
+  "updateMode": "agent-triggered-free",
+  "anchor": {
+    "date": "2026-11-12",
+    "price": 71280.4157896201
+  },
+  "source": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics",
+  "sourceFetchedAt": "2026-11-13T20:55:42.084Z",
+  "inputFingerprint": "eeef66eb3bea91ab7cff75a3544df718dc6e2d923f28002e962a3fd85532dc10",
+  "analysisFingerprint": "ab4e6531de1ba73b4685f3821f37fb304f04b42f638c3690f6fbfb7cae6bdb86",
+  "libraryFingerprint": "227b90cbd52fefddf8f2bf0c3696833ed4b6b0cf9c84685884226ebe5a0cc5ab",
+  "summary": "最新已发布收盘价降至 71,280.42 美元，短期趋势仍弱。美国现货 ETF 截至 11 月 12 日持续净流出，最新 PPI 显示生产端通胀仍有粘性；交易所已披露补足受影响资产，提供部分信心修复。11 月 13 日 ETF 数据尚不完整。历史同类案例仍少，事件调整继续收缩，保留三种情景作前瞻检验。",
+  "coverageGaps": [
+    "行情使用纽约 11 月 13 日 15:55 自动获取的 Coin Metrics 快照，截至 11 月 12 日 UTC 收盘；不是 11 月 13 日盘中或收盘价格。",
+    "11 月 13 日 ETF 表仍缺 IBIT：已报告 FBTC 净流出 4,190 万美元，不能当成全市场全日结果。已完成统计只累计至 11 月 12 日。",
+    "四个历史精选案例存在选择偏差，每个主要类别仍只有一个样本；没有因核算结果调整等级阈值、趋势系数或情景宽度。",
+    "安全事件后续没有同类已核实历史案例，等级仍待积累。平台自述补足与 PoR 快照不等同于独立完整偿付审计；提现仍分阶段恢复。",
+    "未取得完整清算、期权偏斜和市场一致预期数据，不能认定 PPI 超预期；资金流和价格可能互相影响。",
+    "新预测按真实签发时刻留档。纽约仍为 11 月 13 日，UTC 已为 11 月 14 日；目标日沿用 UTC 规则，旧目标和旧评分不重写。"
+  ],
+  "conditions": {
+    "base": "ETF 流出逐步缓和但尚未形成持续流入，通胀与利率预期未明显转向，交易所补偿进展没有新的反复。",
+    "weak": "ETF 赎回持续、利率预期进一步走高，或交易所提现及储备验证再出现问题。",
+    "strong": "ETF 转为连续净流入，交易所提现与储备验证顺利推进，宏观风险偏好改善。"
+  },
+  "events": [
+    {
+      "id": "fed-2026-10-28",
+      "title": "利率仍处高位，旧消息继续衰减",
+      "category": "macro",
+      "kind": "monetary-tightening",
+      "eventDate": "2026-10-28",
+      "publishedAt": "2026-10-28T18:00:00Z",
+      "verifiedAt": "2026-11-14T02:51:01Z",
+      "sourceName": "Federal Reserve",
+      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
+      "fact": "10 月 28 日 Fed 维持目标利率 3.75%—4.00%，两名委员支持提高 25 个基点。本次复核沿用这项决议，不将其标为今日加息。",
+      "inference": "高利率环境可能压低风险资产估值，但既有决议已被市场观察多日，新增信息有限。",
+      "direction": -1,
+      "similarity": 0.35,
+      "confidence": 0.6,
+      "novelty": 0.2,
+      "rationale": "与上一期保持相同主观参数，仅按真实时间继续衰减；只通过政策预期渠道部分匹配 1 月案例。",
+      "ageDays": 16.368761574074075,
+      "classifications": [
+        {
+          "horizon": 7,
+          "count": 1,
+          "level": 4,
+          "label": "L4",
+          "historicalDirection": -1,
+          "reliability": 0.16666666666666666,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 4,
+              "direction": -1,
+              "standardizedMove": -4.976904900093034,
+              "returnPct": -24.87649080459914,
+              "targetDate": "2026-02-05"
+            }
+          ],
+          "contribution": -0.001384111734571372
+        },
+        {
+          "horizon": 30,
+          "count": 1,
+          "level": 3,
+          "label": "L3",
+          "historicalDirection": -1,
+          "reliability": 0.16666666666666666,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ],
+          "contribution": -0.0010380838009285292
+        }
+      ]
+    },
+    {
+      "id": "ppi-2026-11-13",
+      "title": "最新 PPI 显示通胀压力仍在",
+      "category": "macro",
+      "kind": "monetary-tightening",
+      "eventDate": "2026-11-13",
+      "publishedAt": "2026-11-13T13:30:00Z",
+      "verifiedAt": "2026-11-14T02:51:01Z",
+      "sourceName": "BLS",
+      "url": "https://www.bls.gov/news.release/archives/ppi_11132026.htm",
+      "fact": "10 月最终需求 PPI 环比上涨 0.3%，同比上涨 6.5%；剔除食品、能源和贸易服务后环比上涨 0.5%。",
+      "inference": "总体环比回落与基础价格压力并存，可能限制宽松预期；没有一致预期来源，不能称超预期或低于预期。",
+      "direction": -1,
+      "similarity": 0.4,
+      "confidence": 0.5,
+      "novelty": 0.3,
+      "rationale": "作为本期新增通胀证据，替换上一期 CPI 事件条目；同属宏观渠道，与 Fed 消息取平均以避免重复叠加。沿用保守影响参数，不据已发生跌幅上调权重。",
+      "ageDays": 0.5562615740740741,
+      "classifications": [
+        {
+          "horizon": 7,
+          "count": 1,
+          "level": 4,
+          "label": "L4",
+          "historicalDirection": -1,
+          "reliability": 0.16666666666666666,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 4,
+              "direction": -1,
+              "standardizedMove": -4.976904900093034,
+              "returnPct": -24.87649080459914,
+              "targetDate": "2026-02-05"
+            }
+          ],
+          "contribution": -0.009464079257955175
+        },
+        {
+          "horizon": 30,
+          "count": 1,
+          "level": 3,
+          "label": "L3",
+          "historicalDirection": -1,
+          "reliability": 0.16666666666666666,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ],
+          "contribution": -0.007098059443466381
+        }
+      ]
+    },
+    {
+      "id": "etf-2026-11-12",
+      "title": "ETF 已完成统计仍为持续流出",
+      "category": "flows",
+      "kind": "fund-outflow",
+      "eventDate": "2026-11-12",
+      "publishedAt": "2026-11-14T02:51:01Z",
+      "verifiedAt": "2026-11-14T02:51:01Z",
+      "publicationTimeNote": "动态表未提供完整发布时间，采用本次核查时刻作为新增数据可用时间。11 月 13 日 IBIT 未报告，排除该日不完整总额。",
+      "sourceName": "Farside Investors · 数据汇总",
+      "url": "https://farside.co.uk/btc/",
+      "fact": "11 月 12 日美国现货 BTC ETF 净流出 2.841 亿美元；11 月 2—12 日完整交易日合计净流出 21.616 亿美元。11 月 13 日尚缺 IBIT 数据。",
+      "inference": "新增完整交易日仍为净流出，支持需求承压的判断；不据部分报告判定 13 日流出已经缓和。",
+      "direction": -1,
+      "similarity": 0.75,
+      "confidence": 0.6,
+      "novelty": 0.4,
+      "rationale": "与上一期保持相同评分参数，仅纳入新完成的 11 月 12 日数据。参考 6 月持续赎回案例，但美国 ETF 与更广投资产品统计范围不同。",
+      "observations": {
+        "unit": "USD million",
+        "completeTotals": [
+          [
+            "2026-11-02",
+            -398.6
+          ],
+          [
+            "2026-11-03",
+            -115.6
+          ],
+          [
+            "2026-11-04",
+            74.6
+          ],
+          [
+            "2026-11-05",
+            -430.2
+          ],
+          [
+            "2026-11-06",
+            -411.9
+          ],
+          [
+            "2026-11-09",
+            -201
+          ],
+          [
+            "2026-11-10",
+            -95
+          ],
+          [
+            "2026-11-11",
+            -299.8
+          ],
+          [
+            "2026-11-12",
+            -284.1
+          ]
+        ],
+        "completeSum": -2161.6,
+        "partialDay": "2026-11-13",
+        "partialReportedTotal": -41.9,
+        "missingFunds": [
+          "IBIT"
+        ],
+        "partialUsedAsDailyTotal": false
+      },
+      "ageDays": 0,
+      "classifications": [
+        {
+          "horizon": 7,
+          "count": 1,
+          "level": 4,
+          "label": "L4",
+          "historicalDirection": -1,
+          "reliability": 0.16666666666666666,
+          "matches": [
+            {
+              "id": "2026-06-redemptions",
+              "title": "连续赎回与企业买盘预期变化",
+              "level": 4,
+              "direction": -1,
+              "standardizedMove": -3.13342838414801,
+              "returnPct": -14.186642771753476,
+              "targetDate": "2026-06-07"
+            }
+          ],
+          "contribution": -0.03
+        },
+        {
+          "horizon": 30,
+          "count": 1,
+          "level": 3,
+          "label": "L3",
+          "historicalDirection": -1,
+          "reliability": 0.16666666666666666,
+          "matches": [
+            {
+              "id": "2026-06-redemptions",
+              "title": "连续赎回与企业买盘预期变化",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.9501674257351602,
+              "returnPct": -20.48175998334887,
+              "targetDate": "2026-06-30"
+            }
+          ],
+          "contribution": -0.0225
+        }
+      ]
+    },
+    {
+      "id": "binance-coverage-update",
+      "title": "资产补足进展改善，提现仍分批恢复",
+      "category": "security",
+      "kind": "security-breach",
+      "eventDate": "2026-11-13",
+      "publishedAt": "2026-11-14T02:51:01Z",
+      "verifiedAt": "2026-11-14T02:51:01Z",
+      "publicationTimeNote": "原站显示 Published on 2026-11-12 16:54，未标时区；正文署名 11 月 13 日。首次完整核查时刻作为可用时间，不猜测原始 UTC 发布时间。",
+      "sourceName": "Binance 官方公告",
+      "url": "https://www.binance.com/en/support/announcement/detail/0729ad59cde74700b4eaa96c33441e71",
+      "additionalSources": [
+        {
+          "title": "官方同步说明",
+          "url": "https://www.binance.com/en/square/post/387527915862393"
+        }
+      ],
+      "fact": "平台称已完成受影响资产补足，公布 11 月 12 日 00:00 UTC 的 198 币种 PoR 快照；完整零知识证明预计需 40—50 小时生成，提现分阶段恢复。",
+      "inference": "相较此前补足 98% 的披露，信心修复有所推进；不据预计耗时推断完整证明已完成，也不把快照等同于独立审计。",
+      "direction": 1,
+      "similarity": 0,
+      "confidence": 0.4,
+      "novelty": 0.4,
+      "rationale": "对更新方向转为修复，但仍没有同类已核实历史案例，等级待积累；不编造正向价格修正，保留为情景条件。",
+      "ageDays": 0,
+      "classifications": [
+        {
+          "horizon": 7,
+          "count": 0,
+          "level": null,
+          "label": "待积累",
+          "historicalDirection": null,
+          "reliability": 0,
+          "matches": [],
+          "contribution": 0
+        },
+        {
+          "horizon": 30,
+          "count": 0,
+          "level": null,
+          "label": "待积累",
+          "historicalDirection": null,
+          "reliability": 0,
+          "matches": [],
+          "contribution": 0
+        }
+      ]
+    }
+  ],
+  "parameters": {
+    "lookback": 60,
+    "trendShrinkage": 0.35,
+    "halfLifeDays": 7,
+    "sampleShrinkage": 5,
+    "maxEventSigma": 0.5,
+    "rangeSigma": 1,
+    "dailyVolatility": 0.019968512063017047,
+    "dailyTrend": -0.002422411476478671
+  },
+  "features": {
+    "return7dPct": -5.9663917280013745,
+    "return28dPct": -13.195706824428932,
+    "annualVolatilityPct": 38.149788729947495
+  },
+  "horizons": [
+    {
+      "horizon": 7,
+      "targetDate": "2026-11-21",
+      "elapsedFromAnchor": 9,
+      "noEvents": 69743.19917252878,
+      "unchanged": 71280.4157896201,
+      "base": 69669.23741624843,
+      "weak": 65618.2151343928,
+      "strong": 73970.35460688024,
+      "trendLogReturn": -0.02180170328830804,
+      "eventLogAdjustment": -0.0010610497173579015,
+      "eventAdjustmentPct": -0.10604870031467595,
+      "eventScore": -0.03542409549626327,
+      "channelScores": {
+        "macro": -0.005424095496263274,
+        "flows": -0.03,
+        "security": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval"
+    },
+    {
+      "horizon": 30,
+      "targetDate": "2026-12-14",
+      "elapsedFromAnchor": 32,
+      "noEvents": 65963.69065723142,
+      "unchanged": 71280.4157896201,
+      "base": 65864.78300834581,
+      "weak": 58829.58860261387,
+      "strong": 73741.28807937524,
+      "trendLogReturn": -0.07751716724731747,
+      "eventLogAdjustment": -0.0015005509006396837,
+      "eventAdjustmentPct": -0.14994256370457482,
+      "eventScore": -0.026568071622197455,
+      "channelScores": {
+        "macro": -0.004068071622197455,
+        "flows": -0.0225,
+        "security": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval"
+    }
+  ]
+}

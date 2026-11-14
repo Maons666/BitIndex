@@ -1,0 +1,508 @@
+{
+  "version": 1,
+  "source": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics",
+  "fetchedAt": "2026-11-13T20:55:42.084Z",
+  "eventLibrary": {
+    "schema": 1,
+    "reviewedAt": "2026-11-12T16:12:57.369Z",
+    "source": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics",
+    "sourceFetchedAt": "2026-11-11T21:27:42.036Z",
+    "inputFingerprint": "2ac710220babeee5a35f874024d42e578e6699cd697a9c326968f746d6d7eded",
+    "methodology": "pre-event-60d-standardized-residual-v1",
+    "selection": "用户指定的四个事后案例，存在选择偏差；不是完整训练集",
+    "cases": [
+      {
+        "id": "2026-01-fed-repricing",
+        "kind": "monetary-tightening",
+        "title": "偏鹰预期重估与资金撤离",
+        "publishedAt": "2026-01-30T23:59:59Z",
+        "publicationTimeNote": "仅确认公开日期；保守使用 UTC 日末作为可用时间",
+        "candidateDriver": "Fed 主席提名带来的政策预期重估",
+        "cofactors": "投资产品赎回、大户出售与地缘风险；无法识别单一原因的价格贡献",
+        "start": "2026-01-20",
+        "end": "2026-02-10",
+        "conclusion": "政策预期重估与资金撤离同时出现，支持风险偏好下降的解释。1 月 28 日并未加息。",
+        "limitation": "提名早于 2 月初低点，但早于提名前已经下跌；不能把全部跌幅归因于人事变化。",
+        "events": [
+          {
+            "date": "2026-01-28",
+            "fact": "Fed 维持利率 3.50%—3.75%。",
+            "sourceName": "Federal Reserve",
+            "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260128a.htm"
+          },
+          {
+            "date": "2026-01-30",
+            "fact": "美国总统宣布提名 Kevin Warsh 为 Fed 主席。",
+            "sourceName": "美国政府归档",
+            "url": "https://www.govinfo.gov/content/pkg/DCPD-202600073/pdf/DCPD-202600073.pdf"
+          },
+          {
+            "date": "2026-02-02",
+            "fact": "CoinShares 报告上周 BTC 投资产品净流出 13.2 亿美元。",
+            "sourceName": "CoinShares",
+            "url": "https://coinshares.com/us/insights/research-data/fund-flows-02-02-26/"
+          }
+        ],
+        "anchorDate": "2026-01-29",
+        "anchorPrice": 84520.3973106371,
+        "preEventDailyVolatility": 0.020817590010577237,
+        "outcomes": [
+          {
+            "horizon": 7,
+            "targetDate": "2026-02-05",
+            "status": "observed",
+            "actualPrice": 63494.6884456458,
+            "returnPct": -24.87649080459914,
+            "noEventPrice": 83519.07513061597,
+            "residualLogReturn": -0.27411879457051586,
+            "standardizedMove": -4.976904900093034,
+            "level": 4,
+            "direction": -1
+          },
+          {
+            "horizon": 30,
+            "targetDate": "2026-02-28",
+            "status": "observed",
+            "actualPrice": 66965.6353091759,
+            "returnPct": -20.769852674665422,
+            "noEventPrice": 80311.78908438895,
+            "residualLogReturn": -0.18173684120625105,
+            "standardizedMove": -1.59386633143449,
+            "level": 3,
+            "direction": -1
+          }
+        ],
+        "causalStatus": "candidate-not-proven"
+      },
+      {
+        "id": "2026-04-ceasefire",
+        "kind": "geopolitical-easing",
+        "title": "停火消息与机构资金回流",
+        "publishedAt": "2026-04-08T23:59:59Z",
+        "publicationTimeNote": "仅确认公开日期；保守使用 UTC 日末作为可用时间",
+        "candidateDriver": "美国与伊朗停火降低地缘风险预期",
+        "cofactors": "机构产品连续净流入；资金流可能既推动也追随价格",
+        "start": "2026-04-01",
+        "end": "2026-05-05",
+        "conclusion": "停火消息缓和风险溢价，BTC 产品资金连续回流，与价格回升一致；这段上涨不能解释为 Fed 降息。",
+        "limitation": "停火是暂时安排；同期仍有能源通胀压力。相关性不能分解各事件的独立贡献。",
+        "events": [
+          {
+            "date": "2026-04-08",
+            "fact": "欧洲理事会发布多国领导人声明，欢迎美国与伊朗两周停火。",
+            "sourceName": "欧洲理事会",
+            "url": "https://www.consilium.europa.eu/en/press/press-releases/2026/04/08/leaders-statement-on-the-two-week-ceasefire-concluded-between-the-united-states-and-iran/"
+          },
+          {
+            "date": "2026-04-20",
+            "fact": "CoinShares 报告 BTC 产品单周流入 11.16 亿美元。",
+            "sourceName": "CoinShares",
+            "url": "https://coinshares.com/us/insights/research-data/fund-flows-20-04-26/"
+          },
+          {
+            "date": "2026-04-27",
+            "fact": "BTC 产品单周流入 9.33 亿美元；数字资产产品连续第四周流入。",
+            "sourceName": "CoinShares",
+            "url": "https://coinshares.com/us/insights/research-data/fund-flows-27-04-26/"
+          },
+          {
+            "date": "2026-04-29",
+            "fact": "Fed 继续维持 3.50%—3.75%，没有降息。",
+            "sourceName": "Federal Reserve",
+            "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260429a.htm"
+          }
+        ],
+        "anchorDate": "2026-04-07",
+        "anchorPrice": 72057.1243614845,
+        "preEventDailyVolatility": 0.02404035243948642,
+        "outcomes": [
+          {
+            "horizon": 7,
+            "targetDate": "2026-04-14",
+            "status": "observed",
+            "actualPrice": 74173.5083603156,
+            "returnPct": 2.9370919497341497,
+            "noEventPrice": 72848.60967697183,
+            "residualLogReturn": 0.01802360851550509,
+            "standardizedMove": 0.2833687114793827,
+            "level": 1,
+            "direction": 1
+          },
+          {
+            "horizon": 30,
+            "targetDate": "2026-05-07",
+            "status": "observed",
+            "actualPrice": 79988.9987343659,
+            "returnPct": 11.007758695850889,
+            "noEventPrice": 75510.92969365096,
+            "residualLogReturn": 0.05761169946531061,
+            "standardizedMove": 0.43753140270840746,
+            "level": 1,
+            "direction": 1
+          }
+        ],
+        "causalStatus": "candidate-not-proven"
+      },
+      {
+        "id": "2026-06-redemptions",
+        "kind": "fund-outflow",
+        "title": "连续赎回与企业买盘预期变化",
+        "publishedAt": "2026-06-01T23:59:59Z",
+        "publicationTimeNote": "仅确认公开日期；保守使用 UTC 日末作为可用时间",
+        "candidateDriver": "投资产品持续赎回带来的需求压力",
+        "cofactors": "Strategy 首次小额出售所引发的预期变化，以及地缘风险",
+        "start": "2026-06-01",
+        "end": "2026-06-06",
+        "conclusion": "连续净流出是可量化的需求压力。企业小额出售可能影响买盘预期，其交易规模本身不足以解释整段跌幅。",
+        "limitation": "32 BTC 不等于足以压低整个市场的卖压；不能用 6 月中旬决议解释 6 月初行情。",
+        "events": [
+          {
+            "date": "2026-06-01",
+            "fact": "CoinShares 报告 BTC 产品单周流出 14.38 亿美元；数字资产产品连续三周净流出。",
+            "sourceName": "CoinShares",
+            "url": "https://coinshares.com/us/insights/research-data/fund-flows-01-06-26/"
+          },
+          {
+            "date": "2026-06-01",
+            "fact": "Strategy 向 SEC 披露 5 月 26—31 日出售 32 BTC，仍持有 843,706 BTC。",
+            "sourceName": "SEC 8-K",
+            "url": "https://www.sec.gov/Archives/edgar/data/1050446/000119312526249768/mstr-20260530.htm"
+          }
+        ],
+        "anchorDate": "2026-05-31",
+        "anchorPrice": 73599.5607413209,
+        "preEventDailyVolatility": 0.01716465422709897,
+        "outcomes": [
+          {
+            "horizon": 7,
+            "targetDate": "2026-06-07",
+            "status": "observed",
+            "actualPrice": 63158.25397737,
+            "returnPct": -14.186642771753476,
+            "noEventPrice": 72816.54539447617,
+            "residualLogReturn": -0.14229965671393938,
+            "standardizedMove": -3.13342838414801,
+            "level": 4,
+            "direction": -1
+          },
+          {
+            "horizon": 30,
+            "targetDate": "2026-06-30",
+            "status": "observed",
+            "actualPrice": 58525.0753614845,
+            "returnPct": -20.48175998334887,
+            "noEventPrice": 70301.95962577782,
+            "residualLogReturn": -0.18334437256062805,
+            "standardizedMove": -1.9501674257351602,
+            "level": 3,
+            "direction": -1
+          }
+        ],
+        "causalStatus": "candidate-not-proven"
+      },
+      {
+        "id": "2026-08-liquidity",
+        "kind": "liquidity-support",
+        "title": "流动性与监管预期改善",
+        "publishedAt": "2026-08-19T23:59:59Z",
+        "publicationTimeNote": "仅确认公开日期；保守使用 UTC 日末作为可用时间",
+        "candidateDriver": "国债流动性支持回购扩容公告",
+        "cofactors": "SEC 加密监管提案及 ETF 资金回流",
+        "start": "2026-08-16",
+        "end": "2026-08-27",
+        "conclusion": "财政部回购扩容与 SEC 提案可能改善风险偏好，但只是机制解释；上涨早于公告开始，仍需同时看资金流。",
+        "limitation": "财政部回购不是 Fed QE；扩容 9 月才生效。SEC 文件是提案，不能当成已通过法律。",
+        "events": [
+          {
+            "date": "2026-08-18",
+            "fact": "SEC 提出相关加密资产发行豁免与投资合约安全港框架。",
+            "sourceName": "SEC",
+            "url": "https://www.sec.gov/newsroom/speeches-statements/atkins-statement-regulation-crypto-assets-081826"
+          },
+          {
+            "date": "2026-08-19",
+            "fact": "财政部将长期国债流动性支持回购每次上限由 20 亿美元提高至至少 40 亿美元，9 月 9 日起实施。",
+            "sourceName": "美国财政部",
+            "url": "https://home.treasury.gov/news/press-releases/sb0607"
+          }
+        ],
+        "anchorDate": "2026-08-18",
+        "anchorPrice": 64696.1814053185,
+        "preEventDailyVolatility": 0.014800312497207672,
+        "outcomes": [
+          {
+            "horizon": 7,
+            "targetDate": "2026-08-25",
+            "status": "observed",
+            "actualPrice": 78601.4032035769,
+            "returnPct": 21.49311056110539,
+            "noEventPrice": 64825.43745805783,
+            "residualLogReturn": 0.19269147204421339,
+            "standardizedMove": 4.920877900267583,
+            "level": 4,
+            "direction": 1
+          },
+          {
+            "horizon": 30,
+            "targetDate": "2026-09-17",
+            "status": "observed",
+            "actualPrice": 76386.9018813968,
+            "returnPct": 18.070186249226204,
+            "noEventPrice": 65251.95690534303,
+            "residualLogReturn": 0.15755520349218569,
+            "standardizedMove": 1.9435747054049957,
+            "level": 3,
+            "direction": 1
+          }
+        ],
+        "causalStatus": "candidate-not-proven"
+      }
+    ]
+  },
+  "rows": [
+    {
+      "date": "2026-09-13",
+      "price": 76759.2585653887
+    },
+    {
+      "date": "2026-09-14",
+      "price": 78278.7924649912
+    },
+    {
+      "date": "2026-09-15",
+      "price": 75650.4287918118
+    },
+    {
+      "date": "2026-09-16",
+      "price": 76082.3769918527
+    },
+    {
+      "date": "2026-09-17",
+      "price": 76386.9018813968
+    },
+    {
+      "date": "2026-09-18",
+      "price": 80944.1551838106
+    },
+    {
+      "date": "2026-09-19",
+      "price": 81262.3455507422
+    },
+    {
+      "date": "2026-09-20",
+      "price": 81194.7440397662
+    },
+    {
+      "date": "2026-09-21",
+      "price": 86505.297748235
+    },
+    {
+      "date": "2026-09-22",
+      "price": 86205.2717985915
+    },
+    {
+      "date": "2026-09-23",
+      "price": 84434.3188651724
+    },
+    {
+      "date": "2026-09-24",
+      "price": 84386.5778094565
+    },
+    {
+      "date": "2026-09-25",
+      "price": 84062.1558929047
+    },
+    {
+      "date": "2026-09-26",
+      "price": 84386.4961173115
+    },
+    {
+      "date": "2026-09-27",
+      "price": 84392.4723819229
+    },
+    {
+      "date": "2026-09-28",
+      "price": 83516.7629809001
+    },
+    {
+      "date": "2026-09-29",
+      "price": 83674.6569854062
+    },
+    {
+      "date": "2026-09-30",
+      "price": 83579.6739176914
+    },
+    {
+      "date": "2026-10-01",
+      "price": 84777.2412468031
+    },
+    {
+      "date": "2026-10-02",
+      "price": 84517.5188820339
+    },
+    {
+      "date": "2026-10-03",
+      "price": 84756.1407678667
+    },
+    {
+      "date": "2026-10-04",
+      "price": 86520.8001186441
+    },
+    {
+      "date": "2026-10-05",
+      "price": 85834.5284942957
+    },
+    {
+      "date": "2026-10-06",
+      "price": 85523.2317733255
+    },
+    {
+      "date": "2026-10-07",
+      "price": 83273.7243755582
+    },
+    {
+      "date": "2026-10-08",
+      "price": 81731.8801367154
+    },
+    {
+      "date": "2026-10-09",
+      "price": 82562.555254436
+    },
+    {
+      "date": "2026-10-10",
+      "price": 82948.8590383986
+    },
+    {
+      "date": "2026-10-11",
+      "price": 83636.6057580362
+    },
+    {
+      "date": "2026-10-12",
+      "price": 81805.1583513559
+    },
+    {
+      "date": "2026-10-13",
+      "price": 83141.4223052017
+    },
+    {
+      "date": "2026-10-14",
+      "price": 81498.5160066511
+    },
+    {
+      "date": "2026-10-15",
+      "price": 82116.2331746055
+    },
+    {
+      "date": "2026-10-16",
+      "price": 81538.2951464407
+    },
+    {
+      "date": "2026-10-17",
+      "price": 81268.9431190474
+    },
+    {
+      "date": "2026-10-18",
+      "price": 81935.1692647925
+    },
+    {
+      "date": "2026-10-19",
+      "price": 81918.1984864816
+    },
+    {
+      "date": "2026-10-20",
+      "price": 82898.9101560549
+    },
+    {
+      "date": "2026-10-21",
+      "price": 84176.0796455874
+    },
+    {
+      "date": "2026-10-22",
+      "price": 81257.0175825248
+    },
+    {
+      "date": "2026-10-23",
+      "price": 80924.1837657744
+    },
+    {
+      "date": "2026-10-24",
+      "price": 80699.3131272238
+    },
+    {
+      "date": "2026-10-25",
+      "price": 80038.9058032613
+    },
+    {
+      "date": "2026-10-26",
+      "price": 79949.9343292344
+    },
+    {
+      "date": "2026-10-27",
+      "price": 80800.5373719316
+    },
+    {
+      "date": "2026-10-28",
+      "price": 81237.4378259731
+    },
+    {
+      "date": "2026-10-29",
+      "price": 78193.4264043074
+    },
+    {
+      "date": "2026-10-30",
+      "price": 77109.5907473057
+    },
+    {
+      "date": "2026-10-31",
+      "price": 77401.0172870368
+    },
+    {
+      "date": "2026-11-01",
+      "price": 78135.0802893045
+    },
+    {
+      "date": "2026-11-02",
+      "price": 76680.7491297195
+    },
+    {
+      "date": "2026-11-03",
+      "price": 77655.7376776739
+    },
+    {
+      "date": "2026-11-04",
+      "price": 80487.5875787084
+    },
+    {
+      "date": "2026-11-05",
+      "price": 75803.1273068206
+    },
+    {
+      "date": "2026-11-06",
+      "price": 75826.5258667446
+    },
+    {
+      "date": "2026-11-07",
+      "price": 75724.4061539509
+    },
+    {
+      "date": "2026-11-08",
+      "price": 74967.7164066861
+    },
+    {
+      "date": "2026-11-09",
+      "price": 75161.1324418469
+    },
+    {
+      "date": "2026-11-10",
+      "price": 73661.004978235
+    },
+    {
+      "date": "2026-11-11",
+      "price": 73805.5216852425
+    },
+    {
+      "date": "2026-11-12",
+      "price": 71280.4157896201
+    }
+  ]
+}

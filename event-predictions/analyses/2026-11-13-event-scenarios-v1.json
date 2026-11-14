@@ -1,0 +1,149 @@
+{
+  "id": "2026-11-13-event-scenarios-v1",
+  "author": "Codex agent · 纽约 11 月 13 日事件复核",
+  "cutoffAt": "2026-11-14T02:51:01Z",
+  "summary": "最新已发布收盘价降至 71,280.42 美元，短期趋势仍弱。美国现货 ETF 截至 11 月 12 日持续净流出，最新 PPI 显示生产端通胀仍有粘性；交易所已披露补足受影响资产，提供部分信心修复。11 月 13 日 ETF 数据尚不完整。历史同类案例仍少，事件调整继续收缩，保留三种情景作前瞻检验。",
+  "conditions": {
+    "base": "ETF 流出逐步缓和但尚未形成持续流入，通胀与利率预期未明显转向，交易所补偿进展没有新的反复。",
+    "weak": "ETF 赎回持续、利率预期进一步走高，或交易所提现及储备验证再出现问题。",
+    "strong": "ETF 转为连续净流入，交易所提现与储备验证顺利推进，宏观风险偏好改善。"
+  },
+  "coverageGaps": [
+    "行情使用纽约 11 月 13 日 15:55 自动获取的 Coin Metrics 快照，截至 11 月 12 日 UTC 收盘；不是 11 月 13 日盘中或收盘价格。",
+    "11 月 13 日 ETF 表仍缺 IBIT：已报告 FBTC 净流出 4,190 万美元，不能当成全市场全日结果。已完成统计只累计至 11 月 12 日。",
+    "四个历史精选案例存在选择偏差，每个主要类别仍只有一个样本；没有因核算结果调整等级阈值、趋势系数或情景宽度。",
+    "安全事件后续没有同类已核实历史案例，等级仍待积累。平台自述补足与 PoR 快照不等同于独立完整偿付审计；提现仍分阶段恢复。",
+    "未取得完整清算、期权偏斜和市场一致预期数据，不能认定 PPI 超预期；资金流和价格可能互相影响。",
+    "新预测按真实签发时刻留档。纽约仍为 11 月 13 日，UTC 已为 11 月 14 日；目标日沿用 UTC 规则，旧目标和旧评分不重写。"
+  ],
+  "events": [
+    {
+      "id": "fed-2026-10-28",
+      "title": "利率仍处高位，旧消息继续衰减",
+      "category": "macro",
+      "kind": "monetary-tightening",
+      "eventDate": "2026-10-28",
+      "publishedAt": "2026-10-28T18:00:00Z",
+      "verifiedAt": "2026-11-14T02:51:01Z",
+      "sourceName": "Federal Reserve",
+      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
+      "fact": "10 月 28 日 Fed 维持目标利率 3.75%—4.00%，两名委员支持提高 25 个基点。本次复核沿用这项决议，不将其标为今日加息。",
+      "inference": "高利率环境可能压低风险资产估值，但既有决议已被市场观察多日，新增信息有限。",
+      "direction": -1,
+      "similarity": 0.35,
+      "confidence": 0.6,
+      "novelty": 0.2,
+      "rationale": "与上一期保持相同主观参数，仅按真实时间继续衰减；只通过政策预期渠道部分匹配 1 月案例。"
+    },
+    {
+      "id": "ppi-2026-11-13",
+      "title": "最新 PPI 显示通胀压力仍在",
+      "category": "macro",
+      "kind": "monetary-tightening",
+      "eventDate": "2026-11-13",
+      "publishedAt": "2026-11-13T13:30:00Z",
+      "verifiedAt": "2026-11-14T02:51:01Z",
+      "sourceName": "BLS",
+      "url": "https://www.bls.gov/news.release/archives/ppi_11132026.htm",
+      "fact": "10 月最终需求 PPI 环比上涨 0.3%，同比上涨 6.5%；剔除食品、能源和贸易服务后环比上涨 0.5%。",
+      "inference": "总体环比回落与基础价格压力并存，可能限制宽松预期；没有一致预期来源，不能称超预期或低于预期。",
+      "direction": -1,
+      "similarity": 0.4,
+      "confidence": 0.5,
+      "novelty": 0.3,
+      "rationale": "作为本期新增通胀证据，替换上一期 CPI 事件条目；同属宏观渠道，与 Fed 消息取平均以避免重复叠加。沿用保守影响参数，不据已发生跌幅上调权重。"
+    },
+    {
+      "id": "etf-2026-11-12",
+      "title": "ETF 已完成统计仍为持续流出",
+      "category": "flows",
+      "kind": "fund-outflow",
+      "eventDate": "2026-11-12",
+      "publishedAt": "2026-11-14T02:51:01Z",
+      "verifiedAt": "2026-11-14T02:51:01Z",
+      "publicationTimeNote": "动态表未提供完整发布时间，采用本次核查时刻作为新增数据可用时间。11 月 13 日 IBIT 未报告，排除该日不完整总额。",
+      "sourceName": "Farside Investors · 数据汇总",
+      "url": "https://farside.co.uk/btc/",
+      "fact": "11 月 12 日美国现货 BTC ETF 净流出 2.841 亿美元；11 月 2—12 日完整交易日合计净流出 21.616 亿美元。11 月 13 日尚缺 IBIT 数据。",
+      "inference": "新增完整交易日仍为净流出，支持需求承压的判断；不据部分报告判定 13 日流出已经缓和。",
+      "direction": -1,
+      "similarity": 0.75,
+      "confidence": 0.6,
+      "novelty": 0.4,
+      "rationale": "与上一期保持相同评分参数，仅纳入新完成的 11 月 12 日数据。参考 6 月持续赎回案例，但美国 ETF 与更广投资产品统计范围不同。",
+      "observations": {
+        "unit": "USD million",
+        "completeTotals": [
+          [
+            "2026-11-02",
+            -398.6
+          ],
+          [
+            "2026-11-03",
+            -115.6
+          ],
+          [
+            "2026-11-04",
+            74.6
+          ],
+          [
+            "2026-11-05",
+            -430.2
+          ],
+          [
+            "2026-11-06",
+            -411.9
+          ],
+          [
+            "2026-11-09",
+            -201
+          ],
+          [
+            "2026-11-10",
+            -95
+          ],
+          [
+            "2026-11-11",
+            -299.8
+          ],
+          [
+            "2026-11-12",
+            -284.1
+          ]
+        ],
+        "completeSum": -2161.6,
+        "partialDay": "2026-11-13",
+        "partialReportedTotal": -41.9,
+        "missingFunds": [
+          "IBIT"
+        ],
+        "partialUsedAsDailyTotal": false
+      }
+    },
+    {
+      "id": "binance-coverage-update",
+      "title": "资产补足进展改善，提现仍分批恢复",
+      "category": "security",
+      "kind": "security-breach",
+      "eventDate": "2026-11-13",
+      "publishedAt": "2026-11-14T02:51:01Z",
+      "verifiedAt": "2026-11-14T02:51:01Z",
+      "publicationTimeNote": "原站显示 Published on 2026-11-12 16:54，未标时区；正文署名 11 月 13 日。首次完整核查时刻作为可用时间，不猜测原始 UTC 发布时间。",
+      "sourceName": "Binance 官方公告",
+      "url": "https://www.binance.com/en/support/announcement/detail/0729ad59cde74700b4eaa96c33441e71",
+      "additionalSources": [
+        {
+          "title": "官方同步说明",
+          "url": "https://www.binance.com/en/square/post/387527915862393"
+        }
+      ],
+      "fact": "平台称已完成受影响资产补足，公布 11 月 12 日 00:00 UTC 的 198 币种 PoR 快照；完整零知识证明预计需 40—50 小时生成，提现分阶段恢复。",
+      "inference": "相较此前补足 98% 的披露，信心修复有所推进；不据预计耗时推断完整证明已完成，也不把快照等同于独立审计。",
+      "direction": 1,
+      "similarity": 0,
+      "confidence": 0.4,
+      "novelty": 0.4,
+      "rationale": "对更新方向转为修复，但仍没有同类已核实历史案例，等级待积累；不编造正向价格修正，保留为情景条件。"
+    }
+  ]
+}

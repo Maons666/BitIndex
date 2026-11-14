@@ -2,7 +2,7 @@
 
 当前包含两个互相跳转的页面：`index.html` 只展示 12 项指数；`prediction.html` 展示 agent 事件研判、7 天/30 天三种价格情景、历史事件影响等级和每日对照。原 14 份岭回归预测及金融模型参考移到预测页下方，保持原样。行情来自 Coin Metrics Community API，无需 API Key。
 
-在线版：**https://maons666.github.io/BitIndex**。GitHub Pages 使用已发布快照，刷新按钮读取最新发布数据；GitHub Actions 定时抓取真实日线并保存对照。部署方法及持久化结构见 [GitHub Pages 部署说明](docs/GitHub-Pages部署.md)。
+在线版：**https://maons666.github.io/BitIndex** 。GitHub Pages 使用已发布快照，刷新按钮读取最新发布数据；GitHub Actions 定时抓取真实日线并保存对照。部署方法及持久化结构见 [GitHub Pages 部署说明](docs/GitHub-Pages部署.md)。
 
 ## 启动
 

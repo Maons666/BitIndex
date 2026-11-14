@@ -7,6 +7,7 @@ import { readTracking, trackingCsv, recordRun, TRACKING_MODE } from './tracking.
 import { createTrackingJob } from './tracking-job.mjs';
 import { readEventData, eventCsv } from './event-store.mjs';
 import { detectMoves } from './event-library.mjs';
+import { readFiveDayData } from './five-day-store.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const port = Number(process.env.PORT || 8787);
@@ -16,6 +17,7 @@ const trackingJob = createTrackingJob(join(root, '..'), { trackingRoot });
 const files = new Map([
   ['/', ['index.html', 'text/html']], ['/index.html', ['index.html', 'text/html']],
   ['/prediction.html', ['prediction.html', 'text/html']], ['/prediction.mjs', ['prediction.mjs', 'text/javascript']],
+  ['/five-day.html', ['five-day.html', 'text/html']], ['/five-day.mjs', ['five-day.mjs', 'text/javascript']], ['/five-day-core.mjs', ['five-day-core.mjs', 'text/javascript']],
   ['/evaluation.mjs', ['evaluation.mjs', 'text/javascript']], ['/evaluation-core.mjs', ['evaluation-core.mjs', 'text/javascript']],
   ['/style.css', ['style.css', 'text/css']], ['/app.mjs', ['app.mjs', 'text/javascript']],
   ['/core.mjs', ['core.mjs', 'text/javascript']], ['/chart.mjs', ['chart.mjs', 'text/javascript']],
@@ -33,6 +35,7 @@ const server = http.createServer(async (req, res) => {
   if (!['127.0.0.1', 'localhost'].some(h => host === `${h}:${port}`)) return json(res, 403, { error: '仅允许本机访问' });
   const url = new URL(req.url, `http://${host}`);
   try {
+    if (url.pathname === '/api/five-day' && req.method === 'GET') return json(res, 200, await readFiveDayData(trackingRoot));
     if (url.pathname === '/api/data' && req.method === 'GET') return json(res, 200, await store.get());
     if (['/api/events', '/api/events.csv'].includes(url.pathname) && req.method === 'GET') {
       const data = await readEventData(trackingRoot);

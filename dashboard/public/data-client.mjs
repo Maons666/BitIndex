@@ -37,3 +37,10 @@ export async function readEvents(snapshot) {
   if (data.publicationVersion !== snapshot.publication.version) throw new Error('事件分析版本不一致，请重试');
   return data;
 }
+export async function readFiveDay(snapshot) {
+  if (!isStatic) return json('/api/five-day');
+  if (!snapshot?.publication?.fiveDay) throw new Error('当前版本尚无五日预测');
+  const data = await json(asset(snapshot.publication.fiveDay));
+  if (data.publicationVersion !== snapshot.publication.version) throw new Error('五日对照版本不一致，请重试');
+  return data;
+}

@@ -33,7 +33,7 @@ async function click(selector) { return evaluate(`document.querySelector(${JSON.
 async function ready() { await wait(() => evaluate(`!!document.querySelector('#refresh') && !document.querySelector('#refresh').disabled && document.querySelector('#btc-price').textContent !== '—'`), '真实数据'); }
 async function trackingReady() { if (!await evaluate(`!!document.querySelector('#forecast-refresh')`)) return; await evaluate(`document.querySelector('#legacy-section').open=true`); await wait(() => evaluate(`document.querySelectorAll('#tracking-body tr').length > 0 && !document.querySelector('#forecast-refresh').disabled`), '历史预测对照'); }
 async function shot(name, target = null) {
-  await wait(() => evaluate(`document.querySelector('#toast').hidden`), '提示收起', 5000);
+  await wait(() => evaluate(`!document.querySelector('#toast') || document.querySelector('#toast').hidden`), '提示收起', 5000);
   if (target) await evaluate(`document.documentElement.style.scrollBehavior='auto';document.querySelector(${JSON.stringify(target)}).scrollIntoView({behavior:'instant',block:'start'})`);
   await sleep(200);
   const image = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
@@ -226,6 +226,35 @@ try {
   await shot('outlook-mobile', '#outlook-section');
   check('400px 模型卡片与曲线无页面溢出', await evaluate(`document.documentElement.scrollWidth <= window.innerWidth && document.querySelector('#outlook-chart').clientWidth > 0 && document.querySelectorAll('#outlook-models button').length===5`));
   check('400px 窄屏没有页面横向溢出', await evaluate(`document.documentElement.scrollWidth <= window.innerWidth`));
+  await send('Emulation.setDeviceMetricsOverride',{width:1440,height:1100,deviceScaleFactor:1,mobile:false});
+  await click('nav a[href="./five-day.html"]');await ready();
+  await wait(()=>evaluate(`!document.querySelector('#five-mode').disabled`),'五日对照');
+  const five=await (await fetch(base+manifest.fiveDay)).json(), fiveReplay=five.replays[0];
+  check('独立五日页面显示三页起点，150条配对不混入原预测页',await evaluate(`!!document.querySelector('nav a[href="./prediction.html"]') && !document.querySelector('#event-section') && document.querySelectorAll('#five-body tr').length===10 && document.querySelector('#five-page').textContent.includes('共 30')`));
+  const latestFive=[...fiveReplay.issues].sort((a,b)=>b.asOf.localeCompare(a.asOf))[0];
+  check('五日矩阵每格目标日与预测实际逐项对应',JSON.stringify(await evaluate(`Array.from(document.querySelectorAll('#five-body tr:first-child td')).map(td=>({date:td.dataset.target,prediction:Number(td.dataset.prediction),actual:Number(td.dataset.actual)}))`))===JSON.stringify(latestFive.targets.map(t=>({date:t.targetDate,prediction:t.base,actual:t.actualPrice}))));
+  await click('#five-next');check('五日起点分页可前进和返回',await evaluate(`document.querySelector('#five-page').textContent.startsWith('2 / 3') && !document.querySelector('#five-prev').disabled`));await click('#five-prev');
+  await evaluate(`document.querySelector('#five-limit').value='30';document.querySelector('#five-limit').dispatchEvent(new Event('change'))`);
+  check('五日完整表保留30个起点和150条明细',await evaluate(`document.querySelectorAll('#five-body tr').length===30 && document.querySelectorAll('#five-flat-body tr').length===150`));
+  await click('#five-body tr:first-child button');
+  check('点击起点可核查该期的真实来源和各期限等级',await evaluate(`document.querySelector('#five-evidence').open && document.querySelector('#five-evidence-body').textContent.includes('第1～5天等级') && document.querySelector('#five-evidence-body a').href.startsWith('https://')`));
+  await click('#five-csv');const fiveCsv=await wait(async()=>(await readdir(downloadDir)).find(f=>f==='BitIndex_5day_replay.csv'),'五日CSV');
+  check('五日CSV含150条逐日配对和期限标识',(await readFile(join(downloadDir,fiveCsv),'utf8')).split('\r\n').length===151 && (await readFile(join(downloadDir,fiveCsv),'utf8')).includes('forecastId,horizon,agentAnalysisAt'));
+  await click('#five-json');const fiveJson=await wait(async()=>(await readdir(downloadDir)).find(f=>f==='BitIndex_5day_replay.json'),'五日JSON');
+  check('五日导出与冻结回放证据完全相同',JSON.stringify(JSON.parse(await readFile(join(downloadDir,fiveJson),'utf8')))===JSON.stringify(fiveReplay));
+  await evaluate(`document.querySelector('#five-limit').value='10';document.querySelector('#five-limit').dispatchEvent(new Event('change'));document.querySelector('#five-evidence').open=false`);
+  await shot('five-day-desktop','.five-day-page');
+  await evaluate(`document.querySelector('#five-mode').value='live';document.querySelector('#five-mode').dispatchEvent(new Event('change'))`);
+  check('真实每日签发和历史回放分开统计，保留原agent时间',await evaluate(`document.querySelectorAll('#five-body tr').length===${Math.min(five.issues.length,10)} && document.querySelector('#five-policy').textContent.includes('agent') && document.querySelector('#five-description').textContent.includes('真实每日留档')`));
+  if(five.issues.every(i=>i.targets.every(t=>t.actualPrice===null))) check('未到期实际价格不补造，不提前计算五日准确率',await evaluate(`document.querySelectorAll('#five-body [data-actual]').length===0 && document.querySelector('#five-summary').textContent.includes('待到期')`));
+  await send('Network.setBlockedURLs',{urls:['*/data/*/five-day.json*']});await click('#refresh');await ready();
+  check('五日数据失败时隐藏旧版对照并禁用导出',await evaluate(`document.querySelector('#five-content').hidden && document.querySelector('#five-csv').disabled && document.querySelector('#five-json').disabled && !document.querySelector('#notice').hidden`));
+  await send('Network.setBlockedURLs',{urls:[]});await click('#refresh');await ready();
+  await evaluate(`document.querySelector('#five-mode').value='replay';document.querySelector('#five-mode').dispatchEvent(new Event('change'))`);
+  await send('Emulation.setDeviceMetricsOverride',{width:400,height:900,deviceScaleFactor:1,mobile:false});
+  await shot('five-day-mobile','.five-day-page');
+  check('手机五日表格内部可横滑，页面和三页导航不溢出',await evaluate(`document.documentElement.scrollWidth<=window.innerWidth && document.querySelector('.five-matrix-wrap').scrollWidth>document.querySelector('.five-matrix-wrap').clientWidth && document.querySelector('nav').getBoundingClientRect().height>0`));
+  await click('#open-info');check('五日统一说明明确冻结、每日沿用和分析过期规则',await evaluate(`document.querySelector('#info-dialog').open && document.querySelector('#info-dialog').textContent.includes('超过 7 天') && document.querySelector('#info-dialog').textContent.includes('不补造')`));
   check('全程无未捕获脚本异常', errors.length === 0);
   await writeFile(join(output, 'report.json'), JSON.stringify({ base, checks: results.length, results, errors, version: manifest.version, dataThrough: manifest.dataThrough }, null, 2));
   console.log(results.length + ' Pages checks passed.');

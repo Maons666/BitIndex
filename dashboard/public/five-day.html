@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><meta name="description" content="每天未来1至5天的Bitcoin预测价格、实际收盘价与误差逐日对照。"><title>BitIndex · 五日预测对照</title><link rel="icon" href="./favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="./style.css"><script type="module" src="./five-day.mjs"></script></head><body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+<header class="topbar"><a class="brand" href="./"><span class="brand-icon">₿</span><span>BitIndex<span class="brand-dot">.</span></span></a><nav aria-label="主导航"><a href="./index.html">指数看板</a><a href="./prediction.html">预测研判</a><a class="nav-active" aria-current="page" href="./five-day.html">五日对照</a></nav><div class="top-actions"><button class="button subtle" id="theme" aria-label="切换主题">切换主题</button><button class="button subtle" id="open-info">统一说明 ↗</button></div></header>
+<main id="main" class="prediction-page five-day-page">
+  <section class="page-heading"><div><p class="eyebrow">每天一份 / 未来五天</p><h1>五日预测对照</h1><p class="subtitle" id="five-status" role="status">正在读取数据…</p></div><button class="button primary" id="refresh"><span id="refresh-label">刷新数据</span></button></section>
+  <div class="notice" id="notice" role="status" hidden></div>
+  <section class="market-strip"><div class="market-label"><span class="coin-small">₿</span><span>Bitcoin <small>BTC / USD</small></span></div><strong id="btc-price" class="market-price">—</strong><div class="market-meta"><span>UTC 日收盘</span><strong id="price-date">—</strong></div><div class="market-meta"><span>获取时间（纽约）</span><strong id="checked-time">—</strong></div></section>
+  <section class="event-panel" aria-labelledby="five-title"><div class="section-heading"><div><p class="eyebrow">预测 → 等待实际 → 核对误差</p><h2 id="five-title">每日发出的五天预测</h2></div><div class="outlook-controls"><button class="button subtle" id="five-csv" disabled>导出完整 CSV</button><button class="text-button" id="five-json" disabled>证据与数据 JSON ↗</button></div></div>
+    <div class="outlook-toolbar"><label>数据 <select id="five-mode" disabled><option value="replay">历史回放 · 30 个起点</option><option value="live">真实每日留档</option></select></label><label>每页 <select id="five-limit"><option value="10">10 个起点</option><option value="30">30 个起点</option></select></label></div>
+    <p class="event-status" id="five-description"></p><p class="event-status" id="five-policy"></p>
+    <div id="five-content" hidden>
+      <div class="five-summary" id="five-summary"></div>
+      <p class="five-table-note">每格按“预测 / 实际 / 偏差”排列 · 点击预测起点查看来源 · 窄屏可左右滑动表格</p>
+      <div class="table-scroll five-matrix-wrap"><table class="five-matrix" id="five-table"><caption class="sr-only">按预测起点与未来第1至5天配对的价格表</caption><thead><tr><th scope="col">预测起点（UTC）</th><th scope="col">第 1 天</th><th scope="col">第 2 天</th><th scope="col">第 3 天</th><th scope="col">第 4 天</th><th scope="col">第 5 天</th></tr></thead><tbody id="five-body"></tbody></table></div>
+      <div class="five-pagination"><button class="button subtle" id="five-prev">上一页</button><span id="five-page" aria-live="polite"></span><button class="button subtle" id="five-next">下一页</button></div>
+      <details class="five-flat"><summary>查看逐条明细表</summary><div class="table-scroll"><table><thead><tr><th>预测起点</th><th>期限</th><th>目标日（UTC）</th><th>预测价</th><th>实际价</th><th>价差（美元）</th><th>偏差</th><th>不加事件价</th><th>不变价基线</th></tr></thead><tbody id="five-flat-body"></tbody></table></div></details>
+      <details class="five-evidence" id="five-evidence"><summary id="five-evidence-title">本期 agent 判断与来源</summary><div id="five-evidence-body"></div></details>
+    </div>
+  </section>
+  <footer><span><strong>BitIndex</strong> / 五日预测对照</span><a class="text-button" href="./prediction.html">返回预测研判 ↗</a></footer>
+</main>
+<dialog id="info-dialog" aria-labelledby="info-title"><div class="dialog-heading"><h2 id="info-title">五日对照统一说明</h2><button class="icon-button" id="close-info" aria-label="关闭说明">×</button></div><div class="dialog-content">
+<div class="info-block"><h3>表格如何对应</h3><p>预测起点为 D，第 1～5 天分别是 D+1 至 D+5 的 UTC 日收盘价。五个预测价在发出时同时冻结，每一期使用同一信息截止点，不会随着后面的实际价格重算。实际价按精确目标日填入；缺失时保持“待公布”，未到期显示“未到期”。同一天可能对应不同起点、不同预测期限，分别保留，不合并。</p><p>偏差 =（预测 / 实际 − 1）×100%；正数表示高估，负数表示低估。MAPE 为相同期限所有已配对目标的绝对偏差平均值；与不加事件、不变价基线比较时使用同一批实际日期。收益窗口重叠，不代表独立试验。</p></div>
+<div class="info-block"><h3>当前模型与 agent</h3><p>沿用事件模型的趋势、波动与事件收缩公式，新增独立的 event-scenarios-1to5-v1 版本。每个期限直接计算目标价，不把原 7 天或 30 天预测插值成五天。趋势来自近 7/28 日日收益，波动取近 28/60 日较大值；历史事件按各自 1、2、3、4、5 天窗口分别分级，且只使用截止点之前已经完成的观察窗口。没有同类样本时事件贡献为零，未知风险仍保留在证据说明中。</p><p>每天的免费定时任务在行情成功更新后生成当日新一期，沿用最近一次已签发的 agent 事件判断，并按事件真实年龄衰减；不会自动调用付费模型，也不会把旧分析标成当天重新核查。Agent 分析超过 7 天、行情过旧或缺日时暂停新增，已有实际对照继续更新。需要你在对话中触发 agent 更新研究；原来的 7/30 天及 Ridge 留档不改变。一个 UTC 日期只保留首次签发，不补造错过日期的真实预测。</p></div>
+<div class="info-block"><h3>历史回放</h3><p>历史表按起点当日 16:00 UTC 模拟，行情保守滞后 2 个日历日；事件按当时已经公开且可用的信息截断，同一新闻流只保留最新状态。只知道发布日期的事件延至次日 12:00 UTC 使用。首批的第 5 天目标覆盖此前选定的 30 个实际日期，每个起点另有前 4 天的对照，因此共 150 条预测—实际配对。</p><p>这是今天重建的回测，未声称过去实际发出。模型、案例选择和 agent 判断仍有事后偏差；行情使用当前下载历史版本，无法完整还原当年的数据修订与发布时刻。历史回放与真实留档分开统计，数据、证据和实际重建时间保存在独立目录。完整来源可在每期证据及 JSON 中查看。</p></div>
+</div><div class="dialog-footer"><button class="button primary" id="close-info-bottom">知道了</button></div></dialog>
+</body></html>

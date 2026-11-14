@@ -12,6 +12,7 @@ predictions/inputs/
 predictions/runs/
 predictions/observations/
 predictions/events/
+predictions/five-day/
 predictions/latest-comparison.md
 predictions/*.csv
 predictions/schedule.json

@@ -2,6 +2,8 @@ import { createHash } from 'node:crypto';
 import { matchHistory } from './event-library.mjs';
 const DAY = 86400000;
 export const EVENT_MODEL = 'event-scenarios-v1';
+export const FIVE_DAY_MODEL = 'event-scenarios-1to5-v1';
+export const FIVE_DAYS = [1, 2, 3, 4, 5];
 const day = t => new Date(t).toISOString().slice(0, 10);
 const mean = xs => xs.reduce((a, b) => a + b, 0) / xs.length;
 const sd = xs => Math.sqrt(xs.reduce((s, x) => s + (x - mean(xs)) ** 2, 0) / (xs.length - 1));
@@ -23,7 +25,18 @@ export function replayEventForecast(analysis, market, { asOf, reconstructedAt } 
   return calculate(analysis, market, new Date(asOf), reconstructedAt);
 }
 
-function calculate(analysis, market, now, reconstructedAt = null) {
+export function buildFiveDayForecast(analysis, market, { now = new Date() } = {}) {
+  const f = calculate(analysis, market, now, null, FIVE_DAYS);
+  f.modelVersion = FIVE_DAY_MODEL;
+  return f;
+}
+export function replayFiveDayForecast(analysis, market, { asOf, reconstructedAt } = {}) {
+  if (!stamp(asOf) || !stamp(reconstructedAt) || Date.parse(asOf) >= Date.parse(reconstructedAt) || analysis.cutoffAt !== asOf) fail('回放时间无效');
+  const f = calculate(analysis, market, new Date(asOf), reconstructedAt, FIVE_DAYS);
+  f.modelVersion = FIVE_DAY_MODEL;
+  return f;
+}
+function calculate(analysis, market, now, reconstructedAt = null, horizonDays = [7, 30]) {
   const issuedAt = now.toISOString(), issueDay = day(now);
   if (!/^[a-z0-9-]+$/.test(analysis.id || '') || !stamp(analysis.cutoffAt) || Date.parse(analysis.cutoffAt) > now.getTime()) fail('分析 ID 或截止时间无效');
   if (now - Date.parse(analysis.cutoffAt) > DAY) fail('分析已超过 24 小时，请重新核查事件');
@@ -49,7 +62,7 @@ function calculate(analysis, market, now, reconstructedAt = null) {
     for (const [v, lo, hi] of [[e.direction, -1, 1], [e.similarity, 0, 1], [e.confidence, 0, 1], [e.novelty, 0, 1]]) if (!Number.isFinite(v) || v < lo || v > hi) fail('事件评分越界');
     const ageDays = (Date.parse(analysis.cutoffAt) - Date.parse(e.publishedAt)) / DAY;
     if (ageDays > 28) fail('只允许最近 28 天已发布事件进入新预测');
-    const classifications = [7, 30].map(horizon => {
+    const classifications = horizonDays.map(horizon => {
       const matched = matchHistory(e, library, horizon, analysis.cutoffAt);
       const contribution = e.direction * (matched.level || 0) / 4 * matched.reliability * e.similarity * e.confidence * e.novelty * 2 ** (-ageDays / 7);
       return { ...matched, contribution };
@@ -57,7 +70,7 @@ function calculate(analysis, market, now, reconstructedAt = null) {
     return { ...e, ageDays, classifications };
   });
   // Average within a channel: repeated stories must not mechanically amplify the same event.
-  const horizons = [7, 30].map(horizon => {
+  const horizons = horizonDays.map(horizon => {
     const groups = new Map();
     for (const e of events) { const list = groups.get(e.category) || []; list.push(e.classifications.find(c => c.horizon === horizon).contribution); groups.set(e.category, list); }
     const channelScores = Object.fromEntries([...groups].map(([k, v]) => [k, mean(v)]));

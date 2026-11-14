@@ -1,6 +1,7 @@
 import { join } from 'node:path';
 import { updateComparisons } from './tracking.mjs';
 import { updateEventComparisons } from './event-store.mjs';
+import { updateFiveDayComparisons } from './five-day-store.mjs';
 
 // Actual prices only: no training, macro fetch, new forecast or input archive.
 export function createTrackingJob(projectRoot, { trackingRoot = join(projectRoot, 'predictions') } = {}) {
@@ -8,6 +9,7 @@ export function createTrackingJob(projectRoot, { trackingRoot = join(projectRoot
   return { run: async (snapshot, trigger = 'manual') => {
     const result = await updateComparisons(root, snapshot, { trigger });
     await updateEventComparisons(root);
+    await updateFiveDayComparisons(root);
     return result;
   } };
 }

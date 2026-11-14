@@ -5,14 +5,14 @@ const date = t => new Date(t).toISOString().slice(0, 10);
 export const impactLevel = z => Math.abs(z) < .5 ? 1 : Math.abs(z) < 1 ? 2 : Math.abs(z) < 2 ? 3 : 4;
 
 // This is an observed event-window residual, not an identified causal effect.
-export function measureCase(definition, rows) {
+export function measureCase(definition, rows, horizonDays = [7, 30]) {
   const publicationDay = definition.publishedAt.slice(0, 10);
   const anchorDate = date(Date.parse(publicationDay) - DAY), byDate = new Map(rows.map(r => [r.date, r.price]));
   const before = Array.from({ length: 61 }, (_, i) => ({ date: date(Date.parse(anchorDate) - (60 - i) * DAY) })).map(r => ({ ...r, price: byDate.get(r.date) }));
   if (before.some(r => !Number.isFinite(r.price) || r.price <= 0)) throw new Error('案例事前窗口缺日：' + definition.id);
   const rs = before.slice(1).map((r, i) => Math.log(r.price / before[i].price));
   const sigma = Math.max(sd(rs.slice(-28)), sd(rs)), drift = .35 * (mean(rs.slice(-7)) + mean(rs.slice(-28))) / 2, anchorPrice = before.at(-1).price;
-  const outcomes = [7, 30].map(horizon => {
+  const outcomes = horizonDays.map(horizon => {
     const targetDate = date(Date.parse(anchorDate) + horizon * DAY), actual = byDate.get(targetDate);
     if (!Number.isFinite(actual) || actual <= 0) return { horizon, targetDate, status: 'pending' };
     const width = sigma * Math.sqrt(horizon), trend = Math.min(width, Math.max(-width, drift * horizon));

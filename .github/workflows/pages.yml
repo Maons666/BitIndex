@@ -56,10 +56,15 @@ jobs:
           else
             node dashboard/daily.mjs
           fi
-      - name: Verify forecasts were neither added nor changed
+      - name: Verify legacy Ridge forecasts were neither added nor changed
         run: node dashboard/check-forecast-lock.mjs
       - name: Compare agent-issued event scenarios using recorded actuals
         run: node dashboard/update-event-comparisons.mjs
+      - name: Issue today's five-day forecast after fresh daily data
+        if: github.event_name != 'push' && steps.refresh.outcome == 'success'
+        run: node dashboard/update-five-day.mjs --issue
+      - name: Settle five-day targets from exact-date actual records
+        run: node dashboard/update-five-day.mjs
       - name: Save durable daily records
         working-directory: .cloud-state
         shell: bash

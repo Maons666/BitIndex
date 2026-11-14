@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 import { readTracking, trackingCsv } from './tracking.mjs';
 import { readEventData, eventCsv } from './event-store.mjs';
 import { detectMoves } from './event-library.mjs';
+import { readFiveDayData } from './five-day-store.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export async function buildPages({ trackingRoot = process.env.BITINDEX_TRACKING_DIR || join(root, 'predictions'), cacheRoot = process.env.BITINDEX_CACHE_DIR || join(root, '.cache'), output = join(root, 'dist'), repository = process.env.GITHUB_REPOSITORY || 'Maons666/BitIndex', eventArchiveRoot } = {}) {
@@ -22,13 +23,15 @@ export async function buildPages({ trackingRoot = process.env.BITINDEX_TRACKING_
   if (events.forecasts.some(f => f.anchor.date > latestMarket)) throw new Error('行情快照早于已签发预测基准，请使用最新行情缓存');
   events.candidates = detectMoves(raw.rows, events.library.cases);
   const eventsCsv = eventCsv(events.comparisons);
-  const version = createHash('sha256').update(JSON.stringify([raw, tracking, csv, events, eventsCsv])).digest('hex');
+  const fiveDay = await readFiveDayData(trackingRoot, { archiveRoot: eventArchiveRoot ? join(eventArchiveRoot,'five-day') : undefined });
+  const version = createHash('sha256').update(JSON.stringify([raw, tracking, csv, events, eventsCsv, fiveDay])).digest('hex');
   const prefix = `data/${version}`, publishedAt = new Date().toISOString();
   const manifest = { schema: 1, version, publishedAt, sourceFetchedAt: raw.fetchedAt, dataThrough: raw.rows.findLast(r => r.price !== null)?.date, market: `${prefix}/market.json`, tracking: `${prefix}/tracking.json`, csv: `${prefix}/daily-comparison.csv`, events: `${prefix}/events.json`, eventCsv: `${prefix}/event-comparisons.csv` };
   await mkdir(join(output, prefix), { recursive: true });
-  const assets = ['style.css', 'app.mjs', 'prediction.mjs', 'evaluation.mjs', 'evaluation-core.mjs', 'core.mjs', 'chart.mjs', 'forecast.mjs', 'outlook.mjs', 'outlook-core.mjs', 'data-client.mjs', 'favicon.svg'];
+  manifest.fiveDay = `${prefix}/five-day.json`;
+  const assets = ['style.css', 'app.mjs', 'prediction.mjs', 'five-day.mjs', 'five-day-core.mjs', 'evaluation.mjs', 'evaluation-core.mjs', 'core.mjs', 'chart.mjs', 'forecast.mjs', 'outlook.mjs', 'outlook-core.mjs', 'data-client.mjs', 'favicon.svg'];
   for (const file of assets) await copyFile(join(root, 'dashboard/public', file), join(output, file));
-  for (const page of ['index.html', 'prediction.html']) {
+  for (const page of ['index.html', 'prediction.html', 'five-day.html']) {
   let html = await readFile(join(root, 'dashboard/public', page), 'utf8');
   html = html.replace('最近核对', '数据获取时间')
     .replace('更新实际数据', '刷新对照')
@@ -42,6 +45,7 @@ export async function buildPages({ trackingRoot = process.env.BITINDEX_TRACKING_
   await writeFile(join(output, prefix, 'market.json'), JSON.stringify({ ...raw, publicationVersion: version }));
   await writeFile(join(output, prefix, 'tracking.json'), JSON.stringify({ ...tracking, publicationVersion: version }));
   await writeFile(join(output, prefix, 'events.json'), JSON.stringify({ ...events, publicationVersion: version }));
+  await writeFile(join(output, prefix, 'five-day.json'), JSON.stringify({ ...fiveDay, publicationVersion: version }));
   await writeFile(join(output, prefix, 'event-comparisons.csv'), eventsCsv);
   await writeFile(join(output, prefix, 'daily-comparison.csv'), csv);
   await writeFile(join(output, 'data/manifest.json'), JSON.stringify(manifest));

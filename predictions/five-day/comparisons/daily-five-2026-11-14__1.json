@@ -1,0 +1,9 @@
+{
+  "forecastId": "daily-five-2026-11-14",
+  "horizon": 1,
+  "targetDate": "2026-11-15",
+  "actualPrice": 65189.110705488,
+  "actualObservedAt": "2026-11-16T23:26:12.104Z",
+  "actualSourceFetchedAt": "2026-11-16T23:26:12.094Z",
+  "status": "settled"
+}

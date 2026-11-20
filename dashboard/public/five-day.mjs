@@ -24,7 +24,8 @@ function render(){
   const r=replay();issues=[...(historic()?r?.issues||[]:data.issues)].sort((a,b)=>b.asOf.localeCompare(a.asOf));
   const size=Number($('five-limit').value),pages=Math.max(1,Math.ceil(issues.length/size));page=Math.min(page,pages-1);
   $('five-content').hidden=!issues.length;$('five-csv').disabled=!issues.length;$('five-json').disabled=!issues.length;
-  $('five-description').textContent=historic()?r?`事后回放 · ${issues.length} 个预测起点（${r.originStart} — ${r.originEnd}）· 第5天目标 ${r.targetStart} — ${r.targetEnd} · 重建 ${time(r.reconstructedAt)}（纽约）`:'尚未发布历史回放。':`真实每日留档 · ${issues.length} 期 · 每期同时冻结未来1～5天价格，精确目标日到齐后填入实际值。`;
+  const latest=issues[0];
+  $('five-description').textContent=historic()?r?`事后回放 · 固定样本 · ${issues.length} 个预测起点（${r.originStart} — ${r.originEnd}）· 第5天目标 ${r.targetStart} — ${r.targetEnd} · 重建 ${time(r.reconstructedAt)}（纽约）`:'尚未发布历史回放。':latest?`真实每日留档 · ${issues.length} 期 · 最新预测起点 ${latest.asOf.slice(0,10)}（UTC）· 目标覆盖 ${latest.targets[0].targetDate} — ${latest.targets.at(-1).targetDate}`:'尚未发布真实每日预测。';
   const age=issues[0]?.agentSource? (Date.now()-Date.parse(issues[0].agentSource.analysisCutoffAt))/DAY:null;
   $('five-policy').textContent=historic()?'此表不是过去真实发出的预测；历史与真实成绩分开统计。':age>7?'最近 agent 分析已超过7天，暂停新增预测；触发分析更新后恢复。':issues.length?`最近沿用的 agent 分析：${time(issues[0].agentSource.analysisCutoffAt)}（纽约）。每天更新行情，分析过期则暂停新增。`:'等待首次真实签发。';
   const summaries=fiveDaySummaries(issues);$('five-summary').replaceChildren(...summaries.map(s=>{const d=el('div');d.append(el('span','muted',`第 ${s.horizon} 天 · MAPE`),el('strong','',s.count?number(s.mape,2)+'%':'待到期'),el('small','muted',`${s.count}/${s.total} 已配对`),el('small','muted',s.count?`不加事件 ${number(s.noEventsMape,2)}% / 不变价 ${number(s.unchangedMape,2)}%`:'同日基线到期后计算'));return d;}));

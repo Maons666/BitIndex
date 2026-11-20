@@ -230,6 +230,11 @@ try {
   await click('nav a[href="./five-day.html"]');await ready();
   await wait(()=>evaluate(`!document.querySelector('#five-mode').disabled`),'五日对照');
   const five=await (await fetch(base+manifest.fiveDay)).json(), fiveReplay=five.replays[0];
+  const latestLive=[...five.issues].sort((a,b)=>b.asOf.localeCompare(a.asOf))[0];
+  check('五日页面默认展示最新真实预测和完整目标日期',await evaluate(`document.querySelector('#five-mode').value==='live' && document.querySelector('#five-body tr').dataset.issue===${JSON.stringify(latestLive.id)} && document.querySelector('#five-description').textContent.includes(${JSON.stringify(latestLive.asOf.slice(0,10))}) && document.querySelector('#five-description').textContent.includes(${JSON.stringify(latestLive.targets.at(-1).targetDate)})`));
+  await shot('five-day-live-desktop','.five-day-page');
+  await evaluate(`document.querySelector('#five-mode').value='replay';document.querySelector('#five-mode').dispatchEvent(new Event('change'))`);
+  check('历史回放明确标注固定样本和原始起点范围',await evaluate(`document.querySelector('#five-description').textContent.includes('固定样本') && document.querySelector('#five-description').textContent.includes(${JSON.stringify(fiveReplay.originEnd)})`));
   check('独立五日页面显示三页起点，150条配对不混入原预测页',await evaluate(`!!document.querySelector('nav a[href="./prediction.html"]') && !document.querySelector('#event-section') && document.querySelectorAll('#five-body tr').length===10 && document.querySelector('#five-page').textContent.includes('共 30')`));
   const latestFive=[...fiveReplay.issues].sort((a,b)=>b.asOf.localeCompare(a.asOf))[0];
   check('五日矩阵每格目标日与预测实际逐项对应',JSON.stringify(await evaluate(`Array.from(document.querySelectorAll('#five-body tr:first-child td')).map(td=>({date:td.dataset.target,prediction:Number(td.dataset.prediction),actual:Number(td.dataset.actual)}))`))===JSON.stringify(latestFive.targets.map(t=>({date:t.targetDate,prediction:t.base,actual:t.actualPrice}))));

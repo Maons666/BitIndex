@@ -7,7 +7,7 @@
   <div class="notice" id="notice" role="status" hidden></div>
   <section class="market-strip"><div class="market-label"><span class="coin-small">₿</span><span>Bitcoin <small>BTC / USD</small></span></div><strong id="btc-price" class="market-price">—</strong><div class="market-meta"><span>UTC 日收盘</span><strong id="price-date">—</strong></div><div class="market-meta"><span>获取时间（纽约）</span><strong id="checked-time">—</strong></div></section>
   <section class="event-panel" aria-labelledby="five-title"><div class="section-heading"><div><p class="eyebrow">预测 → 等待实际 → 核对误差</p><h2 id="five-title">每日发出的五天预测</h2></div><div class="outlook-controls"><button class="button subtle" id="five-csv" disabled>导出完整 CSV</button><button class="text-button" id="five-json" disabled>证据与数据 JSON ↗</button></div></div>
-    <div class="outlook-toolbar"><label>数据 <select id="five-mode" disabled><option value="replay">历史回放 · 30 个起点</option><option value="live">真实每日留档</option></select></label><label>每页 <select id="five-limit"><option value="10">10 个起点</option><option value="30">30 个起点</option></select></label></div>
+    <div class="outlook-toolbar"><label>数据 <select id="five-mode" disabled><option value="live" selected>真实每日留档 · 最新预测</option><option value="replay">历史回放 · 固定样本</option></select></label><label>每页 <select id="five-limit"><option value="10">10 个起点</option><option value="30">30 个起点</option></select></label></div>
     <p class="event-status" id="five-description"></p><p class="event-status" id="five-policy"></p>
     <div id="five-content" hidden>
       <div class="five-summary" id="five-summary"></div>

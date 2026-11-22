@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "date": "2026-11-21",
+  "price": 60122.6111387551,
+  "observedAt": "2026-11-22T16:18:19.815Z",
+  "sourceFetchedAt": "2026-11-22T16:17:51.889Z",
+  "source": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics"
+}

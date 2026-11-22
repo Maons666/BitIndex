@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "scope": "daily",
+  "mode": "comparison-only",
+  "archived": false,
+  "trigger": "scheduled",
+  "sourceFetchedAt": "2026-11-21T20:36:17.080Z",
+  "status": "stale",
+  "error": "无法连接 Coin Metrics，请检查网络后重试",
+  "dataThrough": "2026-11-20",
+  "finishedAt": "2026-11-22T16:17:06.293Z",
+  "localDate": "2026-11-22"
+}

@@ -1,0 +1,522 @@
+{
+  "schema": 1,
+  "id": "2026-11-22-event-scenarios-v1",
+  "modelVersion": "event-scenarios-v1",
+  "issuedAt": "2026-11-22T16:20:48.130Z",
+  "analysisCutoffAt": "2026-11-22T16:20:48.130Z",
+  "author": "Codex agent · 纽约 11 月 22 日事件复核",
+  "updateMode": "agent-triggered-free",
+  "anchor": {
+    "date": "2026-11-21",
+    "price": 60122.6111387551
+  },
+  "source": "https://community-api.coinmetrics.io/v4/timeseries/asset-metrics",
+  "sourceFetchedAt": "2026-11-22T16:17:51.889Z",
+  "inputFingerprint": "14efb1f1d34b46543dda40a4127548ba1c3942bb39ab36b0dd719294464e1856",
+  "analysisFingerprint": "8991ecb5d0763c8115e9d19bc5c4006f42b29611522a3131a0696f975fec256d",
+  "libraryFingerprint": "227b90cbd52fefddf8f2bf0c3696833ed4b6b0cf9c84685884226ebe5a0cc5ab",
+  "summary": "11 月 21 日完整日线收于 60,122.61 美元，较前日反弹 2.16%。AHR999 约 0.272、RSI 约 22.41，估值与超卖读数偏低，但 MVRV 仍约 1.130；一天反弹尚不足以确认底部。ETF 最近五个完整交易日净流出 13.062 亿美元，Cook 最新讲话继续表达偏紧政策立场，名义国债收益率小幅下降提供部分缓冲。本期判断仍偏谨慎，维持三种情景，并保留弱趋势中出现反弹的可能。",
+  "coverageGaps": [
+    "行情来自纽约 11 月 22 日 11:17 获取的 Coin Metrics 官方完整历史响应，最新为 11 月 21 日 UTC 收盘；不代表 22 日盘中价。首次日更连接超时后改用系统 HTTPS 客户端读取同一端点，并经原有校验与核算脚本入档。",
+    "11 月 19 日 ETF 已完整，净流出 5.823 亿美元；11 月 20 日仍缺 IBIT，已报部分净流出 1.245 亿美元，不计入完整汇总。11 月 21—22 日为周末，不补造交易日零值。",
+    "11 月 20 日 Cook 讲话是委员个人政策观点，不是新 FOMC 决议。讲话提及的 10 月 PCE 数值是估计，不能记作 BEA 正式发布的通胀数据。PPI 和初领失业金保留此前原始发布时间。",
+    "Binance 沿用 11 月 19 日追加确认 ZK 证明已生成的公告；本轮没有新的全面提款恢复确认，也未独立执行证明验证。旧消息按原可用时间衰减，不重新标成今天发布。",
+    "AHR999 和挖矿成本使用看板默认参数；NUPL 由 MVRV 推导，与多个价格均线指标并非独立证据。低估与超卖不等于已确认底部，支撑区域也不是现有模型输出的守住概率。",
+    "原 Ridge 模型累计十条预测到期，两版本各五条，平均绝对百分比误差约为 37%；两期已到期七日事件预测误差分别约 16.71% 和 15.88%。五日留档有二十五条逐日配对，其中第5天仅三条，目标重叠且样本少，不能据此声称稳定预测优势。",
+    "四个历史案例是事后精选样本，主要类别仍各只有一个案例；没有可比安全案例时该渠道量化贡献仍为零。本轮不调整趋势系数、分级阈值、主观参数或情景宽度。",
+    "未取得完整清算、期权偏斜、全市场订单簿和一致预期；资金流与价格相关不等于单一因果。三种价格范围未校准概率，不能当成置信区间。",
+    "本期按真实 11 月 22 日签发时间冻结，目标日期沿用 UTC。旧预测、旧目标和已有实际值保持原样；今日五日预测只保留首次签发。"
+  ],
+  "conditions": {
+    "base": "反弹后仍在低位波动，ETF 整体流出尚未持续逆转，通胀与利率预期维持偏紧，交易所恢复进展没有新的反复。",
+    "weak": "反弹失去承接、价格再次跌破近期低点，ETF 赎回扩大或宏观政策预期进一步收紧，交易所验证及提款恢复出现新问题。",
+    "strong": "价格回踩后守住并突破前一反弹高点，ETF 转为持续净流入，宏观数据与利率走势支持风险偏好改善，交易所恢复得到进一步核实。"
+  },
+  "events": [
+    {
+      "id": "fed-cook-2026-11-20",
+      "title": "Cook 讲话延续偏紧立场，名义收益率略降",
+      "category": "macro",
+      "kind": "monetary-tightening",
+      "eventDate": "2026-11-20",
+      "publishedAt": "2026-11-20T17:15:00Z",
+      "verifiedAt": "2026-11-22T16:20:48.130Z",
+      "sourceName": "Federal Reserve",
+      "url": "https://www.federalreserve.gov/newsevents/speech/cook20261120a.htm",
+      "additionalSources": [
+        {
+          "title": "Cook 官方讲话 PDF",
+          "url": "https://www.federalreserve.gov/newsevents/speech/files/cook20261120a.pdf"
+        },
+        {
+          "title": "此前 FOMC 会议纪要",
+          "url": "https://www.federalreserve.gov/monetarypolicy/fomcminutes20261028.htm"
+        },
+        {
+          "title": "H.15 利率数据",
+          "url": "https://www.federalreserve.gov/releases/h15/"
+        },
+        {
+          "title": "此前初领失业金发布",
+          "url": "https://www.dol.gov/ui/data.pdf"
+        },
+        {
+          "title": "BEA PCE 正式数据与发布日程",
+          "url": "https://www.bea.gov/data/personal-consumption-expenditures-price-index"
+        }
+      ],
+      "verificationMethod": "核对官方讲话、发布时刻及 H.15 数据；旧纪要和初领失业金只作背景，原始日期保留。",
+      "fact": "Cook 在 11 月 20 日讲话中认为金融条件过于宽松，解释其在 10 月支持加息 25 个基点的立场，并强调延迟必要政策调整的代价。这是个人观点，当前目标利率仍为 3.75%—4.00%。H.15 于 11 月 20 日发布的最新观测截至 19 日：两年国债 4.76%、十年国债 5.04%、十年实际收益率 2.88%；较前日分别变化 −4、−3、0 个基点。",
+      "inference": "进一步紧缩的风险仍约束风险偏好；名义收益率回落提供部分缓冲，但实际长端利率没有同步下降，不能判断已经转向宽松。",
+      "direction": -1,
+      "similarity": 0.35,
+      "confidence": 0.6,
+      "novelty": 0.2,
+      "rationale": "以新增个人讲话替换宏观政策条目，不同时叠加旧纪要分数。保留上一期方向、相似度、置信度、新颖度；按讲话真实公开时间衰减，并与 PPI 在同一宏观渠道取平均。",
+      "observations": {
+        "ratesSource": "https://www.federalreserve.gov/releases/h15/",
+        "ratesPublishedAt": "2026-11-20T21:15:00Z",
+        "ratesAsOf": "2026-11-19",
+        "unit": "percent",
+        "effectiveFederalFunds": 3.88,
+        "treasury2y": 4.76,
+        "treasury10y": 5.04,
+        "realTreasury10y": 2.88,
+        "comparisonDate": "2026-11-18",
+        "changesBasisPoints": {
+          "treasury2y": -4,
+          "treasury10y": -3,
+          "realTreasury10y": 0
+        },
+        "joblessClaims": {
+          "source": "https://www.dol.gov/ui/data.pdf",
+          "publishedAt": "2026-11-19T13:30:00Z",
+          "verifiedAt": "2026-11-22T16:20:48.130Z",
+          "seasonallyAdjusted": true,
+          "initialWeekEnding": "2026-11-14",
+          "initial": 203000,
+          "initialPriorRevised": 202000,
+          "initialChange": 1000,
+          "initialFourWeekAverage": 197750,
+          "continuedWeekEnding": "2026-11-07",
+          "continued": 1763000,
+          "continuedChange": 70000,
+          "scoring": "context-only-no-separate-weight"
+        },
+        "policyStatementType": "individual-governor-speech-not-FOMC-decision",
+        "speechPceFiguresStatus": "estimates-not-an-official-BEA-release"
+      },
+      "ageDays": 1.9623626157407408,
+      "classifications": [
+        {
+          "horizon": 7,
+          "count": 1,
+          "level": 4,
+          "label": "L4",
+          "historicalDirection": -1,
+          "reliability": 0.16666666666666666,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 4,
+              "direction": -1,
+              "standardizedMove": -4.976904900093034,
+              "returnPct": -24.87649080459914,
+              "targetDate": "2026-02-05"
+            }
+          ],
+          "contribution": -0.005763788532673908
+        },
+        {
+          "horizon": 30,
+          "count": 1,
+          "level": 3,
+          "label": "L3",
+          "historicalDirection": -1,
+          "reliability": 0.16666666666666666,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ],
+          "contribution": -0.004322841399505431
+        }
+      ]
+    },
+    {
+      "id": "ppi-2026-11-13",
+      "title": "沿用 11 月 13 日 PPI：通胀压力仍在",
+      "category": "macro",
+      "kind": "monetary-tightening",
+      "eventDate": "2026-11-13",
+      "publishedAt": "2026-11-13T13:30:00Z",
+      "verifiedAt": "2026-11-22T16:20:48.130Z",
+      "sourceName": "BLS",
+      "url": "https://www.bls.gov/news.release/archives/ppi_11132026.htm",
+      "fact": "11 月 13 日发布的 10 月最终需求 PPI 环比上涨 0.3%，同比上涨 6.5%；剔除食品、能源和贸易服务后环比上涨 0.5%、同比上涨 4.9%。本轮没有更新的 PPI 发布。",
+      "inference": "总体环比回落与基础价格压力并存，可能限制宽松预期；没有一致预期来源，不能称超预期或低于预期。",
+      "direction": -1,
+      "similarity": 0.4,
+      "confidence": 0.5,
+      "novelty": 0.3,
+      "rationale": "保留上一期原始发布时间与评分参数，继续按时间衰减，不将旧通胀消息重新标为今日数据；与 Fed 纪要同属宏观渠道，组内取平均。",
+      "ageDays": 9.11861261574074,
+      "classifications": [
+        {
+          "horizon": 7,
+          "count": 1,
+          "level": 4,
+          "label": "L4",
+          "historicalDirection": -1,
+          "reliability": 0.16666666666666666,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 4,
+              "direction": -1,
+              "standardizedMove": -4.976904900093034,
+              "returnPct": -24.87649080459914,
+              "targetDate": "2026-02-05"
+            }
+          ],
+          "contribution": -0.004053783805673041
+        },
+        {
+          "horizon": 30,
+          "count": 1,
+          "level": 3,
+          "label": "L3",
+          "historicalDirection": -1,
+          "reliability": 0.16666666666666666,
+          "matches": [
+            {
+              "id": "2026-01-fed-repricing",
+              "title": "偏鹰预期重估与资金撤离",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.59386633143449,
+              "returnPct": -20.769852674665422,
+              "targetDate": "2026-02-28"
+            }
+          ],
+          "contribution": -0.003040337854254781
+        }
+      ]
+    },
+    {
+      "id": "etf-2026-11-19",
+      "title": "ETF 19 日完整净流出 5.823 亿美元",
+      "category": "flows",
+      "kind": "fund-outflow",
+      "eventDate": "2026-11-19",
+      "publishedAt": "2026-11-22T16:20:48.130Z",
+      "verifiedAt": "2026-11-22T16:20:48.130Z",
+      "publicationTimeNote": "动态表没有逐行首次发布时间；用本次实际核查时刻作为新获得完整数据的可用时间，交易日另存。20 日缺 IBIT，周末不补零。",
+      "sourceName": "Farside Investors · 数据汇总",
+      "url": "https://farside.co.uk/btc/",
+      "fact": "11 月 19 日美国现货 BTC ETF 完整日报净流出 5.823 亿美元，含 IBIT 净流出 5.411 亿美元。最近五个完整交易日合计净流出 13.062 亿美元，11 月 2—19 日累计净流出 34.678 亿美元。20 日已报部分净流出 1.245 亿美元，尚缺 IBIT。",
+      "inference": "新增完整数据继续显示需求压力，单日价格反弹不代表资金趋势逆转；不能用 20 日部分结果判断全市场流出已显著缓和。",
+      "direction": -1,
+      "similarity": 0.75,
+      "confidence": 0.6,
+      "novelty": 0.4,
+      "rationale": "沿用上一期评分参数，只补入 19 日完整结果。仍参考 6 月资金赎回案例，保留美国现货 ETF 与更广投资产品统计口径不同的限制。",
+      "observations": {
+        "unit": "USD million",
+        "originalPublishedAt": null,
+        "observedAt": "2026-11-22T16:20:48.130Z",
+        "windowStart": "2026-10-26",
+        "windowEnd": "2026-11-22",
+        "completeTotals": [
+          [
+            "2026-10-26",
+            110.3
+          ],
+          [
+            "2026-10-27",
+            176
+          ],
+          [
+            "2026-10-28",
+            137.3
+          ],
+          [
+            "2026-10-29",
+            17.2
+          ],
+          [
+            "2026-10-30",
+            -643.2
+          ],
+          [
+            "2026-11-02",
+            -398.6
+          ],
+          [
+            "2026-11-03",
+            -115.6
+          ],
+          [
+            "2026-11-04",
+            74.6
+          ],
+          [
+            "2026-11-05",
+            -430.2
+          ],
+          [
+            "2026-11-06",
+            -411.9
+          ],
+          [
+            "2026-11-09",
+            -201
+          ],
+          [
+            "2026-11-10",
+            -95
+          ],
+          [
+            "2026-11-11",
+            -299.8
+          ],
+          [
+            "2026-11-12",
+            -284.1
+          ],
+          [
+            "2026-11-13",
+            -185.4
+          ],
+          [
+            "2026-11-16",
+            7.9
+          ],
+          [
+            "2026-11-17",
+            -239.9
+          ],
+          [
+            "2026-11-18",
+            -306.5
+          ],
+          [
+            "2026-11-19",
+            -582.3
+          ]
+        ],
+        "completeSum": -3670.2,
+        "novemberCompleteSum": -3467.8,
+        "lastFiveCompleteSum": -1306.2,
+        "newCompleteSincePriorIssue": -582.3,
+        "completeDay": "2026-11-19",
+        "completeDayFunds": {
+          "IBIT": -541.1,
+          "FBTC": -45.9,
+          "BITB": 0,
+          "ARKB": -31.3,
+          "BTCO": 0,
+          "EZBC": 0,
+          "BRRR": 0,
+          "HODL": 0,
+          "BTCW": 0.3,
+          "MSBT": 49.6,
+          "GBTC": -13.9,
+          "BTC": 0
+        },
+        "partialDay": "2026-11-20",
+        "partialReportedTotal": -124.5,
+        "partialReportedFunds": {
+          "FBTC": -72.4,
+          "BITB": -7,
+          "ARKB": 0,
+          "BTCO": 0,
+          "EZBC": -1.7,
+          "BRRR": 0,
+          "HODL": 0,
+          "BTCW": 0,
+          "MSBT": 2.3,
+          "GBTC": -32.8,
+          "BTC": -12.9
+        },
+        "missingFunds": [
+          "IBIT"
+        ],
+        "partialUsedAsDailyTotal": false
+      },
+      "ageDays": 0,
+      "classifications": [
+        {
+          "horizon": 7,
+          "count": 1,
+          "level": 4,
+          "label": "L4",
+          "historicalDirection": -1,
+          "reliability": 0.16666666666666666,
+          "matches": [
+            {
+              "id": "2026-06-redemptions",
+              "title": "连续赎回与企业买盘预期变化",
+              "level": 4,
+              "direction": -1,
+              "standardizedMove": -3.13342838414801,
+              "returnPct": -14.186642771753476,
+              "targetDate": "2026-06-07"
+            }
+          ],
+          "contribution": -0.03
+        },
+        {
+          "horizon": 30,
+          "count": 1,
+          "level": 3,
+          "label": "L3",
+          "historicalDirection": -1,
+          "reliability": 0.16666666666666666,
+          "matches": [
+            {
+              "id": "2026-06-redemptions",
+              "title": "连续赎回与企业买盘预期变化",
+              "level": 3,
+              "direction": -1,
+              "standardizedMove": -1.9501674257351602,
+              "returnPct": -20.48175998334887,
+              "targetDate": "2026-06-30"
+            }
+          ],
+          "contribution": -0.0225
+        }
+      ]
+    },
+    {
+      "id": "binance-coverage-update",
+      "title": "沿用储备证明生成确认，全面提款恢复待核实",
+      "category": "security",
+      "kind": "security-breach",
+      "eventDate": "2026-11-19",
+      "publishedAt": "2026-11-20T04:42:44.618Z",
+      "verifiedAt": "2026-11-22T16:20:48.130Z",
+      "publicationTimeNote": "原公告新增 Updated on 2026-11-19 08:20，未标时区；用本次真实核查时间作为新增确认的可用时间。生成发生日期为 11 月 14 日，但不把本次得知的信息倒写到该日。",
+      "sourceName": "Binance 官方公告",
+      "url": "https://www.binance.com/en/support/announcement/detail/0729ad59cde74700b4eaa96c33441e71",
+      "additionalSources": [
+        {
+          "title": "11 月 14 日分批恢复提款公告",
+          "url": "https://www.binance.com/en/support/announcement/detail/432646a7f7c34c2a85b69db99af32c16"
+        },
+        {
+          "title": "官方储备证明页",
+          "url": "https://www.binance.com/en/proof-of-reserves"
+        }
+      ],
+      "fact": "官方原公告仍为 11 月 19 日更新，称 ZK 证明已于 11 月 14 日生成，对应 11 月 12 日 00:00 UTC、198 个代币快照。本轮未核实到更新的全面提款恢复公告；87 个网络恢复仍来自 11 月 14 日披露。本次未独立执行证明验证。",
+      "inference": "已公开的修复信息提供部分缓冲，但没有新增全面恢复确认；不把未核实写成未完成，也不把官方说明当成独立偿付审计。",
+      "direction": 1,
+      "similarity": 0,
+      "confidence": 0.4,
+      "novelty": 0.4,
+      "rationale": "保留原事件可用时间和主观参数，继续随时间衰减，没有同类可比案例时量化修正仍为零。",
+      "observations": {
+        "officialUpdatedAtLocal": "2026-11-19 08:20",
+        "officialTimezone": null,
+        "observedAt": "2026-11-20T04:42:44.618Z",
+        "proofGeneratedDateClaimed": "2026-11-14",
+        "snapshotAt": "2026-11-12T00:00:00Z",
+        "tokenCount": 198,
+        "independentlyVerified": false,
+        "withdrawalsDisclosureDate": "2026-11-14",
+        "networksReportedRestored": 87,
+        "fullWithdrawalRestorationVerified": false,
+        "lastCheckedAt": "2026-11-22T16:20:48.130Z"
+      },
+      "ageDays": 2.4847628703703704,
+      "classifications": [
+        {
+          "horizon": 7,
+          "count": 0,
+          "level": null,
+          "label": "待积累",
+          "historicalDirection": null,
+          "reliability": 0,
+          "matches": [],
+          "contribution": 0
+        },
+        {
+          "horizon": 30,
+          "count": 0,
+          "level": null,
+          "label": "待积累",
+          "historicalDirection": null,
+          "reliability": 0,
+          "matches": [],
+          "contribution": 0
+        }
+      ]
+    }
+  ],
+  "parameters": {
+    "lookback": 60,
+    "trendShrinkage": 0.35,
+    "halfLifeDays": 7,
+    "sampleShrinkage": 5,
+    "maxEventSigma": 0.5,
+    "rangeSigma": 1,
+    "dailyVolatility": 0.025082533815614955,
+    "dailyTrend": -0.003331952519171953
+  },
+  "features": {
+    "return7dPct": -5.794543723727797,
+    "return28dPct": -25.497989005221378,
+    "annualVolatilityPct": 47.92011356968863
+  },
+  "horizons": [
+    {
+      "horizon": 7,
+      "targetDate": "2026-11-29",
+      "elapsedFromAnchor": 8,
+      "noEvents": 58541.176352017406,
+      "unchanged": 60122.6111387551,
+      "base": 58468.730464940134,
+      "weak": 54464.43775130231,
+      "strong": 62767.423723199565,
+      "trendLogReturn": -0.026655620153375623,
+      "eventLogAdjustment": -0.0012382865400909881,
+      "eventAdjustmentPct": -0.12375201796704927,
+      "eventScore": -0.03490878616917347,
+      "channelScores": {
+        "macro": -0.004908786169173475,
+        "flows": -0.03,
+        "security": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval"
+    },
+    {
+      "horizon": 30,
+      "targetDate": "2026-12-22",
+      "elapsedFromAnchor": 31,
+      "noEvents": 54222.473783844696,
+      "unchanged": 60122.6111387551,
+      "base": 54123.436054787075,
+      "weak": 47068.954940980955,
+      "strong": 62235.210746652185,
+      "trendLogReturn": -0.10329052809433054,
+      "eventLogAdjustment": -0.0018281771188048653,
+      "eventAdjustmentPct": -0.1826507020915913,
+      "eventScore": -0.026181589626880105,
+      "channelScores": {
+        "macro": -0.003681589626880106,
+        "flows": -0.0225,
+        "security": 0
+      },
+      "rangeKind": "scenario-envelope-not-confidence-interval"
+    }
+  ]
+}

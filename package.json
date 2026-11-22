@@ -12,6 +12,8 @@
     "test": "node --test dashboard/tests/*.test.mjs",
     "test:browser": "node dashboard/tests/browser.mjs",
     "tracking:daily": "node dashboard/daily.mjs",
+    "market:hourly": "node dashboard/update-intraday.mjs",
+    "analysis:context": "node dashboard/update-intraday.mjs --context",
     "tracking:report": "node dashboard/report.mjs",
     "tracking:schedule": "powershell -NoProfile -ExecutionPolicy Bypass -File dashboard/install-daily-task.ps1",
     "model:report": "node dashboard/report.mjs",

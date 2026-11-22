@@ -20,6 +20,18 @@ test('事件预测签发后 7/30 日固定目标，未知事件不编造等级',
   assert.equal(f.horizons[0].base,f.horizons[0].noEvents);
   for(const h of f.horizons) assert.ok(h.weak<h.base && h.base<h.strong);
 });
+test('分时研判输入冻结可复算，禁止把事后获取数据放入过去预测', async () => {
+  const m = market(), a = analysis(), original = buildEventForecast(a, m, { now });
+  m.intradayContext = { source: 'https://api.kraken.com/0/public/OHLC', mode: 'agent-context-not-fitted-coefficient', receivedAt: '2026-11-12T14:30:00Z', archiveFingerprint: 'a'.repeat(64), features: { through: '2026-11-12T14:00:00Z', price: 60000 } };
+  const archiveRoot = await mkdtemp(join(tmpdir(), 'event-hourly-'));
+  const frozen = await publishAnalysis(a, m, { root: archiveRoot, now });
+  assert.deepEqual(frozen.horizons, original.horizons); // No unvalidated automatic coefficient.
+  assert.equal(JSON.stringify((await readEventForecasts(archiveRoot))[0]), JSON.stringify(frozen));
+  m.intradayContext.receivedAt = '2026-11-12T15:30:00Z';
+  assert.throws(() => buildEventForecast(a, m, { now }), /分时输入/);
+  m.intradayContext.receivedAt = '2026-11-10T14:30:00Z';
+  assert.throws(() => buildEventForecast(a, m, { now }), /分时输入/);
+});
 test('历史匹配只用已到期同类案例；小样本收缩、重复新闻不放大', () => {
   const a=analysis(), m={...market(),eventLibrary:library()}, f=buildEventForecast(a,m,{now});
   assert.equal(f.events[0].classifications[0].level,4); assert.equal(f.events[0].classifications[0].reliability,1/6);

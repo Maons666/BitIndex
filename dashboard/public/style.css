@@ -154,3 +154,4 @@ button,a,input,select{transition:color 150ms cubic-bezier(.22,1,.36,1),backgroun
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
 @media(max-width:600px){.topbar{height:auto;min-height:64px;flex-wrap:wrap;gap:8px 12px;padding-top:12px}.topbar nav{display:flex;order:3;flex:0 0 100%;height:42px;gap:28px}.topbar nav a{height:42px;white-space:nowrap}.topbar .top-actions{margin-left:auto}.event-panel .outlook-controls{flex-wrap:wrap}.event-panel .outlook-controls .button{flex-shrink:0}}
+#intraday-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}#intraday-metrics strong{font-size:20px;overflow-wrap:anywhere}@media(max-width:700px){#intraday-metrics{grid-template-columns:1fr 1fr}#intraday-metrics strong{font-size:18px}}

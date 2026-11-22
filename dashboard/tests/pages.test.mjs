@@ -32,6 +32,8 @@ test('Pages 发布仅含静态资源与真实来源快照，项目子路径可�
   assert.ok(html.includes('./prediction.html')); assert.ok(!html.includes('id="outlook-section"'));
   assert.ok(predictionPage.includes('./index.html')); assert.ok(predictionPage.includes('id="event-section"'));
   assert.equal(JSON.parse(await readFile(join(output, manifest.events), 'utf8')).publicationVersion, manifest.version);
+  const hourly = JSON.parse(await readFile(join(output, manifest.intraday), 'utf8'));
+  assert.equal(hourly.publicationVersion, manifest.version); assert.equal(hourly.features, null);
   assert.equal((await buildPages({ trackingRoot, cacheRoot, output, eventArchiveRoot })).version, result.version);
 });
 test('预测锁阻止修改、删除及新增留档', async () => {

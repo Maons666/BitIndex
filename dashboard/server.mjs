@@ -8,6 +8,7 @@ import { createTrackingJob } from './tracking-job.mjs';
 import { readEventData, eventCsv } from './event-store.mjs';
 import { detectMoves } from './event-library.mjs';
 import { readFiveDayData } from './five-day-store.mjs';
+import { readIntraday } from './intraday.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const port = Number(process.env.PORT || 8787);
@@ -35,6 +36,7 @@ const server = http.createServer(async (req, res) => {
   if (!['127.0.0.1', 'localhost'].some(h => host === `${h}:${port}`)) return json(res, 403, { error: '仅允许本机访问' });
   const url = new URL(req.url, `http://${host}`);
   try {
+    if (url.pathname === '/api/intraday' && req.method === 'GET') return json(res, 200, await readIntraday(trackingRoot));
     if (url.pathname === '/api/five-day' && req.method === 'GET') return json(res, 200, await readFiveDayData(trackingRoot));
     if (url.pathname === '/api/data' && req.method === 'GET') return json(res, 200, await store.get());
     if (['/api/events', '/api/events.csv'].includes(url.pathname) && req.method === 'GET') {

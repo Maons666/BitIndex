@@ -82,6 +82,18 @@ try {
   await click('nav a[href="./prediction.html"]'); await ready();
   await wait(()=>evaluate(`!!document.querySelector('#event-section') && !document.querySelector('#event-content').hidden`),'事件分析');
   const events = await (await fetch(base+manifest.events)).json(), issue=events.forecasts[0];
+  const hourly = await (await fetch(base+manifest.intraday)).json();
+  if (hourly.features) {
+    await wait(()=>evaluate(`!document.querySelector('#intraday-content').hidden`),'小时行情');
+    check('小时行情保留真实截止时间、24条记录与独立分析输入说明', await evaluate(`document.querySelectorAll('#intraday-body tr').length===24 && Number(document.querySelector('#intraday-body tr').dataset.price)===${hourly.features.price} && document.querySelector('#intraday-status').textContent.includes('不改动已签发目标')`));
+    await click('#intraday-export');
+    const hourlyFile = await wait(async()=>(await readdir(downloadDir)).find(f=>f==='BitIndex_hourly_context.json'),'小时JSON');
+    check('小时导出与同一发布版本完全一致', JSON.stringify(JSON.parse(await readFile(join(downloadDir,hourlyFile),'utf8')))===JSON.stringify(hourly));
+    await shot('intraday-desktop','#intraday-section');
+    await send('Network.setBlockedURLs',{urls:['*/data/*/intraday.json*']}); await click('#refresh'); await ready();
+    check('分时数据失败时隐藏旧内容并保留独立事件预测',await evaluate(`document.querySelector('#intraday-content').hidden && document.querySelector('#intraday-export').disabled && !document.querySelector('#event-content').hidden`));
+    await send('Network.setBlockedURLs',{urls:[]}); await click('#refresh'); await ready();
+  }
   check('预测页读取签发结果且保留返回入口', await evaluate(`!!document.querySelector('nav a[href="./index.html"]') && document.querySelector('#event-chart').dataset.forecastId===${JSON.stringify(issue.id)} && !document.querySelector('#legacy-section').open`));
   check('实线与三条虚线按原始签发价格绘制', await evaluate(`document.querySelector('#event-chart [data-role="actual"]').getAttribute('stroke-dasharray')==='none' && document.querySelectorAll('#event-chart [data-scenario]').length===3 && Number(document.querySelector('#event-chart [data-scenario="base"]').dataset.price)===${issue.horizons[0].base}`));
   await click('[data-event-horizon="30"]');
@@ -217,6 +229,8 @@ try {
   await click('#theme');
   await send('Emulation.setDeviceMetricsOverride', { width: 400, height: 900, deviceScaleFactor: 1, mobile: false });
   await shot('event-mobile','#event-section');
+  await shot('intraday-mobile','#intraday-section');
+  check('手机小时行情卡片不造成横向溢出',await evaluate(`document.documentElement.scrollWidth<=window.innerWidth`));
   await shot('evaluation-mobile','#evaluation-section');
   check('400px回放图、误差图和日期选择无页面溢出',await evaluate(`document.documentElement.scrollWidth<=window.innerWidth && document.querySelector('#evaluation-chart').clientWidth>0 && document.querySelector('#evaluation-error-chart').clientWidth>0`));
   check('400px 事件页面没有溢出且导航可见',await evaluate(`document.documentElement.scrollWidth<=window.innerWidth && document.querySelector('nav').getBoundingClientRect().height>0`));

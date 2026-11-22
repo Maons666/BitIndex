@@ -44,3 +44,10 @@ export async function readFiveDay(snapshot) {
   if (data.publicationVersion !== snapshot.publication.version) throw new Error('五日对照版本不一致，请重试');
   return data;
 }
+export async function readIntraday(snapshot) {
+  if (!isStatic) return json('/api/intraday');
+  if (!snapshot?.publication?.intraday) throw new Error('当前发布版本尚无小时行情');
+  const data = await json(asset(snapshot.publication.intraday));
+  if (data.publicationVersion !== snapshot.publication.version) throw new Error('小时行情版本不一致，请重试');
+  return data;
+}

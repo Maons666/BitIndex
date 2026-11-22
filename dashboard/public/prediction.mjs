@@ -1,10 +1,10 @@
-import { readMarket, readEvents, isStatic } from './data-client.mjs';
+import { readMarket, readEvents, readIntraday, isStatic } from './data-client.mjs';
 import { usd, number } from './chart.mjs';
 import { updateOutlook } from './outlook.mjs';
 import { loadForecast } from './forecast.mjs';
 import { updateEvaluation } from './evaluation.mjs';
 const $ = id => document.getElementById(id), DAY = 86400000;
-const state = { snapshot: null, events: null, horizon: 7, id: null, busy: false };
+const state = { snapshot: null, events: null, intraday: null, horizon: 7, id: null, busy: false };
 const pct = v => Number.isFinite(v) ? (v > 0 ? '+' : '') + number(v, 2) + '%' : '—';
 const time = v => new Date(v).toLocaleString('zh-CN', { timeZone: 'America/New_York', hour12: false }) + '（纽约）';
 function el(tag, cls, text) { const n = document.createElement(tag); if (cls) n.className = cls; if (text !== undefined) n.textContent = text; return n; }
@@ -119,11 +119,36 @@ function research() {
   $('library-queue-title').textContent = `2026 年显著波动线索 ${candidates.length} 次 · ${candidates.filter(c=>c.status==='needs-research').length} 次待归因核查`;
   $('library-queue').replaceChildren(...candidates.map(c => el('li', '', `${c.date} · ${pct(c.returnPct)} · 事前波动 ${number(c.z, 2)} 倍 · ${c.status === 'needs-research' ? '待核查主导事件' : '邻近已记录案例，仍需确认归因'}`)));
 }
+async function loadIntraday(data) {
+  state.intraday = null; $('intraday-content').hidden = true; $('intraday-export').disabled = true;
+  $('intraday-status').textContent = '正在读取同一发布版本的小时行情…';
+  try {
+    const x = await readIntraday(data), f = x.features;
+    if (!f) { $('intraday-status').textContent = '尚未取得小时行情；现有预测保留原值。'; return; }
+    state.intraday = x;
+    const stale = Date.now() - Date.parse(x.receivedAt) > 30 * 3600000 || x.lastAttempt?.status === 'failed';
+    $('intraday-status').textContent = `${stale ? '更新滞后 · ' : ''}完整小时截至 ${f.through.replace('T',' ').slice(0,16)} UTC · 获取于 ${time(x.receivedAt)} · 每天批量更新。供后续 agent 研判使用，尚未训练分时系数，不改动已签发目标。`;
+    $('intraday-status').classList.toggle('warn', stale);
+    const values = [
+      ['最新小时收盘', usd(f.price)], ['近 6 / 24 小时涨跌', pct(f.return6hPct) + ' / ' + pct(f.return24hPct)],
+      ['24 小时已实现波动率', Number.isFinite(f.realizedVolatility24hPct) ? number(f.realizedVolatility24hPct, 2) + '%' : '—'], ['24 小时低 / 高', usd(f.low24h) + ' / ' + usd(f.high24h)],
+      ['24 小时成交均价', usd(f.vwap24h)], ['成交量 / 前 7 日均值', Number.isFinite(f.volumeRatio) ? number(f.volumeRatio, 2) + '×' : '—']
+    ];
+    $('intraday-metrics').replaceChildren(...values.map(([label, value]) => { const n = el('div'); n.append(el('span', '', label), el('strong', '', value)); return n; }));
+    $('intraday-body').replaceChildren(...x.rows.slice(-24).reverse().map(r => {
+      const tr = el('tr'); tr.dataset.time = r.time; tr.dataset.price = r.close;
+      for (const value of [r.time.replace('T', ' ').slice(0,16), usd(r.open), usd(r.high) + ' / ' + usd(r.low), usd(r.close), number(r.volume, 2)]) tr.append(el('td','',value));
+      return tr;
+    }));
+    $('intraday-content').hidden = false; $('intraday-export').disabled = false;
+  } catch(e) { $('intraday-status').textContent = '小时行情不可用：' + e.message; }
+}
 async function load(force = false) {
   if (state.busy) return; state.busy = true; $('refresh').disabled = true; $('refresh-label').textContent = '刷新中';
   try {
     const data = await readMarket(force); state.snapshot = data; market(data); updateOutlook(data);
     void loadForecast(data);
+    await loadIntraday(data);
     state.events = null; updateEvaluation(null); $('event-content').hidden = true; $('event-export').disabled = true; $('event-status').textContent = '正在读取对应版本的分析…';
     $('event-comparison-body').replaceChildren(); $('event-research').replaceChildren(); $('library-body').replaceChildren(); $('library-queue').replaceChildren(); $('event-comparison-status').textContent = '正在读取…'; $('event-comparison-export').removeAttribute('href');
     try {
@@ -136,6 +161,11 @@ async function load(force = false) {
   finally { state.busy = false; $('refresh').disabled = false; $('refresh-label').textContent = '刷新数据'; }
 }
 $('refresh').addEventListener('click', () => load(true));
+$('intraday-export').addEventListener('click', () => {
+  if (!state.intraday) return;
+  const a = el('a'), url = URL.createObjectURL(new Blob([JSON.stringify(state.intraday, null, 2)], { type: 'application/json' }));
+  a.href = url; a.download = 'BitIndex_hourly_context.json'; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
 $('forecast-refresh').addEventListener('click', () => load(true));
 $('event-issue').addEventListener('change', e => { state.id = e.target.value; render(); });
 $('event-horizons').addEventListener('click', e => { const b = e.target.closest('[data-event-horizon]'); if (b) { state.horizon = Number(b.dataset.eventHorizon); render(); } });

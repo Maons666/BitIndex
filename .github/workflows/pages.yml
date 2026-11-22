@@ -58,6 +58,10 @@ jobs:
           fi
       - name: Verify legacy Ridge forecasts were neither added nor changed
         run: node dashboard/check-forecast-lock.mjs
+      - name: Collect completed BTC USD hourly candles once daily
+        if: github.event_name != 'push'
+        continue-on-error: true
+        run: node dashboard/update-intraday.mjs
       - name: Compare agent-issued event scenarios using recorded actuals
         run: node dashboard/update-event-comparisons.mjs
       - name: Issue today's five-day forecast after fresh daily data

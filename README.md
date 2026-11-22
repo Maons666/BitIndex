@@ -57,6 +57,10 @@ npm run tracking:schedule    # 安装或更新 Windows 对照任务
 
 ## 检查
 
+小时行情采用 Kraken 免费公开 BTC/USD OHLC 接口，不需要 Key。`npm run market:hourly` 每个 UTC 日最多保存一份成功批次，自动任务沿用每天纽约 09:23，一次补齐小时记录。初次约 30 天，后续增量积累；未结束小时剔除、缺口不插值、修订另存且不覆盖首次记录。原始响应与 SHA-256 指纹保存在云端 `predictions/intraday/batches/`，失败状态另存，页面刷新只读取已发布数据。
+
+`npm run analysis:context` 输出最新分时特征供 agent 研判。`publish-analysis.mjs` 命令会冻结截止前已获取、未超过 30 小时的可用分时摘要，包含小时涨跌、24 小时波动率、量比与成交均价。程序调用可显式传入 `market.intradayContext`。这些是分析输入，尚无经过校准的自动价格系数；旧预测继续原值对照。日线来源与结算口径不变，未来只有取得足够样本并完成无未来信息的对照检验后才能评估分时特征的预测增益。
+
 ```powershell
 npm test
 # 先启动服务，再运行 Chrome 界面验证

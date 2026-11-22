@@ -83,6 +83,12 @@ function calculate(analysis, market, now, reconstructedAt = null, horizonDays = 
     return { horizon, targetDate, elapsedFromAnchor: elapsed, noEvents, unchanged: anchor.price, base, weak: base * Math.exp(-width), strong: base * Math.exp(width), trendLogReturn: trend, eventLogAdjustment, eventAdjustmentPct: (Math.exp(eventLogAdjustment) - 1) * 100, eventScore, channelScores, rangeKind: 'scenario-envelope-not-confidence-interval' };
   });
   const result = { schema: 1, id: analysis.id, modelVersion: EVENT_MODEL, issuedAt, analysisCutoffAt: analysis.cutoffAt, author: analysis.author, updateMode: 'agent-triggered-free', anchor: { date: anchor.date, price: anchor.price }, source: market.source, sourceFetchedAt: market.fetchedAt, inputFingerprint: fingerprint(sample), analysisFingerprint: fingerprint(analysis), libraryFingerprint: fingerprint(library), summary: analysis.summary, coverageGaps: analysis.coverageGaps, conditions: analysis.conditions, events, parameters: { lookback: 60, trendShrinkage: 0.35, halfLifeDays: 7, sampleShrinkage: 5, maxEventSigma: 0.5, rangeSigma: 1, dailyVolatility: sigma, dailyTrend: drift }, features: { return7dPct: (anchor.price / sample.at(-8).price - 1) * 100, return28dPct: (anchor.price / sample.at(-29).price - 1) * 100, annualVolatilityPct: sigma * Math.sqrt(365) * 100 }, horizons };
+  if (market.intradayContext) {
+    const c = market.intradayContext;
+    if (reconstructedAt || c.source !== 'https://api.kraken.com/0/public/OHLC' || c.mode !== 'agent-context-not-fitted-coefficient' || !stamp(c.receivedAt) || Date.parse(c.receivedAt) > Date.parse(analysis.cutoffAt) || Date.parse(analysis.cutoffAt) - Date.parse(c.receivedAt) > 30 * 3600000 || !stamp(c.features?.through) || Date.parse(c.features.through) > Date.parse(c.receivedAt) || !/^[a-f0-9]{64}$/.test(c.archiveFingerprint || '')) fail('分时输入过期、缺失或晚于分析截止点');
+    result.intradayContext = c;
+    result.intradayFingerprint = fingerprint(c);
+  }
   if (reconstructedAt) {
     delete result.issuedAt;
     result.updateMode = 'retrospective-current-model';

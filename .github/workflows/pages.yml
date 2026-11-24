@@ -25,10 +25,11 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment_retry.outputs.page_url || steps.deployment.outputs.page_url }}
     env:
       BITINDEX_TRACKING_DIR: ${{ github.workspace }}/.cloud-state/predictions
       BITINDEX_CACHE_DIR: ${{ github.workspace }}/.cloud-state/cache
+      PAGES_ARTIFACT_NAME: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
       - uses: actions/checkout@v6
       - name: Restore durable daily records
@@ -85,11 +86,24 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
+          name: ${{ env.PAGES_ARTIFACT_NAME }}
           path: dist
           retention-days: 1
       - name: Publish GitHub Pages
         id: deployment
+        continue-on-error: true
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: ${{ env.PAGES_ARTIFACT_NAME }}
+      - name: Wait before retrying Pages publication
+        if: steps.deployment.outcome == 'failure'
+        run: sleep 10
+      - name: Retry GitHub Pages publication
+        id: deployment_retry
+        if: steps.deployment.outcome == 'failure'
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: ${{ env.PAGES_ARTIFACT_NAME }}
       - name: Report refresh failure after publishing honest cached status
         if: steps.refresh.outcome == 'failure'
         run: |

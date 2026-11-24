@@ -1,0 +1,22 @@
+{
+  "forecastId": "2026-11-19-event-scenarios-v1",
+  "modelVersion": "event-scenarios-v1",
+  "issuedAt": "2026-11-20T04:42:44.618Z",
+  "horizon": 30,
+  "targetDate": "2026-12-20",
+  "date": "2026-11-22",
+  "actualPrice": 61103.7072912858,
+  "actualObservedAt": "2026-11-24T01:45:11.572Z",
+  "actualSourceFetchedAt": "2026-11-24T01:45:11.559Z",
+  "base": 54929.09271337847,
+  "weak": 48056.39423612154,
+  "strong": 62784.67775776337,
+  "noEvents": 55027.30368140427,
+  "unchanged": 62896.9341901052,
+  "status": "tracking",
+  "targetGapPct": -10.10513903595488,
+  "absoluteErrorPct": null,
+  "noEventsErrorPct": null,
+  "unchangedErrorPct": null,
+  "envelopeHit": null
+}
